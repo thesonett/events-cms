@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <h1>Register</h1>
+    <form action="" method="">
+        <label for="college">Select College:</label>
+        <select name="college" id="college">
+            <% colleges.forEach(college => { %>
+                <option value="<%= college.college_id %>"><%= college.college_name %></option>
+            <% }) %>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

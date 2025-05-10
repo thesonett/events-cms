@@ -1,25 +1,36 @@
 import express from 'express'
 import sequelize from './config/database.js'
-import Colleges from './models/Colleges.js'
+import College from './models/College.js'
+import router from './routers/router.js'
+
 const app = express()
 const port = 3000
 
-// middlewares
-app.use(express.json())
+// middlewares & settings
 app.set('view engine', 'ejs')
+app.set('views', './views');
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use('/api', router)
 
-// creating tables
+// creating database tables
 await sequelize.sync({force: true})
-.then((data) => {
-    console.log(data)
-    console.log('tables created!')
+.then(() => {
+    College.bulkCreate([
+        { college_id: 101, college_name: 'IIT Kharagpur' },
+        { college_id: 102, college_name: 'IIT Bombay' },
+        { college_id: 103, college_name: 'IIT Delhi' },
+        { college_id: 104, college_name: 'Jadavpur University' },
+        { college_id: 105, college_name: 'MAKAUT' },
+        { college_id: 106, college_name: 'AIIMS Delhi' },
+        { college_id: 107, college_name: 'NIT Durgapur' },
+    ]);
+
+    console.log('All the database tables got created!')
 })
 .catch((error) => {
     console.log('Error creating tables ::: ', error)
 })
-
-// routes
-
 
 // server
 app.listen(port, () => {

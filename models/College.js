@@ -1,7 +1,7 @@
 import sequelize from '../config/database.js'
 import { DataTypes } from 'sequelize'
 
-const Colleges = sequelize.define('College', {
+const College = sequelize.define('College', {
   college_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -16,4 +16,4 @@ const Colleges = sequelize.define('College', {
   timestamps: true,
 });
 
-export default Colleges
+export default College
