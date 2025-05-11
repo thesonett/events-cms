@@ -3,17 +3,16 @@ import { DataTypes } from 'sequelize'
 import College from './College.js';
 
 const Admin = sequelize.define('admin', {
-  admin_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
+  admin_email: {
+    type: DataTypes.STRING,
     allowNull: false,
-    autoIncrement: true,
+    primaryKey: true,
   },
-  username: {
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  password: {
+  username: {
     type: DataTypes.STRING,
     allowNull: false,
   },

@@ -12,5 +12,5 @@ TODOS:
 
 
 Table changes:
-NOTE: add email_id row in table
+NOTE: add email_id row in students table & admin table, make admin_email as primary key
 NOTE: change event's college_id (fk) -> colleges(college_id)

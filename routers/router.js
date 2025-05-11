@@ -1,63 +1,97 @@
-import express from 'express'
+import express from 'express';
 const router = express.Router();
 import { 
     getColleges, 
     createAdmin, 
     getAdmin, 
     getCollegeNameById, 
-    getAdminById 
-} from '../controller/index.js'
+    getAdminByEmail,
+    deleteAdminByEmail,
+} from '../controller/index.js';
 
-
-router.get('/registration', async (req, res) => {
+// Render registration page
+router.get('/register', async (req, res) => {
     try {
-        const colleges = await getColleges();
-        res.render('registration', { colleges });
-    } 
-    catch (error) {
-        res.status(500).json({error: error.message});
-    }
-})
+        const { colleges, success, message } = await getColleges();
+        if (!success) {
+            return res.status(401).json({ error: message });
+        }
 
+        res.render('registration', { colleges });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Create a new admin
 router.post('/createAdmin', async (req, res) => {
     try {
-        const admin = await createAdmin(req.body)
-        if(admin) {
-            console.log('\n:::: Admin created! ::::\n')
+        const { admin, success, message } = await createAdmin(req.body);
+        if (!success) {
+            return res.status(401).json({ error: message });
         }
-    }
-    catch (error) {
+        
+
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
-})
+});
 
-router.get('/getAdmin/:id', async(req, res) => {
-    const admin_id = req.params.id;
+// Admin dashboard
+router.get('/admin/:mail', async (req, res) => {
+    const admin_email = req.params.mail;
 
     try {
-        const admin = await getAdminById(admin_id)
-        const college_name = await getCollegeNameById(admin.college_id)
-        res.status(200).json({admin, college_name});
-    }
-    catch (error) {
+        const { admin, success, message } = await getAdminByEmail(admin_email);
+        if (!success) {
+            return res.status(401).json({ error: message });
+        }
+
+        const { college_name, success: collegeSuccess, message: collegeMsg } = await getCollegeNameById(admin.college_id);
+        if (!collegeSuccess) {
+            return res.status(401).json({ error: collegeMsg });
+        }
+
+        res.render('admin', { admin, college_name });
+
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
-})
+});
 
-router.post('/getAdmin', async(req, res) => {
+// Handle admin login
+router.post('/getAdmin', async (req, res) => {
     try {
-        const { admin_id } = await getAdmin(req.body) // username, password
-        if(!admin_id) {
-            res.status(401).json({ error: 'Admin not found!' });
+        const { admin, success, message } = await getAdmin(req.body);
+
+        if (!success) {
+            return res.status(401).json({ error: message });
         }
-        else {
-            res.redirect(`/getAdmin/${admin_id}`)
-        }
-    }
-    catch(error) {
+
+        const { admin_email } = admin;
+        res.redirect(`/admin/${admin_email}`);
+
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
-})
+});
+
+// Delete admin
+router.post('/deleteAdmin/:mail', async (req, res) => {
+    try {
+        const admin_mail = req.params.mail;
+        const { success, message } = await deleteAdminByEmail(admin_mail);
+
+        if (!success) {
+            return res.status(401).json({ error: message });
+        }
 
 
-export default router
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+export default router;

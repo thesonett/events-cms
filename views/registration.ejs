@@ -8,10 +8,12 @@
 <body>
    <h1>Admin Registration</h1>
     <form action="/api/createAdmin" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
+        <label for="admin_email">Email:</label>
+        <input type="email" id="admin_email" name="admin_email" required><br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
 
         <label for="college">Select College:</label>
         <select name="college_id" id="college_id">
