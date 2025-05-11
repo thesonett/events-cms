@@ -1,14 +1,21 @@
-import College from "../models/College.js";
+import { College } from "../models/index.js";
 
-async function getAllColleges() {
-    const colleges = await College.findAll({
+async function getColleges() {
+    return await College.findAll({
         attributes: ['college_id', 'college_name']
     })
-    return colleges
 }
 
+async function getCollegeNameById(college_id) {
+    const college = await College.findOne({
+        where: { college_id },
+        attributes: ['college_name'],
+    });
 
+    return college.college_name;
+}
 
 export {
-    getAllColleges,
+    getColleges,
+    getCollegeNameById
 }

@@ -1,7 +1,7 @@
 import sequelize from '../config/database.js'
 import { DataTypes } from 'sequelize'
 
-const College = sequelize.define('College', {
+const College = sequelize.define('college', {
   college_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

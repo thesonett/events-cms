@@ -6,14 +6,19 @@
     <title>Document</title>
 </head>
 <body>
-   <h1>Register</h1>
-    <form action="" method="">
+   <h1>Admin Registration</h1>
+    <form action="/api/createAdmin" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
         <label for="college">Select College:</label>
-        <select name="college" id="college">
+        <select name="college_id" id="college_id">
             <% colleges.forEach(college => { %>
                 <option value="<%= college.college_id %>"><%= college.college_name %></option>
             <% }) %>
-        </select>
+        </select><br>
         <button type="submit">Submit</button>
     </form>
 </body>
