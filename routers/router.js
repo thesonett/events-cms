@@ -9,7 +9,7 @@ import {
     deleteAdminByEmail,
 } from '../controller/index.js';
 
-// Render registration page
+// registration page
 router.get('/register', async (req, res) => {
     try {
         const { colleges, success, message } = await getColleges();
@@ -24,7 +24,7 @@ router.get('/register', async (req, res) => {
     }
 });
 
-// Create a new admin
+// create new admin
 router.post('/createAdmin', async (req, res) => {
     try {
         const { admin, success, message } = await createAdmin(req.body);
@@ -38,9 +38,9 @@ router.post('/createAdmin', async (req, res) => {
     }
 });
 
-// Admin dashboard
+// admin dashboard page
 router.get('/admin/:mail', async (req, res) => {
-    const admin_email = req.params.mail;
+    const admin_email = decodeURIComponent(req.params.mail);
 
     try {
         const { admin, success, message } = await getAdminByEmail(admin_email);
@@ -60,34 +60,38 @@ router.get('/admin/:mail', async (req, res) => {
     }
 });
 
-// Handle admin login
-router.post('/getAdmin', async (req, res) => {
+// get admin
+router.post('/login', async (req, res) => {
+    const { admin_email, password } = req.body
+
     try {
-        const { admin, success, message } = await getAdmin(req.body);
+        const { admin, success, message } = await getAdmin({admin_email, password});
 
         if (!success) {
             return res.status(401).json({ error: message });
         }
 
-        const { admin_email } = admin;
-        res.redirect(`/admin/${admin_email}`);
+        res.redirect(`/api/admin/${encodeURIComponent(admin_email)}`);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Delete admin
+// login page
+router.get('/login', async(req, res) => {
+    res.render('login')
+})
+
+// delete admin by id
 router.post('/deleteAdmin/:mail', async (req, res) => {
     try {
-        const admin_mail = req.params.mail;
-        const { success, message } = await deleteAdminByEmail(admin_mail);
+        const admin_email = decodeURIComponent(req.params.mail);
+        const { success, message } = await deleteAdminByEmail(admin_email);
 
         if (!success) {
             return res.status(401).json({ error: message });
         }
-
-
 
     } catch (error) {
         res.status(500).json({ error: error.message });

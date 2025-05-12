@@ -20,6 +20,7 @@ async function getAdmin({admin_email, password}) {
         return {success: false, message: 'Admin not found'};
 
     const isMatch = await bcrypt.compare(password, admin.password);
+
     if (!isMatch) 
         return {success: false, message: 'Invalid password'};
 

@@ -44,32 +44,9 @@ async function createDB() {
                 email: 'joys0178000@gmail.com',
                 department: 'ME',
                 isAlumni: true,
-                college_id: 102
-            },
-            {
-                name: 'Jhantu',
-                rollNo: 103003,
-                email: 'jhantusaha9836@gmail.com',
-                department: 'ECE',
-                isAlumni: false,
-                college_id: 102
-            },
-            {
-                name: 'Priya',
-                rollNo: 104004,
-                email: 'jhantusaha6545@gmail.com',
-                department: 'CE',
-                isAlumni: true,
                 college_id: 101
-            }
+            },
         ]);
-
-        await Admin.create({ 
-            admin_email: 'admin@gmail.com', 
-            password: 'admin', 
-            username: 'admin',
-            college_id: 104
-        });
 
         await Post.bulkCreate([
             {
@@ -95,8 +72,7 @@ async function createDB() {
         await PostImage.bulkCreate([
             { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 1 },
             { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 1 },
-            { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 2 },
-            { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 2 },
+            { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 1 },
         ]);
 
     })

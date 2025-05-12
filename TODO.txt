@@ -1,4 +1,4 @@
-TODOS:
+PLANNING/TASKS:
 1. ORM Sequelize Models creation & creating tables
 2. Admin authetication check with JWT token (if admin already present, login otherwise signup + logout)
 3. Fetch events based on college_id, filter events based on year & category, add new post
@@ -7,10 +7,11 @@ TODOS:
 5. Notification system. (notify only the non-alumni students to upcoming events via mail/notification)
 
 6. Admin Functionality (CURD operations on events)
-7. Admin portal (details of admin with college name & college id)
-8. Styling (tailwind + aos animation + Toastr for notifications)
+7. Admin portal (details of admin)
+
+8. Styling with tailwind + aos animation + Toastr for notifications
 
 
-Table changes:
-NOTE: add email_id row in students table & admin table, make admin_email as primary key
-NOTE: change event's college_id (fk) -> colleges(college_id)
+TODO:
+1. Admin authetication with JWT + login form + toastr
+2. Creating controllers for models
