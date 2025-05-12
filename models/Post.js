@@ -1,4 +1,4 @@
-import sequelize from '../config/database.js'
+import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
 import College from './College.js'
 import Admin from './Admin.js'

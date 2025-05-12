@@ -14,7 +14,7 @@ async function createAdmin({admin_email, password, username, college_id}) {
 }
 
 async function getAdmin({admin_email, password}) {
-    const admin = await Admin.findOne({ where: { admin_email }, attributes: ['admin_email', 'username', 'password'] });
+    const admin = await Admin.findOne({ where: { admin_email }, attributes: ['admin_id', 'admin_email', 'username', 'password'] });
 
     if (!admin) 
         return {success: false, message: 'Admin not found'};

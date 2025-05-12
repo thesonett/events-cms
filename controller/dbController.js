@@ -1,4 +1,4 @@
-import sequelize from '../config/database.js'
+import sequelize from '../database/database.js'
 import { College, Admin, Post, PostImage, Student } from '../models/index.js'
 
 // initializing relationships

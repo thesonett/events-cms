@@ -13,5 +13,4 @@ PLANNING/TASKS:
 
 
 TODO:
-1. Admin authetication with JWT + login form + toastr
-2. Creating controllers for models
+1. Creating controllers for models.

@@ -1,5 +1,5 @@
 import express from 'express';
-const router = express.Router();
+import { isAuthenticated } from '../middleware/auth.js'
 import { 
     getColleges, 
     createAdmin, 
@@ -8,6 +8,7 @@ import {
     getAdminByEmail,
     deleteAdminByEmail,
 } from '../controller/index.js';
+const router = express.Router();
 
 // registration page
 router.get('/register', async (req, res) => {
@@ -17,14 +18,16 @@ router.get('/register', async (req, res) => {
             return res.status(401).json({ error: message });
         }
 
-        res.render('registration', { colleges });
+        const notify = req.query.success === 'true' ? 'Registration successful!' : null
+
+        res.render('registration', { colleges,  notify });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// create new admin
+// create new admin API
 router.post('/createAdmin', async (req, res) => {
     try {
         const { admin, success, message } = await createAdmin(req.body);
@@ -32,6 +35,7 @@ router.post('/createAdmin', async (req, res) => {
             return res.status(401).json({ error: message });
         }
         
+        res.redirect(`/api/register?success=${success}`);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -39,7 +43,7 @@ router.post('/createAdmin', async (req, res) => {
 });
 
 // admin dashboard page
-router.get('/admin/:mail', async (req, res) => {
+router.get('/admin/:mail', isAuthenticated, async (req, res) => {
     const admin_email = decodeURIComponent(req.params.mail);
 
     try {
@@ -60,7 +64,7 @@ router.get('/admin/:mail', async (req, res) => {
     }
 });
 
-// get admin
+// login API
 router.post('/login', async (req, res) => {
     const { admin_email, password } = req.body
 
@@ -71,6 +75,12 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: message });
         }
 
+        // creating a session
+        req.session.admin = {
+            email: admin.admin_email,
+            id: admin.admin_id
+        };
+
         res.redirect(`/api/admin/${encodeURIComponent(admin_email)}`);
 
     } catch (error) {
@@ -79,9 +89,32 @@ router.post('/login', async (req, res) => {
 });
 
 // login page
-router.get('/login', async(req, res) => {
-    res.render('login')
-})
+router.get('/login', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Failed to destroy session:', err);
+        }
+
+        res.clearCookie('connect.sid');
+        res.setHeader('Cache-Control', 'no-store');
+
+        const notify = req.query.notify || null;
+        res.render('login', { notify });
+    });
+});
+
+// logout API
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to logout' });
+        }
+
+        res.clearCookie('connect.sid');
+        res.setHeader('Cache-Control', 'no-store');
+        res.redirect('/api/login')
+    });
+});
 
 // delete admin by id
 router.post('/deleteAdmin/:mail', async (req, res) => {

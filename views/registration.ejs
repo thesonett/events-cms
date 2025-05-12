@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
-<body>
+<body>    
    <h1>Admin Registration</h1>
     <form action="/api/createAdmin" method="POST">
         <label for="admin_email">Email:</label>
@@ -26,5 +29,11 @@
         <p>Already have a account?</p>
         <a href="./login">Login</a>
     </form>
+
+    <% if (notify) { %>
+    <script>
+        toastr.success("<%- notify %>");
+    </script>
+    <% } %>
 </body>
 </html>

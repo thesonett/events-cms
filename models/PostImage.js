@@ -1,4 +1,4 @@
-import sequelize from '../config/database.js'
+import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
 import Post from './Post.js'
 
