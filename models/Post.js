@@ -6,7 +6,6 @@ const Post = sequelize.define('postModel', {
   post_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false,
     autoIncrement: true,
   },
   post_title: {
@@ -30,7 +29,7 @@ const Post = sequelize.define('postModel', {
     }
   },
 }, {
-  tableName: 'post',
+  tableName: 'posts',
   timestamps: true,
 });
 

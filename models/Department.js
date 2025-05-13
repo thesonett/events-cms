@@ -13,7 +13,7 @@ const Department = sequelize.define('departmentModel', {
     allowNull: false,
   }
 }, {
-  tableName: 'department',
+  tableName: 'departments',
   timestamps: true,
 });
 

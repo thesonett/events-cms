@@ -4,8 +4,8 @@ import { DataTypes } from 'sequelize'
 const Event = sequelize.define('eventModel', {
     event_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
+        autoIncrement: true,
     },
     event_name: {
         type: DataTypes.STRING,
@@ -20,7 +20,7 @@ const Event = sequelize.define('eventModel', {
         allowNull: false
     }
 }, {
-    tableName: 'event',
+    tableName: 'events',
     timestamps: true
 })
 

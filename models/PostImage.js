@@ -23,7 +23,7 @@ const PostImage = sequelize.define('postImageModel', {
     onDelete: 'CASCADE',
   },
 }, {
-  tableName: 'postImage',
+  tableName: 'postImages',
   timestamps: true,
 })
 

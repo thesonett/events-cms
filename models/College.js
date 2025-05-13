@@ -13,7 +13,7 @@ const College = sequelize.define('collegeModel', {
     allowNull: false,
   }
 }, {
-  tableName: 'college',
+  tableName: 'colleges',
   timestamps: true,
 });
 
