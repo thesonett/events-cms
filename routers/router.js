@@ -5,8 +5,8 @@ import {
     createAdmin, 
     getAdmin, 
     getCollegeNameById, 
-    getAdminByEmail,
-    deleteAdminByEmail,
+    getAdminById,
+    deleteAdminById,
 } from '../controller/index.js';
 const router = express.Router();
 
@@ -43,11 +43,11 @@ router.post('/createAdmin', async (req, res) => {
 });
 
 // admin dashboard page
-router.get('/admin/:mail', isAuthenticated, async (req, res) => {
-    const admin_email = decodeURIComponent(req.params.mail);
+router.get('/admin/:id', isAuthenticated, async (req, res) => {
+    const admin_id = decodeURIComponent(req.params.id);
 
     try {
-        const { admin, success, message } = await getAdminByEmail(admin_email);
+        const { admin, success, message } = await getAdminById(admin_id);
         if (!success) {
             return res.status(401).json({ error: message });
         }
@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
             id: admin.admin_id
         };
 
-        res.redirect(`/api/admin/${encodeURIComponent(admin_email)}`);
+        res.redirect(`/api/admin/${encodeURIComponent(admin.admin_id)}`);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -116,11 +116,11 @@ router.get('/logout', (req, res) => {
     });
 });
 
-// delete admin by id
-router.post('/deleteAdmin/:mail', async (req, res) => {
+// delete admin by admin email
+router.post('/deleteAdmin/:id', async (req, res) => {
     try {
-        const admin_email = decodeURIComponent(req.params.mail);
-        const { success, message } = await deleteAdminByEmail(admin_email);
+        const admin_id = decodeURIComponent(req.params.id);
+        const { success, message } = await deleteAdminById(admin_id);
 
         if (!success) {
             return res.status(401).json({ error: message });

@@ -38,12 +38,13 @@ const Post = sequelize.define('post', {
         key: 'college_id',
     }
   },
-  admin_email: {
-    type: DataTypes.STRING,
+  admin_id: {
+    type: DataTypes.INTEGER,
     references: {
         model: Admin,
-        key: 'admin_email',
-    }
+        key: 'admin_id',
+    },
+    allowNull: false
   },
 }, {
   tableName: 'posts',

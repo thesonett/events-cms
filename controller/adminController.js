@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Admin } from '../models/index.js'
 
-// TODO: Admin authentication here!
 async function createAdmin({admin_email, password, username, college_id}) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const admin = await Admin.create({admin_email, password: hashedPassword, username, college_id });
@@ -27,8 +26,8 @@ async function getAdmin({admin_email, password}) {
     return { success: true, admin };
 }
 
-async function getAdminByEmail(admin_email) {
-    const admin = await Admin.findOne({ where: { admin_email } });
+async function getAdminById(admin_id) {
+    const admin = await Admin.findOne({ where: { admin_id } });
 
     if (!admin) 
         return {success: false, message: 'Admin not found'};
@@ -36,8 +35,8 @@ async function getAdminByEmail(admin_email) {
     return { success: true, admin };
 }
 
-async function deleteAdminByEmail(admin_email) {
-    const deletedCount = await Admin.destroy({ where: { admin_email: admin_email } });
+async function deleteAdminById(admin_id) {
+    const deletedCount = await Admin.destroy({ where: { admin_id: admin_id } });
     
     if(!deletedCount) {
         return {success: false, message: 'Admin not found'};
@@ -49,6 +48,6 @@ async function deleteAdminByEmail(admin_email) {
 export {
     createAdmin,
     getAdmin,
-    getAdminByEmail,
-    deleteAdminByEmail,
+    getAdminById,
+    deleteAdminById,
 }

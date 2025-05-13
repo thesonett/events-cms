@@ -1,19 +1,22 @@
 import sequelize from '../database/database.js'
-import { College, Admin, Post, PostImage, Student } from '../models/index.js'
+import { College, Admin, Post, PostImage, Student, Department } from '../models/index.js'
 
 // initializing relationships
 College.hasOne(Admin, { foreignKey: 'college_id', onDelete: 'CASCADE',});
 College.hasMany(Student, { foreignKey: 'college_id' });
 College.hasMany(Post, { foreignKey: 'college_id' });
-Admin.hasMany(Post, { foreignKey: 'admin_email' });
 
-Post.belongsTo(Admin, { foreignKey: 'admin_email' });
+Admin.hasMany(Post, { foreignKey: 'admin_id' });
+Admin.belongsTo(College, { foreignKey: 'college_id' });
+
+Post.belongsTo(Admin, { foreignKey: 'admin_id' });
 Post.hasMany(PostImage, { foreignKey: 'post_id', onDelete: 'CASCADE' });
+Post.belongsTo(College, { foreignKey: 'college_id' });
 PostImage.belongsTo(Post, { foreignKey: 'post_id' });
 
-Post.belongsTo(College, { foreignKey: 'college_id' });
+Department.hasMany(Student, { foreignKey: 'department_id', sourceKey: 'department_id', onDelete: 'CASCADE' });
+Student.belongsTo(Department, { foreignKey: 'department_id', targetKey: 'department_id' });
 Student.belongsTo(College, { foreignKey: 'college_id' });
-Admin.belongsTo(College, { foreignKey: 'college_id' });
 
 // creating & inserting some dummy values into tables
 async function createDB() {
@@ -27,6 +30,14 @@ async function createDB() {
             { college_id: 105, college_name: 'MAKAUT' },
             { college_id: 106, college_name: 'AIIMS Delhi' },
             { college_id: 107, college_name: 'NIT Durgapur' },
+        ], {ignoreDuplicates: true});
+
+        await Department.bulkCreate([
+            { department_id: 10, department_name: 'CSE' },
+            { department_id: 20, department_name: 'ME' },
+            { department_id: 30, department_name: 'ECE' },
+            { department_id: 40, department_name: 'CE' },
+            { department_id: 50, department_name: 'IT' },
         ]);
 
         await Student.bulkCreate([
@@ -34,47 +45,20 @@ async function createDB() {
                 name: 'Sonett',
                 rollNo: 101001,
                 email: 'sonettjsaha@gmail.com',
-                department: 'CSE',
                 isAlumni: false,
-                college_id: 101
+                college_id: 101,
+                department_id: 10
+
             },
             {
                 name: 'Joy',
                 rollNo: 102002,
                 email: 'joys0178000@gmail.com',
-                department: 'ME',
                 isAlumni: true,
-                college_id: 101
-            },
-        ]);
-
-        await Post.bulkCreate([
-            {
-                title: 'Tech Fest 2025',
-                description: 'Annual tech festival featuring hackathons, robotics, and coding competitions.',
-                venue: 'Main Auditorium',
-                eventDate: new Date('2025-07-15'),
-                category: 'Technical',
                 college_id: 101,
-                admin_email: 'admin@gmail.com',
-            },
-            {
-                title: 'Startup Pitch Day',
-                description: 'Students pitch their startup ideas to a panel of investors.',
-                venue: 'Innovation Hub',
-                eventDate: new Date('2025-08-01T14:00:00'),
-                category: 'Entrepreneurship',
-                college_id: 101,
-                admin_email: 'admin@gmail.com',
+                department_id: 20
             },
         ]);
-
-        await PostImage.bulkCreate([
-            { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 1 },
-            { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 1 },
-            { image_url: 'https://media.collegedekho.com/media/img/news/college_fests.jpg', post_id: 1 },
-        ]);
-
     })
     .catch((error) => {
         console.error(error)

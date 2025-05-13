@@ -24,7 +24,7 @@ const PostImage = sequelize.define('postImage', {
   },
 }, {
   tableName: 'postImages',
-  timestamps: false,
+  timestamps: true,
 })
 
 export default PostImage

@@ -1,6 +1,7 @@
 import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
 import College from './College.js'
+import Department from './Department.js'
 
 const Student = sequelize.define('student', {
   student_id: {
@@ -21,10 +22,6 @@ const Student = sequelize.define('student', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  department: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   isAlumni: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -35,6 +32,13 @@ const Student = sequelize.define('student', {
     references: {
         model: College,
         key: 'college_id',
+    }
+  },
+  department_id: {
+    type: DataTypes.INTEGER,
+    references: {
+        model: Department,
+        key: 'department_id',
     }
   },
 }, {
