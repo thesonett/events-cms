@@ -2,13 +2,13 @@ import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
 import Post from './Post.js'
 
-const PostImage = sequelize.define('postImage', {
-  image_id: {
+const PostImage = sequelize.define('postImageModel', {
+  post_image_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  image_url: {
+  post_image_url: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -23,7 +23,7 @@ const PostImage = sequelize.define('postImage', {
     onDelete: 'CASCADE',
   },
 }, {
-  tableName: 'postImages',
+  tableName: 'postImage',
   timestamps: true,
 })
 

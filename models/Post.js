@@ -1,53 +1,36 @@
 import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
-import College from './College.js'
-import Admin from './Admin.js'
+import Event from './Event.js'
 
-const Post = sequelize.define('post', {
+const Post = sequelize.define('postModel', {
   post_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
     autoIncrement: true,
   },
-  title: {
+  post_title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  description: {
+  post_description: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  venue: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  eventDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  category: {
+  post_venue: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   // Foreign keys
-  college_id: {
+  event_id: {
     type: DataTypes.INTEGER,
     references: {
-        model: College,
-        key: 'college_id',
+        model: Event,
+        key: 'event_id',
     }
   },
-  admin_id: {
-    type: DataTypes.INTEGER,
-    references: {
-        model: Admin,
-        key: 'admin_id',
-    },
-    allowNull: false
-  },
 }, {
-  tableName: 'posts',
+  tableName: 'post',
   timestamps: true,
 });
 

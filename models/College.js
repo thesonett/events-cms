@@ -1,7 +1,7 @@
 import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
 
-const College = sequelize.define('college', {
+const College = sequelize.define('collegeModel', {
   college_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -13,7 +13,7 @@ const College = sequelize.define('college', {
     allowNull: false,
   }
 }, {
-  tableName: 'colleges',
+  tableName: 'college',
   timestamps: true,
 });
 

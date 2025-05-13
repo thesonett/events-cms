@@ -2,13 +2,13 @@ import sequelize from '../database/database.js'
 import { DataTypes } from 'sequelize'
 import College from './College.js';
 
-const Admin = sequelize.define('admin', {
-  admin_id: {
+const User = sequelize.define('userModel', {
+  user_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  admin_email: {
+  user_email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
@@ -31,8 +31,8 @@ const Admin = sequelize.define('admin', {
     },
   },
 }, {
-  tableName: 'admins',
+  tableName: 'user',
   timestamps: true,
 });
 
-export default Admin
+export default User

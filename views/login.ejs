@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <title>Login Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h2>Login</h2>
     <form action="/api/login" method="POST">
-        <label for="admin_email">Email:</label><br>
-        <input type="email" id="admin_email" name="admin_email" required><br><br>
+        <label for="user_email">Email:</label><br>
+        <input type="email" id="user_email" name="user_email" required><br><br>
 
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password" required><br><br>
@@ -22,7 +20,10 @@
 
     <% if (notify) { %>
     <script>
-        toastr.warning("<%= notify %>");
+        Swal.fire({
+            text: "<%- notify %>",
+            icon: 'warning'
+        });
     </script>
     <% } %>
 </body>

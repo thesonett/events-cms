@@ -1,13 +1,14 @@
-import {getColleges, getCollegeNameById} from './collegeController.js'
-import { createAdmin, getAdmin, getAdminById, deleteAdminById } from './adminController.js'
+import { getColleges, getCollegeNameById } from './collegeController.js'
 import { createDB } from './dbController.js'
+import { createUser, getUser, getUserById, deleteUserById } from './userController.js'
 
 export {
-    createAdmin,
+    createUser,
+    getUser,
+    getUserById,
+    deleteUserById,
+    
     getColleges,
     getCollegeNameById,
-    getAdmin,
-    getAdminById,
-    deleteAdminById,
     createDB,
 }

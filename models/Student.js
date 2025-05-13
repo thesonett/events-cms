@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize'
 import College from './College.js'
 import Department from './Department.js'
 
-const Student = sequelize.define('student', {
+const Student = sequelize.define('studentModel', {
   student_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -22,10 +22,6 @@ const Student = sequelize.define('student', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  isAlumni: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
   // Foreign keys
   college_id: {
     type: DataTypes.INTEGER,
@@ -42,7 +38,7 @@ const Student = sequelize.define('student', {
     }
   },
 }, {
-  tableName: 'students',
+  tableName: 'student',
   timestamps: true,
 });
 

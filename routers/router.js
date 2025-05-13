@@ -2,11 +2,11 @@ import express from 'express';
 import { isAuthenticated } from '../middleware/auth.js'
 import { 
     getColleges, 
-    createAdmin, 
-    getAdmin, 
     getCollegeNameById, 
-    getAdminById,
-    deleteAdminById,
+    createUser, 
+    getUser, 
+    getUserById,
+    deleteUserById,
 } from '../controller/index.js';
 const router = express.Router();
 
@@ -22,66 +22,69 @@ router.get('/register', async (req, res) => {
 
         res.render('registration', { colleges,  notify });
 
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// create new admin API
-router.post('/createAdmin', async (req, res) => {
+// create new user
+router.post('/createUser', async (req, res) => {
     try {
-        const { admin, success, message } = await createAdmin(req.body);
+        const { user, success, message } = await createUser(req.body);
         if (!success) {
             return res.status(401).json({ error: message });
         }
         
         res.redirect(`/api/register?success=${success}`);
 
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// admin dashboard page
-router.get('/admin/:id', isAuthenticated, async (req, res) => {
-    const admin_id = decodeURIComponent(req.params.id);
+// user dashboard page
+router.get('/user/:id', isAuthenticated, async (req, res) => {
+    const user_id = req.params.id;
 
     try {
-        const { admin, success, message } = await getAdminById(admin_id);
+        const { user, success, message } = await getUserById(user_id);
         if (!success) {
             return res.status(401).json({ error: message });
         }
 
-        const { college_name, success: collegeSuccess, message: collegeMsg } = await getCollegeNameById(admin.college_id);
+        const { college_name, success: collegeSuccess, message: collegeMsg } = await getCollegeNameById(user.college_id);
         if (!collegeSuccess) {
             return res.status(401).json({ error: collegeMsg });
         }
 
-        res.render('admin', { admin, college_name });
+        res.render('user', { user, college_name });
 
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// login API
+// login
 router.post('/login', async (req, res) => {
-    const { admin_email, password } = req.body
+    const { user_email, password } = req.body
 
     try {
-        const { admin, success, message } = await getAdmin({admin_email, password});
+        const { user, success, message } = await getUser({user_email, password});
 
         if (!success) {
             return res.status(401).json({ error: message });
         }
 
         // creating a session
-        req.session.admin = {
-            email: admin.admin_email,
-            id: admin.admin_id
+        req.session.user = {
+            email: user.user_email,
+            id: user.user_id
         };
 
-        res.redirect(`/api/admin/${encodeURIComponent(admin.admin_id)}`);
+        res.redirect(`/api/user/${user.user_id}`);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -103,7 +106,7 @@ router.get('/login', (req, res) => {
     });
 });
 
-// logout API
+// logout
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -116,17 +119,17 @@ router.get('/logout', (req, res) => {
     });
 });
 
-// delete admin by admin email
-router.post('/deleteAdmin/:id', async (req, res) => {
+// delete user
+router.post('/deleteUser/:id', async (req, res) => {
     try {
-        const admin_id = decodeURIComponent(req.params.id);
-        const { success, message } = await deleteAdminById(admin_id);
+        const user_id = req.params.id;
+        const { success, message } = await deleteUserById(user_id);
 
         if (!success) {
             return res.status(401).json({ error: message });
         }
-
-    } catch (error) {
+    }
+    catch (error) {
         res.status(500).json({ error: error.message });
     }
 });

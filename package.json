@@ -21,6 +21,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.14.1",
     "sequelize": "^6.37.7",
+    "sweetalert2": "^11.21.0",
     "tailwindcss": "^4.1.6"
   }
 }

@@ -1,24 +1,19 @@
 import sequelize from '../database/database.js'
-import { College, Admin, Post, PostImage, Student, Department } from '../models/index.js'
+import { College, Student, Department, User, Post, PostImage, Event } from '../models/index.js'
 
 // initializing relationships
-College.hasOne(Admin, { foreignKey: 'college_id', onDelete: 'CASCADE',});
-College.hasMany(Student, { foreignKey: 'college_id' });
-College.hasMany(Post, { foreignKey: 'college_id' });
+College.hasMany(Student, { foreignKey: 'college_id', });
+Student.belongsTo(College, { foreignKey: 'college_id', });
+Department.hasMany(Student, { foreignKey: 'department_id', });
+Student.belongsTo(Department, { foreignKey: 'department_id', });
+College.hasOne(User, { foreignKey: 'college_id', });
+User.belongsTo(College, { foreignKey: 'college_id', });
+Event.hasMany(Post, { foreignKey: 'event_id', });
+Post.belongsTo(Event, { foreignKey: 'event_id', });
+Post.hasMany(PostImage, { foreignKey: 'post_id', onDelete: 'CASCADE', });
+PostImage.belongsTo(Post, { foreignKey: 'post_id', });
 
-Admin.hasMany(Post, { foreignKey: 'admin_id' });
-Admin.belongsTo(College, { foreignKey: 'college_id' });
-
-Post.belongsTo(Admin, { foreignKey: 'admin_id' });
-Post.hasMany(PostImage, { foreignKey: 'post_id', onDelete: 'CASCADE' });
-Post.belongsTo(College, { foreignKey: 'college_id' });
-PostImage.belongsTo(Post, { foreignKey: 'post_id' });
-
-Department.hasMany(Student, { foreignKey: 'department_id', sourceKey: 'department_id', onDelete: 'CASCADE' });
-Student.belongsTo(Department, { foreignKey: 'department_id', targetKey: 'department_id' });
-Student.belongsTo(College, { foreignKey: 'college_id' });
-
-// creating & inserting some dummy values into tables
+// creating db tables
 async function createDB() {
     await sequelize.sync({force: true})
     .then(async () => {
@@ -41,23 +36,8 @@ async function createDB() {
         ]);
 
         await Student.bulkCreate([
-            {
-                name: 'Sonett',
-                rollNo: 101001,
-                email: 'sonettjsaha@gmail.com',
-                isAlumni: false,
-                college_id: 101,
-                department_id: 10
-
-            },
-            {
-                name: 'Joy',
-                rollNo: 102002,
-                email: 'joys0178000@gmail.com',
-                isAlumni: true,
-                college_id: 101,
-                department_id: 20
-            },
+            {name: 'Sonett', rollNo: 101001, email: 'sonettjsaha@gmail.com',college_id: 101,department_id: 10},
+            {name: 'Joy', rollNo: 102002, email: 'joys0178000@gmail.com', college_id: 101, department_id: 20},
         ]);
     })
     .catch((error) => {
