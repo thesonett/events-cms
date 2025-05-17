@@ -6,26 +6,12 @@ const Role = sequelize.define('role_model', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
+    unique: true,
   },
   role: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  // foreign keys
-  users_id: {
-    type: DataTypes.INTEGER,
-    references: {
-        model: Users,
-        key: 'id'
-    }
-  },
-  users_organizing_committee_id: {
-    type: DataTypes.INTEGER,
-    references: {
-        model: Users,
-        key: 'organizing_committee_id'
-    }
+    type: DataTypes.ENUM('user', 'admin'),
+    defaultValue: 'user'
   },
 }, {
   tableName: 'role',

@@ -1,9 +1,14 @@
 import bcrypt from 'bcrypt'
 import { Users } from '../models/index.js'
 
-async function createUser({ first_name, last_name, email, password, username, status, email_verified_at,  is_owner, role, organizing_committee_id}) {
+async function createUser({ first_name, last_name, email, password, username, status, email_verified_at,  is_owner, organizing_committee_id, role_id}) {
+    if (password.length < 8) {
+        return { success: false, message: 'Password must be at least 8 characters long' };
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await Users.create({first_name, last_name, email, password: hashedPassword, username, status, email_verified_at,  is_owner, role, organizing_committee_id});
+
+    const user = await Users.create({first_name, last_name, email, password: hashedPassword, username, status, email_verified_at,  is_owner, organizing_committee_id, role_id});
 
     if(!user) {
         return {success: false, message: 'User creation failed'};
@@ -27,13 +32,16 @@ async function getUser({email, password}) {
     return { success: true, user };
 }
 
-async function getUsersByRole(role) {
-    const user = await Users.findAll({ where: { role, is_owner: true, status: 1 }, attributes: { exclude: ['password'] }, });
+async function getUsersByRoleId(role_id) {
+    const users = await Users.findAll({
+        where: { role_id, is_owner: true, status: 1 },
+        attributes: { exclude: ['password'] },
+    });
 
-    if (!user) 
-        return {success: false, message: 'User not found'};
+    if (!users || users.length === 0) 
+        return { success: false, message: 'Users not found' };
 
-    return { success: true, user };
+    return { success: true, users };
 }
 
 async function getUserById(id) {
@@ -58,7 +66,7 @@ async function deleteUserById(id) {
 export {
     createUser,
     getUser,
-    getUsersByRole,
+    getUsersByRoleId,
     getUserById,
     deleteUserById,
 }

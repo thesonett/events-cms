@@ -20,12 +20,13 @@
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>
         <label for="role">Select Role:</label>
-        <select name="role" id="role">
-            <option value="admin">admin</option>
-            <option value="user">user</option>
+        <select name="role_id" id="role_id">
+            <% roles.forEach(role => { %>
+                <option value="<%= role.id %>"><%= role.role %></option>
+            <% }) %>
         </select><br>
 
-        <label for="college">Select Organizing Committee:</label>
+        <label for="organizing_committee">Select Organizing Committee:</label>
         <select name="organizing_committee_id" id="organizing_committee_id">
             <% organizingCommitties.forEach(organizingCommittee => { %>
                 <option value="<%= organizingCommittee.id %>"><%= organizingCommittee.name %></option>

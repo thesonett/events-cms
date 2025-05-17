@@ -1,6 +1,7 @@
 import { getCategories, getCategoryById } from './categoryController.js'
 import { getOrganizingCommitteeById, getOrganizingCommitties } from './organizingCommitteeController.js'
-import { createUser, deleteUserById, getUser, getUserById, getUsersByRole } from './userController.js'
+import { createUser, deleteUserById, getUser, getUserById, getUsersByRoleId } from './userController.js'
+import { getRoles, getRoleById } from './roleController.js'
 
 export {
     getCategories,
@@ -13,5 +14,8 @@ export {
     deleteUserById, 
     getUser, 
     getUserById,
-    getUsersByRole,
+    getUsersByRoleId,
+
+    getRoles,
+    getRoleById,
 }

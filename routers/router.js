@@ -1,19 +1,31 @@
 import express from 'express';
 import { isAuthenticated } from '../middleware/auth.js'
-import { createUser, deleteUserById, getCategories, getCategoryById, getOrganizingCommitteeById, getOrganizingCommitties, getUser, getUserById, getUsersByRole } from '../controller/index.js';
+import {
+    createUser,
+    deleteUserById,
+    getOrganizingCommitteeById,
+    getOrganizingCommitties,
+    getRoleById,
+    getRoles,
+    getUser,
+    getUserById,
+} from '../controller/index.js';
+
 const router = express.Router();
 
 // registration page
 router.get('/register', async (req, res) => {
     try {
         const { organizingCommitties, success, message } = await getOrganizingCommitties();
+        const { roles } = await getRoles();
+
         if (!success) {
             return res.status(401).json({ error: message });
         }
 
         const notify = req.query.success === 'true' ? 'Registration successful!' : null
 
-        res.render('registration', { organizingCommitties,  notify });
+        res.render('registration', { organizingCommitties, roles, notify });
 
     } 
     catch (error) {
@@ -23,7 +35,7 @@ router.get('/register', async (req, res) => {
 
 // create new user
 router.post('/createUser', async (req, res) => {
-    const {first_name, last_name, email, password, username, role, organizing_committee_id} = req.body
+    const {first_name, last_name, email, password, username, organizing_committee_id, role_id } = req.body
 
     try {
         const { user, success, message } = await createUser({
@@ -31,11 +43,13 @@ router.post('/createUser', async (req, res) => {
             last_name, 
             email, 
             password, 
-            username, 
-            role, 
+            username,
             status: 1,
             is_owner: true,  
-            organizing_committee_id});
+            organizing_committee_id,
+            role_id,
+        });
+
 
         if (!success) {
             return res.status(401).json({ error: message });
@@ -60,8 +74,9 @@ router.get('/user/:id', isAuthenticated, async (req, res) => {
         }
 
         const { name } = await getOrganizingCommitteeById(user.organizing_committee_id);
+        const { role } = await getRoleById(user.role_id)
 
-        res.render('user', { user, name });
+        res.render('user', { user, name, role });
     } 
     catch (error) {
         res.status(500).json({ error: error.message });

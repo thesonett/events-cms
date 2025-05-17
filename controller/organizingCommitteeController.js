@@ -11,14 +11,15 @@ async function getOrganizingCommitties() {
 }
 
 async function getOrganizingCommitteeById(id) {
-    const { name }  = await OrganizingCommittee.findOne({ where: { id }, attributes: ['name'] });
+    const oc = await OrganizingCommittee.findOne({ where: { id }, attributes: ['name'] });
 
-    if(!name) {
-        return {success: false, message: 'Organizing committiee name not found!'};
+    if (!oc) {
+        return { success: false, message: 'Organizing committee not found!' };
     }
 
-    return {success: true, name};
+    return { success: true, name: oc.name };
 }
+
 
 export {
     getOrganizingCommitties,

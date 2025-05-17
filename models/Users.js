@@ -1,6 +1,7 @@
 import sequelize from '../database/config.js'
 import { DataTypes } from 'sequelize'
 import OrganizingCommittee from './OrganizingCommittee.js'
+import Role from './Role.js';
 
 const User = sequelize.define('users_model', {
   id: {
@@ -43,10 +44,6 @@ const User = sequelize.define('users_model', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
-  role: {
-    type: DataTypes.ENUM('user', 'admin'),
-    defaultValue: 'user'
-  },
   // foreign keys
   organizing_committee_id: {
     type: DataTypes.INTEGER,
@@ -56,8 +53,14 @@ const User = sequelize.define('users_model', {
       key: 'id',
     },
   },
-
-
+  role_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Role,
+      key: 'id',
+    },
+  },
 }, {
   tableName: 'users',
   timestamps: true,
