@@ -1,20 +1,20 @@
-import sequelize from '../database/database.js'
+import sequelize from '../database/config.js'
 import { DataTypes } from 'sequelize'
 
-const College = sequelize.define('collegeModel', {
-  college_id: {
+const OrganizingCommittee = sequelize.define('organizing_committee_model', {
+  id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
     unique: true
   },
-  college_name: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   }
 }, {
-  tableName: 'colleges',
+  tableName: 'organizing_committee',
   timestamps: true,
 });
 
-export default College
+export default OrganizingCommittee

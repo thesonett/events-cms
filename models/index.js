@@ -1,17 +1,17 @@
-import College from './College.js'
-import User from './User.js'
-import Post from './Post.js'
-import PostImage from './PostImage.js'
-import Student from './Student.js'
-import Department from './Department.js'
-import Event from './Event.js'
+import Category from './Category.js'
+import Events from './Events.js'
+import Images from './Images.js'
+import OrganizingCommittee from './OrganizingCommittee.js'
+import Posts from './Posts.js'
+import Role from './Posts.js'
+import Users from './Users.js'
 
 export {
-    College,
-    User,
-    Post,
-    PostImage,
-    Student,
-    Department,
-    Event,
+    Category,
+    Events,
+    Images,
+    OrganizingCommittee,
+    Posts,
+    Role,
+    Users,
 }

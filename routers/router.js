@@ -1,26 +1,19 @@
 import express from 'express';
 import { isAuthenticated } from '../middleware/auth.js'
-import { 
-    getColleges, 
-    getCollegeNameById, 
-    createUser, 
-    getUser, 
-    getUserById,
-    deleteUserById,
-} from '../controller/index.js';
+import { createUser, deleteUserById, getCategories, getCategoryById, getOrganizingCommitteeById, getOrganizingCommitties, getUser, getUserById, getUsersByRole } from '../controller/index.js';
 const router = express.Router();
 
 // registration page
 router.get('/register', async (req, res) => {
     try {
-        const { colleges, success, message } = await getColleges();
+        const { organizingCommitties, success, message } = await getOrganizingCommitties();
         if (!success) {
             return res.status(401).json({ error: message });
         }
 
         const notify = req.query.success === 'true' ? 'Registration successful!' : null
 
-        res.render('registration', { colleges,  notify });
+        res.render('registration', { organizingCommitties,  notify });
 
     } 
     catch (error) {
@@ -30,8 +23,20 @@ router.get('/register', async (req, res) => {
 
 // create new user
 router.post('/createUser', async (req, res) => {
+    const {first_name, last_name, email, password, username, role, organizing_committee_id} = req.body
+
     try {
-        const { user, success, message } = await createUser(req.body);
+        const { user, success, message } = await createUser({
+            first_name, 
+            last_name, 
+            email, 
+            password, 
+            username, 
+            role, 
+            status: 1,
+            is_owner: true,  
+            organizing_committee_id});
+
         if (!success) {
             return res.status(401).json({ error: message });
         }
@@ -44,23 +49,19 @@ router.post('/createUser', async (req, res) => {
     }
 });
 
-// user dashboard page
+// dashboard page
 router.get('/user/:id', isAuthenticated, async (req, res) => {
-    const user_id = req.params.id;
+    const id = req.params.id;
 
     try {
-        const { user, success, message } = await getUserById(user_id);
+        const { user, success, message } = await getUserById(id);
         if (!success) {
             return res.status(401).json({ error: message });
         }
 
-        const { college_name, success: collegeSuccess, message: collegeMsg } = await getCollegeNameById(user.college_id);
-        if (!collegeSuccess) {
-            return res.status(401).json({ error: collegeMsg });
-        }
+        const { name } = await getOrganizingCommitteeById(user.organizing_committee_id);
 
-        res.render('user', { user, college_name });
-
+        res.render('user', { user, name });
     } 
     catch (error) {
         res.status(500).json({ error: error.message });
@@ -69,22 +70,17 @@ router.get('/user/:id', isAuthenticated, async (req, res) => {
 
 // login
 router.post('/login', async (req, res) => {
-    const { user_email, password } = req.body
+    const { email, password } = req.body
 
     try {
-        const { user, success, message } = await getUser({user_email, password});
+        const { user, success, message } = await getUser({email, password});
 
         if (!success) {
             return res.status(401).json({ error: message });
         }
-
-        // creating a session
-        req.session.user = {
-            email: user.user_email,
-            id: user.user_id
-        };
-
-        res.redirect(`/api/user/${user.user_id}`);
+        
+        req.session.user = { id: user.id };
+        res.redirect(`/api/user/${user.id}`);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -122,8 +118,8 @@ router.get('/logout', (req, res) => {
 // delete user
 router.post('/deleteUser/:id', async (req, res) => {
     try {
-        const user_id = req.params.id;
-        const { success, message } = await deleteUserById(user_id);
+        const id = req.params.id;
+        const { success, message } = await deleteUserById(id);
 
         if (!success) {
             return res.status(401).json({ error: message });

@@ -9,12 +9,14 @@
     <h1>Dashboard</h1>
     
     <% if (user) { %>
-        <p><strong>User ID:</strong> <%= user.user_id %></p>
+        <p><strong>Account ID:</strong> <%= user.id %></p>
+        <p><strong>First Name:</strong> <%= user.first_name %></p>
+        <p><strong>Last Name:</strong> <%= user.last_name %></p>
         <p><strong>Username:</strong> <%= user.username %></p>
-        <p><strong>Email:</strong> <%= user.user_email %></p>
-        <p><strong>College:</strong> <%= college_name %></p>
-        <p><strong>Created At:</strong> <%= user.createdAt %></p>
-        <p><strong>Updated At:</strong> <%= user.updatedAt %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Status:</strong> <%= user.status ? 'Active' : 'Inactive' %></p>
+        <p><strong>Organizing Committee:</strong> <%= name %></p>
+        <p><strong>Email Verified At:</strong> <%= user.email_verified_at %></p>
     <% } 
     else { %>
         <p>User not found!</p>

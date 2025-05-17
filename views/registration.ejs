@@ -9,17 +9,26 @@
 <body>    
    <h1>Registration</h1>
     <form action="/api/createUser" method="POST">
-        <label for="user_email">Email:</label>
-        <input type="email" id="user_email" name="user_email" required><br>
+        <label for="first_name">First name:</label>
+        <input type="text" id="first_name" name="first_name" required><br>
+        <label for="last_name">Last name:</label>
+        <input type="text" id="last_name" name="last_name" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>
+        <label for="role">Select Role:</label>
+        <select name="role" id="role">
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+        </select><br>
 
-        <label for="college">Select College:</label>
-        <select name="college_id" id="college_id">
-            <% colleges.forEach(college => { %>
-                <option value="<%= college.college_id %>"><%= college.college_name %></option>
+        <label for="college">Select Organizing Committee:</label>
+        <select name="organizing_committee_id" id="organizing_committee_id">
+            <% organizingCommitties.forEach(organizingCommittee => { %>
+                <option value="<%= organizingCommittee.id %>"><%= organizingCommittee.name %></option>
             <% }) %>
         </select><br>
         <button type="submit">Submit</button>

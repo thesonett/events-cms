@@ -1,16 +1,3 @@
-PLANNING/TASKS:
-1. ORM Sequelize Models creation & creating tables
-2. Admin authetication check with JWT token (if admin already present, login otherwise signup + logout)
-3. Fetch events based on college_id, filter events based on year & category, add new post
-
-4. Fetch students based on college_id, filter students based on college_id & alumni status (data needed for notify functionality, whom do I want to send email)
-5. Notification system. (notify only the non-alumni students to upcoming events via mail/notification)
-
-6. Admin Functionality (CURD operations on events)
-7. Admin portal (details of admin)
-
-8. Styling with tailwind + aos animation + Toastr for notifications
-
-
-TODO:
-1. Creating controllers for models.
+// TODO:
+// 1. write all the controllers. 
+// 2. role drop-list from role table (update registration page for role selection)

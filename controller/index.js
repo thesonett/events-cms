@@ -1,14 +1,17 @@
-import { getColleges, getCollegeNameById } from './collegeController.js'
-import { createDB } from './dbController.js'
-import { createUser, getUser, getUserById, deleteUserById } from './userController.js'
+import { getCategories, getCategoryById } from './categoryController.js'
+import { getOrganizingCommitteeById, getOrganizingCommitties } from './organizingCommitteeController.js'
+import { createUser, deleteUserById, getUser, getUserById, getUsersByRole } from './userController.js'
 
 export {
-    createUser,
-    getUser,
+    getCategories,
+    getCategoryById,
+
+    getOrganizingCommitteeById,
+    getOrganizingCommitties,
+
+    createUser, 
+    deleteUserById, 
+    getUser, 
     getUserById,
-    deleteUserById,
-    
-    getColleges,
-    getCollegeNameById,
-    createDB,
+    getUsersByRole,
 }
