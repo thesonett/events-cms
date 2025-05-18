@@ -26,8 +26,6 @@ const Images = sequelize.define('images_model', {
     type: DataTypes.ENUM('post', 'event'),
     defaultValue: 'event'
   },
-  // foreign keys
-  
 }, {
   tableName: 'images',
   timestamps: true,

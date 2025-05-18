@@ -3,17 +3,18 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const sequelize = new Sequelize({
-    host: 'localhost',
-    username: 'root',
-    password: 'root',
-    database: 'events_cms',
-    dialect: 'mysql',
+    host: process.env.DB_HOST,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE_NAME,
+    dialect: process.env.DB_DIALECT,
 })
 
 await sequelize.authenticate().then(async () => {
-    console.log('\n :::: Database connected!! ::::\n')
+    console.log('\nDatabase connected!!\n')
+
 }).catch((error) => {
-    console.log('\n:::: Unable to connect Database :::: \n', error)
+    console.log('\nDatabase connection failed!\n', error)
 })
 
 export default sequelize;

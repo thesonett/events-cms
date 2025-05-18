@@ -55,7 +55,7 @@ router.post('/createUser', async (req, res) => {
             return res.status(401).json({ error: message });
         }
         
-        res.redirect(`/api/register?success=${success}`);
+        res.redirect(`/users/register?success=${success}`);
 
     } 
     catch (error) {
@@ -95,7 +95,7 @@ router.post('/login', async (req, res) => {
         }
         
         req.session.user = { id: user.id };
-        res.redirect(`/api/user/${user.id}`);
+        res.redirect(`/users/user/${user.id}`);
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -126,7 +126,7 @@ router.get('/logout', (req, res) => {
 
         res.clearCookie('connect.sid');
         res.setHeader('Cache-Control', 'no-store');
-        res.redirect('/api/login')
+        res.redirect('/users/login')
     });
 });
 

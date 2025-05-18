@@ -1,3 +1,6 @@
-// TODO:
-// 1. write all the controllers. 
-// 2. role drop-list from role table (update registration page for role selection)
+TODOS:
+
+1. .env file adding + router refactoring + creating controller for images. ✅
+2. figma design for home, events and posts, contact us, login.
+3. creating controllers for events and posts.
+4. making routers + testing.

@@ -32,6 +32,27 @@ async function getUser({email, password}) {
     return { success: true, user };
 }
 
+async function getUsers() {
+    const users = await Users.findAll({ attributes: { exclude: ['password'] } })
+
+    if (!users || users.length === 0) 
+        return { success: false, message: 'Users not found' };
+
+    return { success: true, users };
+}
+
+async function getUserByRoleId(role_id) {
+    const user = await Users.findOne({
+        where: { role_id, is_owner: true, status: 1 },
+        attributes: { exclude: ['password'] },
+    });
+
+    if (!user) 
+        return { success: false, message: 'User not found' };
+
+    return { success: true, user };
+}
+
 async function getUsersByRoleId(role_id) {
     const users = await Users.findAll({
         where: { role_id, is_owner: true, status: 1 },
@@ -53,6 +74,16 @@ async function getUserById(id) {
     return { success: true, user };
 }
 
+async function getUsersById(id) {
+    const users = await Users.findAll({ where: { id, is_owner: true }, attributes: { exclude: ['password'] } })
+
+    if (!users || users.length === 0) 
+        return { success: false, message: 'Users not found' };
+
+    return { success: true, users };
+}
+
+
 async function deleteUserById(id) {
     const user = await Users.destroy({ where: { id } });
     
@@ -63,10 +94,40 @@ async function deleteUserById(id) {
     return { success: true, message: 'User got deleted!'}
 }
 
+
+async function updateUserById(id, updates) {
+    if (updates.password && updates.password.length < 8) {
+        return { success: false, message: 'Password must be at least 8 characters long' };
+    }
+
+    if (updates.password) {
+        updates.password = await bcrypt.hash(updates.password, 10);
+    }
+
+    const [affectedRows] = await Users.update(updates, { where: { id } });
+
+    if (!affectedRows) {
+        return { success: false, message: 'User not found or no changes made' };
+    }
+
+    const updatedUser = await Users.findByPk(id);
+    console.log(updatedUser)
+    
+    return { success: true, message: 'User got updated!' };
+}
+
+
 export {
     createUser,
-    getUser,
-    getUsersByRoleId,
-    getUserById,
     deleteUserById,
+    updateUserById,
+
+    getUser,
+    getUsers,
+
+    getUserByRoleId,
+    getUsersByRoleId,
+
+    getUserById,
+    getUsersById,
 }
