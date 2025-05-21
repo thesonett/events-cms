@@ -11,6 +11,7 @@ const Posts = sequelize.define('posts_model', {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   description: {
     type: DataTypes.STRING,
@@ -25,7 +26,7 @@ const Posts = sequelize.define('posts_model', {
     allowNull: false,
   },
   duration: {
-    type: DataTypes.TINYINT,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   organizer: {

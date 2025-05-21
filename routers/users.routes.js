@@ -15,134 +15,86 @@ const router = express.Router();
 
 // registration page
 router.get('/register', async (req, res) => {
-    try {
-        const { organizingCommitties, success, message } = await getOrganizingCommitties();
-        const { roles } = await getRoles();
+    const notify = req.flash('message')[0];
 
-        if (!success) {
-            return res.status(401).json({ error: message });
-        }
+    const { organizingCommitties, success, message } = await getOrganizingCommitties();
+    const { roles } = await getRoles();
 
-        const notify = req.query.success === 'true' ? 'Registration successful!' : null
-
-        res.render('registration', { organizingCommitties, roles, notify });
-
-    } 
-    catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    res.render('registration', { organizingCommitties, roles, notify });
 });
 
 // create new user
 router.post('/createUser', async (req, res) => {
     const {first_name, last_name, email, password, username, organizing_committee_id, role_id } = req.body
-
-    try {
-        const { user, success, message } = await createUser({
-            first_name, 
-            last_name, 
-            email, 
-            password, 
-            username,
-            status: 1,
-            is_owner: true,  
-            organizing_committee_id,
-            role_id,
-        });
-
-
-        if (!success) {
-            return res.status(401).json({ error: message });
-        }
-        
-        res.redirect(`/users/register?success=${success}`);
-
-    } 
-    catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const { message } = await createUser({ first_name, last_name, email, password, username, status: 1, is_owner: true, organizing_committee_id, role_id });
+    
+    req.flash('message', message);
+    res.redirect(`/users/register`);
 });
 
 // dashboard page
 router.get('/user/:id', isAuthenticated, async (req, res) => {
     const id = req.params.id;
 
-    try {
-        const { user, success, message } = await getUserById(id);
-        if (!success) {
-            return res.status(401).json({ error: message });
-        }
+    const { user } = await getUserById(id);
+    const { name } = await getOrganizingCommitteeById(user.organizing_committee_id);
+    const { role } = await getRoleById(user.role_id)
 
-        const { name } = await getOrganizingCommitteeById(user.organizing_committee_id);
-        const { role } = await getRoleById(user.role_id)
-
-        res.render('user', { user, name, role });
-    } 
-    catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    res.render('user', { user, name, role });
 });
 
 // login
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
+    const { user, success, message } = await getUser({ email, password });
 
-    try {
-        const { user, success, message } = await getUser({email, password});
-
-        if (!success) {
-            return res.status(401).json({ error: message });
-        }
-        
-        req.session.user = { id: user.id };
-        res.redirect(`/users/user/${user.id}`);
-
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (!success) {
+        req.flash('message', message);
+        res.redirect('/users/login');
     }
+
+    req.session.user = { id: user.id };
+    req.flash('message', message);
+    res.redirect(`/users/user/${user.id}`);
 });
+
 
 // login page
 router.get('/login', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error('Failed to destroy session:', err);
-        }
+    const notify = req.flash('message')[0]
 
-        res.clearCookie('connect.sid');
-        res.setHeader('Cache-Control', 'no-store');
-
-        const notify = req.query.notify || null;
-        res.render('login', { notify });
-    });
+    res.setHeader('Cache-Control', 'no-store')
+    res.render('login', { notify })
 });
 
 // logout
 router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({ error: 'Failed to logout' });
+    const notify = req.flash('message')[0]
+
+    req.session.destroy((error) => {
+        if (error) {
+            console.error('Failed to destroy session!\n', error)
         }
 
-        res.clearCookie('connect.sid');
-        res.setHeader('Cache-Control', 'no-store');
-        res.redirect('/users/login')
+        res.clearCookie('connect.sid')
+        res.setHeader('Cache-Control', 'no-store')
+        res.render('login', { notify })
     });
 });
 
+
 // delete user
 router.post('/deleteUser/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const { success, message } = await deleteUserById(id);
+    const id = req.params.id;
+    const { success, message } = await deleteUserById(id);
 
-        if (!success) {
-            return res.status(401).json({ error: message });
-        }
+    if (success) {
+        req.flash('message', message);
+        return res.redirect('/users/register');
     }
-    catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+
+    res.status(500).send({ error: message });
 });
+
 
 export default router;

@@ -1,95 +1,161 @@
 import { Images } from '../models/index.js'
 
-async function uploadImage({ file_name, original_filename, size, entity_type, entity_id }) {
+async function createImage({ file_name, original_filename, size, entity_type, entity_id }) {
     try {
         const image = await Images.create({ file_name, original_filename, size, entity_type, entity_id });
         return { success: true, message: 'Image uploaded!', image };
+
     } 
     catch (error) {
         console.error('Upload failed: ', error);
-        return { success: false, message: 'Unable to upload image!'};
+        return { success: false, message: 'Unable to upload image!' };
     }
 }
 
-async function deleteImage(id) {
-    const image = await Images.destroy({ where: { id }})
-
-    if(!image) {
-        return {success: false, message: 'Unable to delete image or image not found!'};
+async function deleteImageById(id) {
+    try {
+        const image = await Images.destroy({ where: { id } });
+        return image ? { success: true, message: 'Image deleted!' } : 
+                       { success: false, message: 'Unable to delete image or image not found!' };
     }
-
-    return { success: true, message: 'Image deleted!', image };
+    catch (error) {
+        console.log(error)
+        return { success: false, message: 'Exception occured inside deleteImageById!' }
+    }
 }
 
 async function updateImageById(id, updates) {
-    const [affectedRows] = await Images.update(updates, { where: { id } });
-
-    if (!affectedRows) {
-        return { success: false, message: 'Image not found or no changes made!' };
-    }
-
-    const updatedImage = await Images.findByPk(id);
+    try {
+        const [status] = await Images.update(updates, { where: { id } });
+        if (!status) {
+            return { success: false, message: 'Image not found or no changes made!' };
+        }
     
-    return { success: true, message: 'Image got updated!', updatedImage };
-}
-
-async function getImagesByEntityType(entity_type) {
-    const images = await Images.findAll({ where: { entity_type }})
-
-    if(!images.length) {
-        return {success: false, message: 'Images not found!'};
+        const updatedImage = await Images.findByPk(id);
+        return { success: true, message: 'Image updated!', updatedImage };
     }
-
-    return {success: true, images };
-}
-
-async function getImagesById(id) {
-    const images = await Images.findAll({ where: { id }})
-
-    if(!images.length) {
-        return {success: false, message: 'Images not found!'};
+    catch (error) {
+        console.log(error)
+        return { success: false, message: 'Exception occured inside updateImageById!' }
     }
-
-    return {success: true, images };
 }
 
 async function getImageById(id) {
-    const image = await Images.findOne({ where: { id }})
-
-    if(!image) {
-        return {success: false, message: 'Image not found!'};
+    try {
+        const image = await Images.findOne({ where: { id } });
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
     }
-
-    return {success: true, image };
-}
-
-async function getImagesByEntityId(entity_id) {
-    const images = await Images.findAll({ where: { entity_id }})
-
-    if(!images.length) {
-        return {success: false, message: 'Images not found!'};
+    catch (error) {
+        console.log(error)
+        return { success: false, message: 'Exception occured inside getImageById!' }
     }
-
-    return {success: true, images };
 }
 
 async function getImageByEntityId(entity_id) {
-    const image = await Images.findOne({ where: { entity_id }})
-
-    if(!image) {
-        return {success: false, message: 'Image not found!'};
+    try {
+        const image = await Images.findOne({ where: { entity_id } });
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
     }
-
-    return {success: true, image };
+    catch (error) {
+        console.log(error)
+        return { success: false, message: 'Exception occured inside getImageByEntityId!' }
+    }
 }
 
+async function getImagesByEntityId(entity_id) {
+    try {
+        const images = await Images.findAll({ where: { entity_id } });
+        return images.length ? { success: true, images } : { success: false, message: 'Images not found!' };
+    }
+    catch (error) {
+        console.log(error)
+        return { success: false, message: 'Exception occured inside getImagesByEntityId!' }
+    }
+}
+
+async function getImageByFileName(file_name) {
+    try {
+        const image = await Images.findOne({ where: { file_name } });
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
+    } 
+    catch (error) {
+        console.error(error);
+        return { success: false, message: 'Exception occurred in getImageByFileName!' };
+    }
+}
+
+async function getImagesByFileName(file_name) {
+    try {
+        const images = await Images.findAll({ where: { file_name } });
+        return images.length ? { success: true, images } : { success: false, message: 'Images not found!' };
+    } 
+    catch (error) {
+        console.error(error);
+        return { success: false, message: 'Exception occurred in getImagesByFileName!' };
+    }
+}
+
+async function getImageByFileNameAndEntityType(file_name, entity_type) {
+    try {
+        const image = await Images.findOne({ where: { file_name, entity_type } });
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
+    } 
+    catch (error) {
+        console.error(error);
+        return { success: false, message: 'Exception occurred in getImageByFileNameAndEntityType!' };
+    }
+}
+
+async function getImagesByFileNameAndEntityType(file_name, entity_type) {
+    try {
+        const images = await Images.findAll({ where: { file_name, entity_type } });
+        return images.length ? { success: true, images } : { success: false, message: 'Images not found!' };
+    } 
+    catch (error) {
+        console.error(error);
+        return { success: false, message: 'Exception occurred in getImagesByFileNameAndEntityType!' };
+    }
+}
+
+async function getImageByEntityType(entity_id, entity_type) {
+    try {
+        const image = await Images.findOne({ where: { entity_id, entity_type } });
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
+    } 
+    catch (error) {
+        console.error(error);
+        return { success: false, message: 'Exception occurred in getImageByEntityType!' };
+    }
+}
+
+async function getImagesByEntityType(entity_id, entity_type) {
+    try {
+        const images = await Images.findAll({ where: { entity_id, entity_type } });
+        return images.length ? { success: true, images } : { success: false, message: 'Images not found!' };
+    } 
+    catch (error) {
+        console.error(error);
+        return { success: false, message: 'Exception occurred in getImagesByEntityType!' };
+    }
+}
+
+
 export {
-    uploadImage,
-    deleteImage,
+    createImage,
+    deleteImageById,
     updateImageById,
-    getImagesByEntityType,
-    getImagesByEntityId,
-    getImageByEntityId,
-    getImagesById,
+
     getImageById,
+
+    getImageByEntityId,
+    getImagesByEntityId,
+
+    getImageByFileName,
+    getImagesByFileName,
+
+    getImageByFileNameAndEntityType,
+    getImagesByFileNameAndEntityType,
+
+    getImageByEntityType,
+    getImagesByEntityType,
 }

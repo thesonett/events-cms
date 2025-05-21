@@ -6,8 +6,7 @@ const Role = sequelize.define('role_model', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false,
-    unique: true,
+    autoIncrement: true,
   },
   role: {
     type: DataTypes.ENUM('user', 'admin'),

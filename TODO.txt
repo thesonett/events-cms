@@ -1,6 +1,4 @@
 TODOS:
 
-1. .env file adding + router refactoring + creating controller for images. ✅
-2. figma design for home, events and posts, contact us, login.
-3. creating controllers for events and posts.
-4. making routers + testing.
+1. Have to work on routes now.
+2. Make dashboard page by figma design.

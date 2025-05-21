@@ -3,7 +3,8 @@ function isAuthenticated(req, res, next) {
         return next();
     }
 
-    return res.redirect('/api/login?notify=' + encodeURIComponent('Unauthorized. Please log in!'));
+    req.flash('message', 'Unauthorized. Please log in!');
+    return res.redirect('/users/login');
 }
 
 export {
