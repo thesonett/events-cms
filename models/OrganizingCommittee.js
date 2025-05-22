@@ -9,7 +9,7 @@ const OrganizingCommittee = sequelize.define('organizing_committee_model', {
     unique: true
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
   }
 }, {

@@ -8,15 +8,15 @@ const Images = sequelize.define('images_model', {
     autoIncrement: true,
   },
   file_name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
   original_filename: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
   },
   size: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
   },
   entity_id: {
     type: DataTypes.INTEGER,

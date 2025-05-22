@@ -2,6 +2,8 @@ import express from 'express'
 import session from 'express-session'
 import dotenv from 'dotenv';
 import flash from 'connect-flash';
+import cookieParser from 'cookie-parser';
+
 import router from './routers/index.js'
 import initializeDB from './database/db.js'
 
@@ -23,6 +25,7 @@ app.use(session({
 }));
 
 app.use(flash())
+app.use(cookieParser())
 
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private')

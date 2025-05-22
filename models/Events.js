@@ -11,11 +11,11 @@ const Events = sequelize.define('events_model', {
         autoIncrement: true,
     },
     title: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false
     },
     description: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false
     },
     date: {
