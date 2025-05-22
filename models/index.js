@@ -6,26 +6,23 @@ import OrganizingCommittee from './OrganizingCommittee.js';
 import Posts from './Posts.js';
 import Images from './Images.js';
 
-function applyAssociations() {
-  Category.hasMany(Events, { foreignKey: "category_id" });
-  Events.belongsTo(Category, { foreignKey: "category_id" });
+// defining relationships
+Category.hasMany(Events, { foreignKey: "category_id" });
+Events.belongsTo(Category, { foreignKey: "category_id" });
 
-  Events.hasMany(Posts, { foreignKey: "event_id" });
-  Posts.belongsTo(Events, { foreignKey: "event_id" });
+Events.hasMany(Posts, { foreignKey: "event_id" });
+Posts.belongsTo(Events, { foreignKey: "event_id" });
 
-  Events.belongsTo(OrganizingCommittee, { foreignKey: "organizing_committee_id" });
-  OrganizingCommittee.hasMany(Events, { foreignKey: "organizing_committee_id" });
+Events.belongsTo(OrganizingCommittee, { foreignKey: "organizing_committee_id" });
+OrganizingCommittee.hasMany(Events, { foreignKey: "organizing_committee_id" });
 
-  Events.belongsTo(Role, { foreignKey: "role_id" });
+Events.belongsTo(Role, { foreignKey: "role_id" });
 
-  Users.belongsTo(OrganizingCommittee, { foreignKey: "organizing_committee_id" });
-  OrganizingCommittee.hasMany(Users, { foreignKey: "organizing_committee_id" });
+Users.belongsTo(OrganizingCommittee, { foreignKey: "organizing_committee_id" });
+OrganizingCommittee.hasMany(Users, { foreignKey: "organizing_committee_id" });
 
-  Users.hasMany(Role, { foreignKey: "users_id" });
-  Users.hasMany(Role, { foreignKey: "users_organizing_committee_id" });
-}
-
-applyAssociations();
+Users.hasMany(Role, { foreignKey: "users_id" });
+Users.hasMany(Role, { foreignKey: "users_organizing_committee_id" });
 
 export {
   Users,

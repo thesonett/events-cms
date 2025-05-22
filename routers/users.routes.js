@@ -6,7 +6,7 @@ import {
     createUser,
     deleteUserById,
     getOrganizingCommitteeById,
-    getOrganizingCommitties,
+    getOrganizingCommittees,
     getRoleById,
     getRoles,
     getUser,
@@ -20,13 +20,13 @@ const router = express.Router()
 router.get('/register', async (req, res) => {
     const notify = req.flash('message')[0]
 
-    const { organizingCommitties, success, message } = await getOrganizingCommitties()
+    const { organizingCommitties, success, message } = await getOrganizingCommittees()
     const rolesResult = await getRoles();
 
     const roles = rolesResult.success ? rolesResult.roles : [];
 
     res.render('registration', { organizingCommitties, roles, notify })
-});
+})
 
 // create new user
 router.post('/create', async (req, res) => {
@@ -35,7 +35,7 @@ router.post('/create', async (req, res) => {
     
     req.flash('message', message)
     res.redirect(`/users/register`)
-});
+})
 
 // dashboard page
 router.get('/user/:id', isAuthenticated, async (req, res) => {
@@ -45,7 +45,7 @@ router.get('/user/:id', isAuthenticated, async (req, res) => {
     const { role } = await getRoleById(user.role_id)
 
     res.render('user', { user, name, role })
-});
+})
 
 // login
 router.post('/login', async (req, res) => {
@@ -68,7 +68,7 @@ router.post('/login', async (req, res) => {
 
     req.flash('message', message)
     return res.redirect(`/users/user/${user.id}`)
-});
+})
 
 
 // login page
@@ -78,7 +78,7 @@ router.get('/login', (req, res) => {
     res.clearCookie('connect.sid')
     res.setHeader('Cache-Control', 'no-store')
     res.render('login', { notify })
-});
+})
 
 // logout
 router.get('/logout', (req, res) => {
@@ -91,12 +91,10 @@ router.get('/logout', (req, res) => {
 
         res.clearCookie('connect.sid')
         res.clearCookie('token')
-        res.setHeader('Cache-Control', 'no-store')
-        res.render('login', { notify })
-    });
-
-});
-
+        req.flash('message', 'You have been logged out successfully')
+        res.redirect('/users/login')
+    })
+})
 
 // delete user
 router.post('/delete/:id', async (req, res) => {
@@ -109,7 +107,7 @@ router.post('/delete/:id', async (req, res) => {
     }
 
     res.status(500).send({ error: message })
-});
+})
 
 
 export default router;

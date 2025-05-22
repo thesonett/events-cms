@@ -1,6 +1,10 @@
 import { Events } from '../models/index.js'
 
 async function createEvent({title, description, date, category_id, organizing_committee_id, role_id}) {
+    if (!title || !date || !category_id || !organizing_committee_id || !role_id) {
+        return { success: false, message: 'Missing required event fields!' }
+    }
+
     try {
         const event = await Events.create({title, description, date, category_id, organizing_committee_id, role_id})
 
@@ -8,7 +12,7 @@ async function createEvent({title, description, date, category_id, organizing_co
     }
     catch(error) {
         console.error('Event creation failed! \n', error)
-        return { success: false, message: 'Unable to upload image!'}
+        return { success: false, message: 'Event creation failed!' }
     }
 }
 
@@ -98,22 +102,6 @@ async function getEventById(id) {
 }
 
 
-async function getEventsById(id) {
-    try {
-        const events = await Events.findAll({ where: { id } })
-    
-        if(!events || !events.length) {
-            return { success: false, message: 'Events not found!'}
-        }
-    
-        return { success: true, events }
-    }
-    catch(error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getEventsById!' }
-    }
-}
-
 async function getEventsByYear(id, date) {
     if (!date || !date.includes('/')) {
         return { success: false, message: 'Invalid date format!' }
@@ -146,8 +134,6 @@ export {
     updateEventById,
 
     getEventById,
-    getEventsById,
-
     getEventsByCategoryId,
     getEventsByOrganizingCommitteeId,
     getEventsByRoleId,

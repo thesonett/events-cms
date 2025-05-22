@@ -5,11 +5,10 @@ import flash from 'connect-flash';
 import cookieParser from 'cookie-parser';
 
 import router from './routers/index.js'
-import initializeDB from './database/db.js'
+import initializeDB from './database/data.js'
 
 dotenv.config();
 const app = express()
-const port = 3000
 
 // middlewares
 app.set('view engine', 'ejs')
@@ -41,6 +40,6 @@ app.use('/', router)
 initializeDB()
 
 // server
-app.listen(port, () => {
-    console.log(`\n::: Server started at port number: ${port} ::::\n`)
+app.listen(process.env.DB_PORT, () => {
+    console.log(`\n::: Server started at port number: ${process.env.DB_PORT} ::::\n`)
 })

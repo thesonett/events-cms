@@ -17,7 +17,7 @@ async function deletePostByEventId(event_id) {
         const post = await Posts.destroy({ where: { event_id }})
     
         if(!post) {
-            return {success: false, message: 'Unable to delete post or post not found!'};
+            return {success: false, message: 'Unable to delete post or post not found!'}
         }
     
         return { success: true, message: 'Post deleted successfully' }
@@ -66,18 +66,18 @@ async function updatePostByEventId(event_id, updates) {
 
 async function updatePostById(id, updates) {
     try {
-        const [status] = await Posts.update(updates, { where: { id } });
+        const [status] = await Posts.update(updates, { where: { id } })
 
         if (!status) {
             return { success: false, message: 'Post not found or nothing to update.' }
         }
 
-        const updatedPost = await Posts.findByPk(id);
+        const updatedPost = await Posts.findByPk(id)
         return { success: true, message: 'Post updated successfully!', updatedPost }
 
     } 
     catch (error) {
-       console.error(error);
+       console.error(error)
        return { success: false, message: 'Exception occurred inside updatePostById!' }
     }
 }
@@ -100,7 +100,7 @@ async function getPostById(id) {
     } 
     catch (error) {
         console.error(error)
-        return { success: false, message: 'Exception occurredinside getPostById!' }
+        return { success: false, message: 'Exception occurred inside getPostById!' }
     }
 }
 
@@ -108,7 +108,9 @@ async function getPostsByEventId(event_id) {
     try {
         // gonna help in pagination later
         const { count, rows } = await Posts.findAndCountAll({ where: { event_id } });
-        return count ? { success: true, posts: rows } : { success: false, message: 'No posts found' };
+        return count ? 
+            { success: true, posts: rows } : 
+            { success: false, message: 'No posts found' };
     }
     catch(error) {
         console.error(error)
@@ -119,7 +121,9 @@ async function getPostsByEventId(event_id) {
 async function getPostByOrganizerName(organizer) {
     try {
         const post = await Posts.findOne({ where: { organizer } })
-        return post ? {success: true, post} : {success: false, message: 'Post not found!'}
+        return post ? 
+            {success: true, post} : 
+            {success: false, message: 'Post not found!'}
     }
     catch(error) {
         console.error(error)
@@ -131,7 +135,9 @@ async function getPostsByOrganizerName(organizer) {
     try {
         // gonna help in pagination later
         const { count, rows } = await Posts.findAndCountAll({ where: { organizer } })
-        return count ? { success: true, posts: rows } : { success: false, message: 'Posts not found!' }
+        return count ? 
+            { success: true, posts: rows } : 
+            { success: false, message: 'Posts not found!' }
 
     }
     catch(error) {
@@ -162,7 +168,7 @@ async function getPostsByStatus(status) {
     }
 }
 
-// enhanced for testing purpose
+// enhanced function for testing purpose
 async function findOnePostByField(field, value) {
     try {
         const post = await Posts.findOne({ where: { [field]: value } })

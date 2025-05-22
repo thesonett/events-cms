@@ -1,12 +1,18 @@
 import { 
-    getCategories, 
+    createCategory,
+    deleteCategoryById,
+    updateCategoryById,
+    getCategories,
     getCategoryById,
 } 
 from './categoryController.js'
 
 import { 
-    getOrganizingCommitteeById, 
-    getOrganizingCommitties,
+    createOrganizingCommittee,
+    deleteOrganizingCommitteeById,
+    updateOrganizingCommitteeById,
+    getOrganizingCommittees,
+    getOrganizingCommitteeById,
 } from './organizingCommitteeController.js'
 
 import { 
@@ -18,11 +24,13 @@ import {
     getUserByRoleId,
     getUsersByRoleId,
     getUserById,
-    getUsersById,
 } from './userController.js'
 
 import { 
-    getRoles, 
+    createRole,
+    deleteRoleById,
+    updateRoleById,
+    getRoles,
     getRoleById,
 } from './roleController.js'
 
@@ -37,8 +45,10 @@ import {
     getImagesByFileName,
     getImageByFileNameAndEntityType,
     getImagesByFileNameAndEntityType,
-    getImageByEntityType,
-    getImagesByEntityType,
+    getImageByEntityRef,
+    getImagesByEntityRef,
+    getPaginatedImages,
+    fetchImagesByCondition,
 } from './imagesController.js'
 
 import {
@@ -46,7 +56,6 @@ import {
     deleteEventById,
     updateEventById,
     getEventById,
-    getEventsById,
     getEventsByCategoryId,
     getEventsByOrganizingCommitteeId,
     getEventsByRoleId,
@@ -71,12 +80,18 @@ import {
 
 export {
     // categories
+    createCategory,
+    deleteCategoryById,
+    updateCategoryById,
     getCategories,
     getCategoryById,
 
     // organizing committee
+    createOrganizingCommittee,
+    deleteOrganizingCommitteeById,
+    updateOrganizingCommitteeById,
+    getOrganizingCommittees,
     getOrganizingCommitteeById,
-    getOrganizingCommitties,
 
     // users
     createUser,
@@ -87,9 +102,11 @@ export {
     getUserByRoleId,
     getUsersByRoleId,
     getUserById,
-    getUsersById,
 
     // roles
+    createRole,
+    deleteRoleById,
+    updateRoleById,
     getRoles,
     getRoleById,
 
@@ -104,15 +121,16 @@ export {
     getImagesByFileName,
     getImageByFileNameAndEntityType,
     getImagesByFileNameAndEntityType,
-    getImageByEntityType,
-    getImagesByEntityType,
+    getImageByEntityRef,
+    getImagesByEntityRef,
+    getPaginatedImages, // pagination
+    fetchImagesByCondition, // for testing purpose
 
     // events
     createEvent,
     deleteEventById,
     updateEventById,
     getEventById,
-    getEventsById,
     getEventsByCategoryId,
     getEventsByOrganizingCommitteeId,
     getEventsByRoleId,
