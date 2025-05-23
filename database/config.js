@@ -11,10 +11,10 @@ const sequelize = new Sequelize({
 })
 
 await sequelize.authenticate().then(async () => {
-    console.log('\nDatabase connected!!\n')
+    console.log('\n:::: Database connected!! ::::\n')
 
 }).catch((error) => {
-    console.log('\nDatabase connection failed!\n', error)
+    console.log('\n:::: Database connection failed!! ::::\n', error)
 })
 
 export default sequelize;

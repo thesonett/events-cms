@@ -5,8 +5,7 @@ const OrganizingCommittee = sequelize.define('organizing_committee_model', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false,
-    unique: true
+    autoIncrement: true,
   },
   name: {
     type: DataTypes.STRING(255),

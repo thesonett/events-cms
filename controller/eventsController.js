@@ -34,18 +34,18 @@ async function deleteEventById(id) {
 
 async function updateEventById(id, updates) {
     try {
-        const [status] = await Events.update(updates, { where: { id } });
+        const [status] = await Events.update(updates, { where: { id } })
 
         if (!status) {
             return { success: false, message: 'Event not found or nothing to update.' }
         }
 
-        const updatedEvent = await Events.findByPk(id);
+        const updatedEvent = await Events.findByPk(id)
         return { success: true, message: 'Event updated successfully!', updatedEvent }
 
     } 
     catch (error) {
-        console.error('Failed to update event!', error);
+        console.error('Failed to update event!', error)
         return { success: false, message: 'Unable to update event!' }
     }
 }
@@ -90,7 +90,7 @@ async function getEventsByRoleId(role_id) {
         return {success: true, events}
     }
     catch (error) {
-        console.error('Exception occurred inside getEventsByRoleId!\n', error);
+        console.error('Exception occurred inside getEventsByRoleId!\n', error)
         return { success: false, message: 'Exception occurred inside getEventsByRoleId!' }
     }
 

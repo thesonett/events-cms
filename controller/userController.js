@@ -39,7 +39,7 @@ async function getUser({email, password}) {
         const user = await Users.findOne({ where: { email, is_owner: true, status: 1 } })
     
         if (!user) 
-            return {success: false, message: 'User not found'}
+            return { success: false, message: 'User not found!' }
     
         const isMatch = await bcrypt.compare(password, user.password)
         return isMatch ? { success: true, user } : {success: false, message: 'Invalid password'}
@@ -55,9 +55,9 @@ async function getUsers() {
         const users = await Users.findAll()
     
         if (!users || !users.length) 
-            return { success: false, message: 'Users not found' };
+            return { success: false, message: 'Users not found' }
     
-        return { success: true, users };
+        return { success: true, users }
     }
     catch (error) {
         console.log(error)
@@ -130,7 +130,7 @@ async function updateUserById(id, updates) {
         const [status] = await Users.update(updates, { where: { id } })
     
         if (!status) {
-            return { success: false, message: 'User not found or no changes made' }
+            return { success: false, message: 'User not found or no changes made!' }
         }
     
         const updatedUser = await Users.findByPk(id)

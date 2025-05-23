@@ -10,8 +10,8 @@ async function createOrganizingCommittee({ name }) {
         return { success: true, message: 'OrganizingCommittee got created!', organizingCommittee }
     }
     catch(error) {
-        console.log('Organizing Committee creation failed!\n', error)
-        return { success: false, message: 'Exception occured inside createOrganizingCommittee!' }
+        console.log('Exception occured inside createOrganizingCommittee!\n', error)
+        return { success: false, message: 'Organizing Committee creation failed!' }
     }
 }
 

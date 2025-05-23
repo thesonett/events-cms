@@ -110,7 +110,7 @@ async function getPostsByEventId(event_id) {
         const { count, rows } = await Posts.findAndCountAll({ where: { event_id } });
         return count ? 
             { success: true, posts: rows } : 
-            { success: false, message: 'No posts found' };
+            { success: false, message: 'No posts found!' };
     }
     catch(error) {
         console.error(error)
