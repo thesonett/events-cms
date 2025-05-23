@@ -59,17 +59,12 @@ router.post('/login', async (req, res) => {
 
     req.session.user = { id: user.id }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' })
-    res.cookie('token', token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000
-    })
+    const token = jwt.sign({ _id: user.id, email: user.email }, process.env.MY_SECRET_KEY, { expiresIn: '24h' })
+    res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000 })
 
     req.flash('message', message)
     return res.redirect(`/users/user/${user.id}`)
 })
-
 
 // login page
 router.get('/login', (req, res) => {
@@ -81,19 +76,13 @@ router.get('/login', (req, res) => {
 })
 
 // logout
-router.get('/logout', (req, res) => {
-    const notify = req.flash('message')[0]
+// TODO: NOT DESTROYING SESSION FOR NOW!
+router.post('/logout', (req, res) => {
+    req.flash('message', 'Logged out successfully!')
 
-    req.session.destroy((error) => {
-        if (error) {
-            console.error('Failed to destroy session!\n', error)
-        }
-
-        res.clearCookie('connect.sid')
-        res.clearCookie('token')
-        req.flash('message', 'You have been logged out successfully')
-        res.redirect('/users/login')
-    })
+    res.clearCookie('connect.sid')
+    res.clearCookie('token')
+    res.redirect('/users/login')
 })
 
 // delete user

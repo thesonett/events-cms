@@ -13,6 +13,7 @@
         <p><strong>First Name:</strong> <%= user.first_name %></p>
         <p><strong>Last Name:</strong> <%= user.last_name %></p>
         <p><strong>Username:</strong> <%= user.username %></p>
+        <p><strong>Password:</strong> <%= user.password %></p>
         <p><strong>Email:</strong> <%= user.email %></p>
         <p><strong>Status:</strong> <%= user.status ? 'Active' : 'Inactive' %></p>
         <p><strong>Organizing Committee:</strong> <%= name %></p>
@@ -21,6 +22,10 @@
 
         <form action="/users/delete/<%= user.id %>" method="POST">
             <button type="submit">delete</button>
+        </form>
+
+        <form action="/users/logout" method="POST">
+            <button type="submit">logout</button>
         </form>
     <% } 
     else { %>

@@ -1,5 +1,5 @@
 TODOS:
 
-1. Have to work on routes now.
-2. JWT token based authorization.
-3. Make dashboard page by figma design.
+1. Fixing bugs of controllers. ✅
+2. JWT token based authentication. ✅
+2. Make routes + frontend adding.

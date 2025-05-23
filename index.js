@@ -16,15 +16,15 @@ app.set('views', './views');
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.use(cookieParser())
 app.use(session({ 
-    secret: process.env.SECRET_KEY,
+    secret: process.env.SESSION_KEY,
     resave: false, 
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
 app.use(flash())
-app.use(cookieParser())
 
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private')
