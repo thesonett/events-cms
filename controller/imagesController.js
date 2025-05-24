@@ -11,8 +11,8 @@ async function createImage({ file_name, original_filename, size, entity_type, en
 
     } 
     catch (error) {
-        console.error('Upload failed: ', error)
-        return { success: false, message: 'Unable to upload image!' }
+        console.error('Exception occurred inside createImage!\n', error)
+        return { success: false, message: 'Exception::: Unable to create image!' }
     }
 }
 
@@ -23,8 +23,8 @@ async function deleteImageById(id) {
                        { success: false, message: 'Unable to delete image or image not found!' };
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside deleteImageById!' }
+        console.error('Exception occurred inside deleteImageById!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete image or image not found!' }
     }
 }
 
@@ -39,8 +39,8 @@ async function updateImageById(id, updates) {
         return { success: true, message: 'Image updated!', updatedImage }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside updateImageById!' }
+        console.log('Exception occurred inside updateImageById!\n', error)
+        return { success: false, message: 'Exception::: Image not found or no changes made!'}
     }
 }
 
@@ -50,8 +50,8 @@ async function getImageById(id) {
         return image ? { success: true, image } : { success: false, message: 'Image not found!' };
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getImageById!' }
+        console.log('Exception occurred inside getImageById!\n', error)
+        return { success: false, message: 'Exception::: Image not found!' }
     }
 }
 
@@ -61,19 +61,21 @@ async function getImageByEntityId(entity_id) {
         return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getImageByEntityId!' }
+        console.log('Exception occurred inside getImageByEntityId!\n', error)
+        return { success: false, message: 'Exception::: Image not found!' }
     }
 }
 
 async function getImagesByEntityId(entity_id) {
     try {
         const images = await Images.findAll({ where: { entity_id } })
-        return images.length ? { success: true, images } : { success: false, message: 'Images not found!' }
+        return images.length ? 
+            { success: true, images } : 
+            { success: false, message: 'Images not found!' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getImagesByEntityId!' }
+        console.log('Exception occurred inside getImagesByEntityId!\n', error)
+        return { success: false, message: 'Exception::: Images not found!' }
     }
 }
 
@@ -83,19 +85,21 @@ async function getImageByFileName(file_name) {
         return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     } 
     catch (error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred in getImageByFileName!' }
+        console.error('Exception occurred in getImageByFileName!\n', error)
+        return { success: false, message: 'Exception::: Image not found!' }
     }
 }
 
 async function getImagesByFileName(file_name) {
     try {
         const images = await Images.findAll({ where: { file_name } });
-        return images.length ? { success: true, images } : { success: false, message: 'Images not found!' }
+        return images.length ? 
+            { success: true, images } : 
+            { success: false, message: 'Images not found!' }
     } 
     catch (error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred in getImagesByFileName!' }
+        console.error('Exception occurred in getImagesByFileName!\n', error)
+        return { success: false, message: 'Exception::: Images not found!' }
     }
 }
 
@@ -105,8 +109,8 @@ async function getImageByFileNameAndEntityType(file_name, entity_type) {
         return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     } 
     catch (error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred in getImageByFileNameAndEntityType!' }
+        console.error('Exception occurred in getImageByFileNameAndEntityType!\n', error)
+        return { success: false, message: 'Exception::: Images not found!' }
     }
 }
 
@@ -116,8 +120,8 @@ async function getImagesByFileNameAndEntityType(file_name, entity_type) {
         return images.length ? { success: true, images } : { success: false, message: 'Images not found!' }
     } 
     catch (error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred in getImagesByFileNameAndEntityType!' }
+        console.error('Exception occurred in getImagesByFileNameAndEntityType!\n', error)
+        return { success: false, message: 'Exception::: Images not found!' }
     }
 }
 
@@ -127,8 +131,8 @@ async function getImageByEntityRef(entity_id, entity_type) {
         return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     } 
     catch (error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred in getImageByEntityRef!' }
+        console.error('Exception occurred in getImageByEntityRef!\n', error)
+        return { success: false, message: 'Exception::: Image not found!' }
     }
 }
 
@@ -138,8 +142,8 @@ async function getImagesByEntityRef(entity_id, entity_type) {
         return images.length ? { success: true, images } : { success: false, message: 'Images not found!' }
     } 
     catch (error) {
-        console.error(error);
-        return { success: false, message: 'Exception occurred in getImagesByEntityRef!' }
+        console.error('Exception occurred in getImagesByEntityRef\n!', error);
+        return { success: false, message: 'Exception::: Images not found!' }
     }
 }
 
@@ -154,7 +158,7 @@ async function getPaginatedImages({ page = 1, limit = 10, filters = {} }) {
     } 
     catch (error) {
         console.error('Exception occurred in getPaginatedImages!\n', error)
-        return { success: false, message: 'Unable to fetch paginated images!' }
+        return { success: false, message: 'Exception::: Unable to fetch paginated images!' }
     }
 }
 
@@ -172,8 +176,8 @@ async function fetchImagesByCondition(condition, multiple = false) {
         return { success: true, [multiple ? 'images' : 'image']: result }
     } 
     catch (error) {
-        console.error('Error in fetchImagesByCondition!\n', error)
-        return { success: false, message: 'Exception occurred in fetchImagesByCondition!' }
+        console.error('Exception occurred inside fetchImagesByCondition!\n', error)
+        return { success: false, message: 'Exception::: Image(s) not found!' }
     }
 }
 

@@ -8,4 +8,10 @@ const router = express.Router()
 router.use('/users', userRoutes)
 router.use('/images', imageRoutes)
 
+// default page
+router.get('/', (req, res) => {
+  res.render('../views/pages/home', { layout: 'layouts/main' })
+});
+
+
 export default router;

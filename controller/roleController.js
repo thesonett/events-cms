@@ -10,8 +10,8 @@ async function createRole({ role }) {
         return { success: true, message: 'Role got created!', role: status }
     }
     catch(error) {
-        console.error('Role creation failed!\n', error)
-        return { success: false, message: 'Exception occured inside createRole!' }
+        console.error('Exception occured inside createRole!\n', error)
+        return { success: false, message: 'Exception:::: Role creation failed!' }
     }
 }
 
@@ -20,12 +20,12 @@ async function deleteRoleById(id) {
         const role = await Role.destroy({ where: { id } })
         
         return role ? 
-            { success: true, message: 'Role got deleted!'} : 
-            { success: false, message: 'Role not found!'}
+            { success: true, message: 'Role got deleted!' } : 
+            { success: false, message: 'Role not found!' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside deleteRoleById!' }
+        console.log('Exception occurred inside deleteRoleById!\n', error)
+        return { success: false, message: 'Exception:::: Role not found!' }
     }
 }
 
@@ -41,24 +41,24 @@ async function updateRoleById(id, updates) {
         return { success: true, message: 'Role got updated!', updatedRole }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside updateRoleById!' }
+        console.log('Exception occurred inside updateRoleById!\n', error)
+        return { success: false, message: 'Exception::: Unable to update role!' }
     }
 }
 
 async function getRoles() {
   try {
-    const roles = await Role.findAll({ attributes: ['id', 'role'] });
+    const roles = await Role.findAll({ attributes: ['id', 'role'] })
   
     if (roles.length === 0) {
-      return { success: false, message: 'No roles found!' };
+      return { success: false, message: 'No roles found!' }
     }
   
-    return { success: true, roles };
+    return { success: true, roles }
   }
   catch(error) {
-    console.error(error)
-    return { success: false, message: 'Exception occurred inside getRoles!' }
+    console.error('Exception occurred inside getRoles!\n', error)
+    return { success: false, message: 'Exception:::: No roles found!' }
   }
 }
 
@@ -74,8 +74,8 @@ async function getRoleById(id) {
 
   }
   catch(error) {
-    console.error(error)
-    return { success: false, message: 'Exception occurred inside getRoleById!' }
+    console.error('Exception occurred inside getRoleById!\n', error)
+    return { success: false, message: 'Exception:::: No role found!' }
   }
 }
 

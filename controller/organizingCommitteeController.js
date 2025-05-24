@@ -4,14 +4,14 @@ async function createOrganizingCommittee({ name }) {
     try {
         const organizingCommittee = await OrganizingCommittee.create({ name })
         if(!organizingCommittee) {
-            return { success: false, message: 'OrganizingCommittee creation failed!' }
+            return { success: false, message: 'Organizing Committee creation failed!' }
         }
 
-        return { success: true, message: 'OrganizingCommittee got created!', organizingCommittee }
+        return { success: true, message: 'Organizing Committee got created!', organizingCommittee }
     }
     catch(error) {
-        console.log('Exception occured inside createOrganizingCommittee!\n', error)
-        return { success: false, message: 'Organizing Committee creation failed!' }
+        console.log('Exception occurred inside createOrganizingCommittee!\n', error)
+        return { success: false, message: 'Exception::: Organizing Committee creation failed!' }
     }
 }
 
@@ -24,8 +24,8 @@ async function deleteOrganizingCommitteeById(id) {
             { success: false, message: 'Organizing Committee not found!'}
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside deleteOrganizingCommitteeById!' }
+        console.log('Exception occurred inside deleteOrganizingCommitteeById!\n', error)
+        return { success: false, message: 'Exception::: Organizing Committee not found!' }
     }
 }
 
@@ -41,8 +41,8 @@ async function updateOrganizingCommitteeById(id, updates) {
         return { success: true, message: 'Organizing Committee got updated!', updatedOrganizingCommittee }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside updateOrganizingCommitteeById!' }
+        console.log('Exception occurred inside updateOrganizingCommitteeById!\n', error)
+        return { success: false, message: 'Exception::: Organizing Committee not found or no changes made!' }
     }
 }
 
@@ -57,8 +57,8 @@ async function getOrganizingCommittees() {
         return { success: true, organizingCommitties }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getOrganizingCommitties!' }
+        console.log('Exception occurred inside getOrganizingCommitties!\n', error)
+        return { success: false, message: 'Exception::: Organizing committies are not found!'}
     }
 }
 
@@ -73,8 +73,8 @@ async function getOrganizingCommitteeById(id) {
         return { success: true, name: oc.name };
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getOrganizingCommitteeById!' }
+        console.log('Exception occurred inside getOrganizingCommitteeById!\n', error)
+        return { success: false, message: 'Exception::: Organizing committee not found!' }
     }
 }
 

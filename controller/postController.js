@@ -4,11 +4,11 @@ async function createPost({ title, description, venue, start, location, duration
     try {
         const post = await Posts.create({ title, description, venue, start, location, duration, organizer, status, event_id })
 
-        return { success: true, message: 'post created!', post }
+        return { success: true, message: 'Post created!', post }
     }
     catch(error) {
-        console.error('Post creation failed!\n', error)
-        return { success: false, message: 'Unable to create post!'}
+        console.error('Exception occurred inside createPost!\n', error)
+        return { success: false, message: 'Exception:: Unable to create post!'}
     }
 }
 
@@ -17,15 +17,15 @@ async function deletePostByEventId(event_id) {
         const post = await Posts.destroy({ where: { event_id }})
     
         if(!post) {
-            return {success: false, message: 'Unable to delete post or post not found!'}
+            return { success: false, message: 'Unable to delete post or post not found!' }
         }
     
         return { success: true, message: 'Post deleted successfully' }
 
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside deletePostByEventId!' }
+        console.error('Exception occurred inside deletePostByEventId!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete post or post not found!' }
     }
 }
 
@@ -34,24 +34,24 @@ async function deletePostById(id) {
         const post = await Posts.destroy({ where: { id }})
     
         if(!post) {
-            return {success: false, message: 'Unable to delete post or post not found!'};
+            return {success: false, message: 'Unable to delete post or post not found!' }
         }
     
         return { success: true, message: 'Post deleted successfully' }
 
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside deletePostById!' }
+        console.error('Exception occurred inside deletePostById!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete post or post not found!' }
     }
 }
 
 async function updatePostByEventId(event_id, updates) {
     try {
-        const [status] = await Posts.update(updates, { where: { event_id } });
+        const [status] = await Posts.update(updates, { where: { event_id } })
 
         if (!status) {
-            return { success: false, message: 'Post not found or nothing to update.' }
+            return { success: false, message: 'Post not found or nothing to update!' }
         }
 
         const updatedPost = await getPostsByEventId(event_id);
@@ -59,8 +59,8 @@ async function updatePostByEventId(event_id, updates) {
 
     } 
     catch (error) {
-        console.error(error);
-        return { success: false, message: 'Exception occurred inside updatePostByEventId!' }
+        console.error('Exception occurred inside updatePostByEventId!\n', error)
+        return { success: false, message: 'Exception::: Post not found or nothing to update!' }
     }
 }
 
@@ -69,7 +69,7 @@ async function updatePostById(id, updates) {
         const [status] = await Posts.update(updates, { where: { id } })
 
         if (!status) {
-            return { success: false, message: 'Post not found or nothing to update.' }
+            return { success: false, message: 'Post not found or nothing to update!' }
         }
 
         const updatedPost = await Posts.findByPk(id)
@@ -77,19 +77,19 @@ async function updatePostById(id, updates) {
 
     } 
     catch (error) {
-       console.error(error)
-       return { success: false, message: 'Exception occurred inside updatePostById!' }
+       console.error('Exception occurred inside updatePostById!\n', error)
+       return { success: false, message: 'Exception::: Post not found or nothing to update!'}
     }
 }
 
 async function getPostByEventId(event_id) {
     try {
-        const post = await Posts.findOne({ where: {event_id} })
-        return post ? {success: true, post} : {success: false, message: 'Post not found!'}
+        const post = await Posts.findOne({ where: { event_id } })
+        return post ? { success: true, post } : { success: false, message: 'Post not found!' }
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostsByEventId!' }
+        console.error('Exception occurred inside getPostsByEventId!\n', error)
+        return { success: false, message: 'Exception:::: Post not found!' }
     }
 }
 
@@ -99,22 +99,22 @@ async function getPostById(id) {
         return post ? { success: true, post } : { success: false, message: 'Post not found!' }
     } 
     catch (error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostById!' }
+        console.error('Exception occurred inside getPostById!\n', error)
+        return { success: false, message: 'Exception:::: Post not found!' }
     }
 }
 
 async function getPostsByEventId(event_id) {
     try {
         // gonna help in pagination later
-        const { count, rows } = await Posts.findAndCountAll({ where: { event_id } });
+        const { count, rows } = await Posts.findAndCountAll({ where: { event_id } })
         return count ? 
             { success: true, posts: rows } : 
-            { success: false, message: 'No posts found!' };
+            { success: false, message: 'No posts found!' }
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostsByEventId!' }
+        console.error('Exception occurred inside getPostsByEventId!\n', error)
+        return { success: false, message: 'Exception:::: No posts found!'}
     }
 }
 
@@ -122,12 +122,12 @@ async function getPostByOrganizerName(organizer) {
     try {
         const post = await Posts.findOne({ where: { organizer } })
         return post ? 
-            {success: true, post} : 
-            {success: false, message: 'Post not found!'}
+            { success: true, post } : 
+            { success: false, message: 'Post not found!' }
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostByOrganizerName!' }
+        console.error('Exception occurred inside getPostByOrganizerName!\n', error)
+        return { success: false, message: 'Exception:::: Post not found!' }
     }
 }
 
@@ -141,19 +141,19 @@ async function getPostsByOrganizerName(organizer) {
 
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostsByOrganizerName!' }
+        console.error('Exception occurred inside getPostsByOrganizerName\n!', error)
+        return { success: false, message: 'Exception:::: Posts not found!' }
     }
 }
 
 async function getPostByStatus(status) {
     try {
         const post = await Posts.findOne({ where: { status } })
-        return post ? {success: true, post} : {success: false, message: 'Post not found!'}
+        return post ? { success: true, post } : { success: false, message: 'Post not found!' }
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostByStatus!' }
+        console.error('Exception occurred inside getPostByStatus!\n', error)
+        return { success: false, message: 'Exception:::: Post not found!'}
     }
 }
 
@@ -163,8 +163,8 @@ async function getPostsByStatus(status) {
         return posts.length ? {success: true, posts} : {success: false, message: 'Posts not found!'}
     }
     catch(error) {
-        console.error(error)
-        return { success: false, message: 'Exception occurred inside getPostsByStatus!' }
+        console.error('Exception occurred inside getPostsByStatus!\n', error)
+        return { success: false, message: 'Exception::: Posts not found!' }
     }
 }
 
@@ -173,12 +173,12 @@ async function findOnePostByField(field, value) {
     try {
         const post = await Posts.findOne({ where: { [field]: value } })
         return post ? { success: true, post } : { success: false, message: 'Post not found!' }
-    } catch (error) {
-        console.error(error)
-        return { success: false, message: `Exception occurred inside getPostBy${capitalize(field)}!` }
+    } 
+    catch (error) {
+        console.error(`Exception occurred inside getPostBy${capitalize(field)}!\n`, error)
+        return { success: false, message: 'Exception::: Post not found!' }
     }
 }
-
 
 export {
     createPost,

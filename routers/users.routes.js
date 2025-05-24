@@ -12,7 +12,7 @@ import {
     getRoles,
     getUser,
     getUserById,
-} from '../controller/index.js';
+} from '../controller/index.js'
 
 dotenv.config()
 const router = express.Router()
@@ -26,21 +26,12 @@ router.get('/register', async (req, res) => {
 
     const roles = rolesResult.success ? rolesResult.roles : [];
 
-    res.render('registration', { organizingCommitties, roles, notify })
+    res.render('pages/registration', { organizingCommitties, roles, notify })
 })
 
 // create new user
 router.post('/create', async (req, res) => {
-    const { 
-        first_name, 
-        last_name, 
-        email, 
-        password, 
-        username, 
-        organizing_committee_id, 
-        new_organizing_committee, 
-        role_id 
-    } = req.body
+    const { first_name, last_name, email, password, username, organizing_committee_id, new_organizing_committee, role_id } = req.body
 
     let finalOrganizingCommitteeId = organizing_committee_id
 
@@ -75,7 +66,7 @@ router.get('/user/:id', isAuthenticated, async (req, res) => {
     const { name } = await getOrganizingCommitteeById(user.organizing_committee_id)
     const { role } = await getRoleById(user.role_id)
 
-    res.render('user', { user, name, role })
+    res.render('pages/user', { user, name, role })
 })
 
 // login
@@ -103,12 +94,11 @@ router.get('/login', (req, res) => {
 
     res.clearCookie('connect.sid')
     res.setHeader('Cache-Control', 'no-store')
-    res.render('login', { notify })
+    res.render('pages/login', { notify })
 })
 
 // logout
-// TODO: NOT DESTROYING SESSION FOR NOW!
-router.post('/logout', (req, res) => {
+router.post('/logout', (req, res) => { // TODO: NOT DESTROYING SESSION FOR NOW!
     req.flash('message', 'Logged out successfully!')
 
     res.clearCookie('connect.sid')

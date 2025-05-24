@@ -10,10 +10,11 @@ async function createCategory({ id, category }) {
         return { success: true, message: 'Category created!', category: createdCategory }
     } 
     catch (error) {
-        console.error('Error in createCategory!\n', error)
-        return { success: false, message: 'Exception occurred in createCategory!' }
+        console.error('Exception occurred in createCategory!\n', error)
+        return { success: false, message: 'Exception::: Category creation failed!' }
     }
 }
+
 
 async function deleteCategoryById(id) {
     try {
@@ -24,8 +25,8 @@ async function deleteCategoryById(id) {
             { success: false, message: 'Category not found!'}
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside deleteCategoryById!' }
+        console.log('Exception occured inside deleteCategoryById!\n', error)
+        return { success: false, message: 'Exception::: Category not found!'}
     }
 }
 
@@ -41,8 +42,8 @@ async function updateCategoryById(id, updates) {
         return { success: true, message: 'Category got updated!', updatedCategory }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside updateCategoryById!' }
+        console.log('Exception occured inside updateCategoryById!\n', error)
+        return { success: false, message: 'Exception::: Category not found or no changes made!' }
     }
 }
 
@@ -57,8 +58,8 @@ async function getCategories() {
         return { success: true, categories }
     }
     catch(error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getCategories!' }
+        console.log('Exception occured inside getCategories!\n', error)
+        return { success: false, message: 'Exception::: Categories are not found!' }
     }
 }
 
@@ -73,8 +74,8 @@ async function getCategoryById(id) {
         return {success: true, categoryName}
     }
     catch(error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getCategoryById!' }
+        console.log('Exception occured inside getCategoryById!\n', error)
+        return { success: false, message: 'Exception::: Category name not found!'}
     }
 }
 

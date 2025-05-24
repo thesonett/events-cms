@@ -23,14 +23,14 @@ async function createUser({ first_name, last_name, email, password, username, st
         })
     
         if(!user) {
-            return { success: false, message: 'User creation failed' }
+            return { success: false, message: 'Unable to create user!' }
         }
     
         return { success: true, message: 'Registration successful!', user }
     }
     catch(error) {
-        console.error('User creation failed!\n', error)
-        return { success: false, message: 'Unable to create user!'}
+        console.error('Exception occurred inside createUser!\n', error)
+        return { success: false, message: 'Exception::: Unable to create user!'}
     }
 }
 
@@ -42,11 +42,11 @@ async function getUser({email, password}) {
             return { success: false, message: 'User not found!' }
     
         const isMatch = await bcrypt.compare(password, user.password)
-        return isMatch ? { success: true, user } : {success: false, message: 'Invalid password'}
+        return isMatch ? { success: true, user } : { success: false, message: 'Invalid password' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occurred inside getUser!' }
+        console.log('Exception occurred inside getUser!\n', error)
+        return { success: false, message: 'Exception:::: User not found!' }
     }
 }
 
@@ -55,13 +55,13 @@ async function getUsers() {
         const users = await Users.findAll()
     
         if (!users || !users.length) 
-            return { success: false, message: 'Users not found' }
+            return { success: false, message: 'Users not found!' }
     
         return { success: true, users }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getUsers!' }
+        console.log('Exception occurred inside getUsers!\n', error)
+        return { success: false, message: 'Exception:::: Users not found!' }
     }
 }
 
@@ -70,11 +70,11 @@ async function getUserByRoleId(role_id) {
         const user = await Users.findOne({ where: { role_id, is_owner: true, status: 1 } })
         return user ? 
             { success: true, user } : 
-            { success: false, message: 'User not found' }
+            { success: false, message: 'User not found!' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getUserByRoleId!' }
+        console.log('Exception occured inside getUserByRoleId!\n', error)
+        return { success: false, message: 'Exception:::: User not found!' }
     }
 }
 
@@ -87,8 +87,8 @@ async function getUsersByRoleId(role_id) {
             { success: true, users }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getUsersByRoleId!' }
+        console.log('Exception occurred inside getUsersByRoleId!\n', error)
+        return { success: false, message: 'Exception:::: Users not found!' }
     }
 }
 
@@ -98,8 +98,8 @@ async function getUserById(id) {
         return user ? { success: true, user } : { success: false, message: 'User not found' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getUserById!' }
+        console.log('Exception occurred inside getUserById!\n', error)
+        return { success: false, message: 'Exception:::: User not found!' }
     }
 }
 
@@ -112,8 +112,8 @@ async function deleteUserById(id) {
             { success: false, message: 'User not found!' }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside deleteUserById!' }
+        console.log('Exception occurred inside deleteUserById!\n', error)
+        return { success: false, message: 'Exception:::: User not found!' }
     }
 }
 
@@ -137,8 +137,8 @@ async function updateUserById(id, updates) {
         return { success: true, message: 'User got updated!',  updatedUser }
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside updateUserById!' }
+        console.log('Exception occurred inside updateUserById!\n', error)
+        return { success: false, message: 'Exception::: User not found or no changes made!' }
     }
 }
 

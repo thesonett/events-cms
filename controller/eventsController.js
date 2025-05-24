@@ -7,28 +7,22 @@ async function createEvent({title, description, date, category_id, organizing_co
 
     try {
         const event = await Events.create({title, description, date, category_id, organizing_committee_id, role_id})
-
-        return { success: true, message: 'event created!', event }
+        return { success: true, message: 'Event created!', event }
     }
     catch(error) {
-        console.error('Event creation failed! \n', error)
-        return { success: false, message: 'Event creation failed!' }
+        console.error('Exception occurred inside createEvent!\n', error)
+        return { success: false, message: 'Exception::: Event creation failed!' }
     }
 }
 
 async function deleteEventById(id) {
     try {
         const event = await Events.destroy({ where: { id }})
-    
-        if(!event) {
-            return {success: false, message: 'Unable to delete event or event not found!'};
-        }
-    
         return { success: true, message: 'event deleted!' };
     }
     catch (error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside deleteEventById!' }
+        console.log('Exception occured inside deleteEventById!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete event or event not found!'}
     }
 }
 
@@ -45,8 +39,8 @@ async function updateEventById(id, updates) {
 
     } 
     catch (error) {
-        console.error('Failed to update event!', error)
-        return { success: false, message: 'Unable to update event!' }
+        console.error('Exception occurred inside updateEventById!\n', error)
+        return { success: false, message: 'Exception::: Unable to update event!' }
     }
 }
 
@@ -57,8 +51,8 @@ async function getEventsByCategoryId(category_id) {
                                { success: false, message: 'Events not found!' }
     } 
     catch (error) {
-        console.error('Exception in getEventsByCategoryId!\n', error)
-        return { success: false, message: 'Exception occurred inside getEventsByCategoryId!' }
+        console.error('Exception occurred inside getEventsByCategoryId!\n', error)
+        return { success: false, message: 'Exception::: Events not found!' }
     }
 }
 
@@ -74,8 +68,8 @@ async function getEventsByOrganizingCommitteeId(organizing_committee_id) {
         return {success: true, events}
     }
     catch(error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getEventsByOrganizingCommitteeId!' }
+        console.log('Exception occured inside getEventsByOrganizingCommitteeId!\n', error)
+        return { success: false, message: 'Exception::: Events not found!'}
     }
 }
 
@@ -91,14 +85,23 @@ async function getEventsByRoleId(role_id) {
     }
     catch (error) {
         console.error('Exception occurred inside getEventsByRoleId!\n', error)
-        return { success: false, message: 'Exception occurred inside getEventsByRoleId!' }
+        return { success: false, message: 'Exception::: Events not found!'}
     }
 
 }
 
 async function getEventById(id) {
-    const event = await Events.findByPk(id)
-    return event ? { success: true, event } : { success: false, message: 'Event not found!' }
+    try {
+        const event = await Events.findByPk(id)
+
+        return event ? 
+            { success: true, event } : 
+            { success: false, message: 'Event not found!' }
+    }
+    catch(error) {
+        console.error('Exception occurred inside getEventById!\n', error)
+        return { success: false, message: 'Exception::: Event not found!'}
+    }
 }
 
 
@@ -123,8 +126,8 @@ async function getEventsByYear(id, date) {
         return { success: true, filteredEvents }
     }
     catch(error) {
-        console.log(error)
-        return { success: false, message: 'Exception occured inside getEventsByYear!' }
+        console.log('Exception occured inside getEventsByYear!\n', error)
+        return { success: false, message: 'Exception::: No events found for given ID!' }
     }
 }
 
