@@ -1,28 +1,18 @@
 <!-- Navigation Bar -->
-<nav class="bg-white shadow-lg sticky top-0 z-50">
+<nav id="header" class="bg-white shadow-lg sticky top-0 z-50 hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
-      
+    
       <div class="flex items-center">
-        <a href="/" class="text-2xl font-bold text-red-600 nav-link" data-section="home">
-          Event CMS
-        </a>
+        <a href="/" class="text-2xl font-bold text-red-600 nav-link" data-section="home">Event CMS</a>
       </div>
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex space-x-8 items-center">
-        <a href="/" class="text-gray-700 hover:text-red-600 nav-link" data-section="home">
-          Home
-        </a>
-        <a href="#" class="text-gray-700 hover:text-red-600 nav-link" data-section="events">
-          Events
-        </a>
-        <a href="#" class="text-gray-700 hover:text-red-600 nav-link" data-section="contact">
-          Contact Us
-        </a>
-        <a href="/users/login" class="text-gray-700 hover:text-red-600">
-          Login
-        </a>
+        <a href="/" class="text-gray-700 hover:text-red-600 nav-link" data-section="home">Home</a>
+        <a href="#" class="text-gray-700 hover:text-red-600 nav-link" data-section="events">Events</a>
+        <a href="#" class="text-gray-700 hover:text-red-600 nav-link" data-section="contact">Contact Us</a>
+        <a href="/users/login" class="text-gray-700 hover:text-red-600">Login</a>
       </div>
 
       <!-- Mobile Menu Toggle -->
@@ -36,21 +26,12 @@
 
   <!-- Mobile Menu -->
   <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
-    <a href="/" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 nav-link" data-section="home">
-      Home
-    </a>
-    <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 nav-link" data-section="events">
-      Events
-    </a>
-    <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 nav-link" data-section="contact">
-      Contact Us
-    </a>
-    <a href="/users/login" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">
-      Login
-    </a>
+    <a href="/" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 nav-link" data-section="home">Home</a>
+    <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 nav-link" data-section="events">Events</a>
+    <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 nav-link" data-section="contact">Contact Us</a>
+    <a href="/users/login" class="block px-4 py-3 text-gray-700 hover:bg-gray-100">Login</a>
   </div>
 </nav>
-
 
 <script>
   document.getElementById('menu-toggle').addEventListener('click', function () {

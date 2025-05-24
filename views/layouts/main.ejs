@@ -4,11 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Events CMS</title>
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Font Awesome -->
     <link
       rel="stylesheet"
@@ -24,8 +28,8 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Lato', 'sans-serif'],
-              heading: ['Montserrat', 'sans-serif'],
+              sans: ["Lato", "sans-serif"],
+              heading: ["Montserrat", "sans-serif"],
             },
           },
         },
@@ -33,17 +37,19 @@
     </script>
 
     <style>
-      .nav-link,
-      .footer-link {
+      * {
+        scroll-behavior: smooth;
+      }
+      .nav-link, .footer-link {
         position: relative;
         transition: color 0.3s ease;
       }
-      .nav-link:hover,
-      .footer-link:hover {
+
+      .nav-link:hover, .footer-link:hover {
         color: #f43f5e;
       }
-      .nav-link::after,
-      .footer-link::after {
+
+      .nav-link::after, .footer-link::after {
         content: "";
         position: absolute;
         width: 0;
@@ -53,24 +59,92 @@
         background-color: #f43f5e;
         transition: width 0.3s ease;
       }
+
       .nav-link:hover::after,
       .footer-link:hover::after {
         width: 100%;
       }
+
       .footer-divider {
         height: 2px;
         background: linear-gradient(to right, #f43f5e, #1f2937);
         margin: 2rem 0;
       }
+
+      .fade-in {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transition: opacity 0.6s ease;
+      }
+
+      .fade-out {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.6s ease;
+      }
+
+      #loader {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.6s ease;
+      }
+
+      #header, #main-content, #footer {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.6s ease;
+      }
     </style>
   </head>
   <body class="flex flex-col min-h-screen font-sans">
-    <%- include('../pages/header') %>
+    <%- include("../pages/loader") %>
+    <%- include("../pages/header") %>
 
-    <main class="flex-grow">
+    <main id="main-content" class="flex-grow hidden">
       <%- body %>
     </main>
 
-    <%- include('../pages/footer') %>
+    <%- include("../pages/footer") %>
   </body>
+
+  <!-- For loading screen with smooth transitions -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loader = document.getElementById("loader")
+      const header = document.getElementById("header")
+      const mainContent = document.getElementById("main-content")
+      const footer = document.getElementById("footer")
+
+      function showPageContent() {
+      loader.classList.add("fade-out");
+      loader.addEventListener("transitionend", () => {
+            loader.style.display = "none";
+            [header, mainContent, footer].forEach((el) => {
+              el.classList.remove("hidden");
+              el.style.display = "";
+              setTimeout(() => {
+                el.classList.add("fade-in");
+              }, 8);
+            });
+          },
+          { once: true }
+        );
+      }
+
+      if (!sessionStorage.getItem("loadingShown")) {
+        setTimeout(() => {
+          sessionStorage.setItem("loadingShown", "true")
+          showPageContent()
+        }, 3000)
+      } 
+      else {
+        loader.style.display = "none";
+        [header, mainContent, footer].forEach((el) => {
+          el.style.display = ""
+          el.classList.remove("hidden")
+          el.classList.add("fade-in")
+        })
+      }
+    })
+  </script>
 </html>
