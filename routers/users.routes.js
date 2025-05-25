@@ -2,6 +2,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { isAuthenticated } from '../middleware/auth.js'
+import renderPage from '../services/render.js'
 import {
     createUser,
     deleteUserById,
@@ -27,6 +28,7 @@ router.get('/register', async (req, res) => {
     const roles = rolesResult.success ? rolesResult.roles : [];
 
     res.render('pages/registration', { organizingCommitties, roles, notify })
+    // renderPage(res, 'registration', { organizingCommitties, roles, notify }) // testing
 })
 
 // create new user
@@ -67,6 +69,7 @@ router.get('/user/:id', isAuthenticated, async (req, res) => {
     const { role } = await getRoleById(user.role_id)
 
     res.render('pages/user', { user, name, role })
+    // renderPage(res, 'user', { user, name, role }) // testing
 })
 
 // login
@@ -94,7 +97,9 @@ router.get('/login', (req, res) => {
 
     res.clearCookie('connect.sid')
     res.setHeader('Cache-Control', 'no-store')
+
     res.render('pages/login', { notify })
+    // renderPage(res, 'login', { notify }) // testing
 })
 
 // logout

@@ -4,8 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Events CMS</title>
-    <!-- Tailwind CSS CDN -->
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Custom Fonts -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Lato", "sans-serif"],
+              heading: ["Montserrat", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
 
     <!-- Google Fonts -->
     <link
@@ -20,26 +35,14 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ["Lato", "sans-serif"],
-              heading: ["Montserrat", "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
-
     <style>
       * {
         scroll-behavior: smooth;
       }
+
       .nav-link, .footer-link {
         position: relative;
         transition: color 0.3s ease;
@@ -49,7 +52,7 @@
         color: #f43f5e;
       }
 
-      .nav-link::after, .footer-link::after {
+      .footer-link::after {
         content: "";
         position: absolute;
         width: 0;
@@ -60,9 +63,34 @@
         transition: width 0.3s ease;
       }
 
+      .nav-link::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background-color: #f43f5e;
+        font-family: inherit;
+        transition: width 0.3s ease;
+      }
+
       .nav-link:hover::after,
       .footer-link:hover::after {
         width: 100%;
+      }
+
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s ease-out forwards;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .footer-divider {
@@ -70,81 +98,83 @@
         background: linear-gradient(to right, #f43f5e, #1f2937);
         margin: 2rem 0;
       }
-
-      .fade-in {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transition: opacity 0.6s ease;
-      }
-
-      .fade-out {
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transition: opacity 0.6s ease;
-      }
-
-      #loader {
-        opacity: 1;
-        visibility: visible;
-        transition: opacity 0.6s ease;
-      }
-
-      #header, #main-content, #footer {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.6s ease;
-      }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen font-sans">
-    <%- include("../pages/loader") %>
-    <%- include("../pages/header") %>
 
-    <main id="main-content" class="flex-grow hidden">
-      <%- body %>
+  <body class="flex flex-col min-h-screen font-sans bg-white text-gray-800">
+    <!-- Navigation -->
+    <nav id="header" class="bg-white shadow-lg sticky top-0 z-50 fade-in">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="text-2xl font-bold text-red-600 nav-link">Event CMS</a>
+          <div class="hidden md:flex space-x-6">
+            <a href="/" class="nav-link text-gray-700">Home</a>
+            <a href="#" class="nav-link text-gray-700">Events</a>
+            <a href="#" class="nav-link text-gray-700">Contact Us</a>
+            <a href="/users/login" class="text-gray-700 hover:text-red-600">Login</a>
+          </div>
+          <div class="md:hidden">
+            <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+        <a href="/" class="block px-4 py-3 nav-link text-gray-700">Home</a>
+        <a href="#" class="block px-4 py-3 nav-link text-gray-700">Events</a>
+        <a href="#" class="block px-4 py-3 nav-link text-gray-700">Contact Us</a>
+        <a href="/users/login" class="block px-4 py-3 text-gray-700">Login</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-grow fade-in">
+      <!-- <%- // include(page) %> -->
+       <%- body %>
     </main>
 
-    <%- include("../pages/footer") %>
+    <!-- Footer -->
+    <footer id="footer" class="text-white py-12 bg-gray-900 fade-in">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div>
+            <h3 class="text-2xl font-bold">Event CMS</h3>
+            <p class="mt-3 text-gray-300">
+              Empowering organizers to create unforgettable events.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold">Quick Links</h3>
+            <ul class="mt-3 space-y-3">
+              <li><a href="/" class="footer-link text-gray-300">Home</a></li>
+              <li><a href="#" class="footer-link text-gray-300">Events</a></li>
+              <li><a href="#" class="footer-link text-gray-300">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold">Connect</h3>
+            <div class="mt-4 flex space-x-6">
+              <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-linkedin text-2xl"></i></a>
+              <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-facebook-f text-2xl"></i></a>
+              <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-twitter text-2xl"></i></a>
+              <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-instagram text-2xl"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-divider my-8"></div>
+        <p class="text-center text-gray-400">
+          Created By Joy Saha<br />
+          © 2025 Event CMS. All rights reserved!
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("menu-toggle").addEventListener("click", () => {
+        document.getElementById("mobile-menu").classList.toggle("hidden");
+      });
+    </script>
   </body>
-
-  <!-- For loading screen with smooth transitions -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const loader = document.getElementById("loader")
-      const header = document.getElementById("header")
-      const mainContent = document.getElementById("main-content")
-      const footer = document.getElementById("footer")
-
-      function showPageContent() {
-      loader.classList.add("fade-out");
-      loader.addEventListener("transitionend", () => {
-            loader.style.display = "none";
-            [header, mainContent, footer].forEach((el) => {
-              el.classList.remove("hidden");
-              el.style.display = "";
-              setTimeout(() => {
-                el.classList.add("fade-in");
-              }, 8);
-            });
-          },
-          { once: true }
-        );
-      }
-
-      if (!sessionStorage.getItem("loadingShown")) {
-        setTimeout(() => {
-          sessionStorage.setItem("loadingShown", "true")
-          showPageContent()
-        }, 3000)
-      } 
-      else {
-        loader.style.display = "none";
-        [header, mainContent, footer].forEach((el) => {
-          el.style.display = ""
-          el.classList.remove("hidden")
-          el.classList.add("fade-in")
-        })
-      }
-    })
-  </script>
 </html>
