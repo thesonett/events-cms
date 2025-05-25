@@ -1,0 +1,1205 @@
+<style>
+  #navbar,
+  #footer {
+    display: none;
+  }
+  .sidebar {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+  }
+
+  .image-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+
+<div class="bg-gray-100 font-sans">
+  <!-- Sidebar -->
+  <aside
+    id="sidebar"
+    class="sidebar fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col"
+  >
+    <a href="/" class="text-2xl font-bold hover:text-red-600 nav-link text-center mt-5">Event CMS</a>
+    <nav class="flex-1">
+      <ul class="space-y-2 p-4">
+        <li>
+          <a
+            href="#dashboard"
+            class="flex items-center p-2 rounded-lg hover:bg-gray-700 hover:text-[#f43f5e]"
+            data-page="dashboard"
+          >
+            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a
+            href="#events"
+            class="flex items-center p-2 rounded-lg hover:bg-gray-700 hover:text-[#f43f5e]"
+            data-page="events"
+          >
+            <i class="fas fa-calendar-alt mr-3"></i> Events
+          </a>
+        </li>
+        <li>
+          <a
+            href="#users"
+            class="flex items-center p-2 rounded-lg hover:bg-gray-700 hover:text-[#f43f5e]"
+            data-page="users"
+          >
+            <i class="fas fa-users mr-3"></i> Users
+          </a>
+        </li>
+        <li>
+          <a
+            href="#settings"
+            class="flex items-center p-2 rounded-lg hover:bg-gray-700 hover:text-[#f43f5e]"
+            data-page="settings"
+          >
+            <i class="fas fa-cog mr-3"></i> Settings
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="p-4 border-t border-gray-700">
+      <a
+        href="#logout"
+        class="flex items-center p-2 rounded-lg hover:bg-gray-700 hover:text-[#f43f5e]"
+        data-page="logout"
+      >
+        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="ml-0 md:ml-64 transition-all">
+    <!-- Header -->
+    <header class="bg-white shadow p-4 flex justify-between items-center">
+      <button id="menu-toggle" class="md:hidden text-gray-600">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+      <h1 id="page-title" class="text-xl font-semibold">Admin Dashboard</h1>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-600">Admin User</span>
+        <i class="fas fa-user-circle text-2xl text-gray-600"></i>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main id="page-content" class="p-6"></main>
+  </div>
+
+  <script>
+    // Sample data
+    const eventsData = [
+      {
+        id: 1,
+        name: "Tech Conference 2025",
+        date: "2025-06-10",
+        location: "San Francisco, CA",
+        status: "Active",
+        images: [],
+        posts: [
+          {
+            id: 1,
+            artistName: "Keynote Speaker",
+            bio: "Industry leader in tech innovation.",
+            performanceTime: "2025-06-10T09:00",
+            stage: "Main Hall",
+            createdAt: "2025-05-01",
+            images: [],
+          },
+          {
+            id: 2,
+            artistName: "Panel Moderator",
+            bio: "Expert in AI and ML discussions.",
+            performanceTime: "2025-06-10T14:00",
+            stage: "Conference Room A",
+            createdAt: "2025-05-10",
+            images: [],
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: "Music Festival",
+        date: "2025-07-15",
+        location: "Austin, TX",
+        status: "Pending",
+        images: [],
+        posts: [
+          {
+            id: 3,
+            artistName: "Arijit Singh",
+            bio: "Renowned Bollywood playback singer known for soulful melodies.",
+            performanceTime: "2025-07-15T20:00",
+            stage: "Main Stage",
+            createdAt: "2025-05-05",
+            images: [],
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: "Art Exhibition",
+        date: "2025-08-20",
+        location: "New York, NY",
+        status: "Active",
+        images: [],
+        posts: [],
+      },
+    ];
+
+    const usersData = [
+      {
+        id: 1,
+        username: "alice_smith",
+        email: "alice@example.com",
+        role: "Student",
+      },
+      {
+        id: 2,
+        username: "bob_jones",
+        email: "bob@example.com",
+        role: "Student",
+      },
+      {
+        id: 3,
+        username: "carol_wilson",
+        email: "carol@example.com",
+        role: "Student",
+      },
+      {
+        id: 4,
+        username: "david_brown",
+        email: "david@example.com",
+        role: "Student",
+      },
+    ];
+
+    // Page templates
+    const pages = {
+      dashboard: `
+                <!-- Metrics -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-gray-600">Total Events</h3>
+                        <p class="text-2xl font-bold">120</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-gray-600">Active Users</h3>
+                        <p class="text-2xl font-bold">450</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-gray-600">Upcoming Events</h3>
+                        <p class="text-2xl font-bold">15</p>
+                    </div>
+                </div>
+                <!-- Recent Events -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-lg font-semibold mb-4">Recent Events</h2>
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-gray-600">
+                                <th class="p-2">Event Name</th>
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Location</th>
+                                <th class="p-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-table"></tbody>
+                    </table>
+                </div>
+            `,
+      events: `
+                <div class="bg-white p-6 rounded-lg shadow" id="events-container">
+                    <div id="events-list-view">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Manage Events</h2>
+                            <button id="add-event" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Event</button>
+                        </div>
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="text-gray-600">
+                                    <th class="p-2">Event Name</th>
+                                    <th class="p-2">Date</th>
+                                    <th class="p-2">Location</th>
+                                    <th class="p-2">Status</th>
+                                    <th class="p-2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="events-table"></tbody>
+                        </table>
+                    </div>
+ edging
+                    <div id="edit-event-view" class="hidden">
+                        <h2 class="text-lg font-semibold mb-4">Edit Event</h2>
+                        <form id="edit-event-form" class="space-y-4 mb-6">
+                            <div>
+                                <label class="block text-gray-600">Event Name</label>
+                                <input type="text" id="event-name" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Date</label>
+                                <input type="date" id="event-date" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Location</label>
+                                <input type="text" id="event-location" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Status</label>
+                                <select id="event-status" class="w-full p-2 border rounded">
+                                    <option value="Active">Active</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Images</label>
+                                <input type="file" id="event-images" multiple accept="image/*" class="w-full p-2 border rounded">
+                                <div id="event-images-preview" class="image-preview flex flex-wrap mt-2"></div>
+                                <div id="existing-event-images" class="image-preview flex flex-wrap mt-2"></div>
+                            </div>
+                            <button type="button" id="save-event" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Changes</button>
+                            <button type="button" id="cancel-edit" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2">Back</button>
+                        </form>
+                        <div class="border-t pt-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold">Manage Artist Posts</h3>
+                                <button id="add-post" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Artist Post</button>
+                            </div>
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="text-gray-600">
+                                        <th class="p-2">Artist Name</th>
+                                        <th class="p-2">Bio</th>
+                                        <th class="p-2">Performance Time</th>
+                                        <th class="p-2">Stage</th>
+                                        <th class="p-2">Images</th>
+                                        <th class="p-2">Created At</th>
+                                        <th class="p-2">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="posts-table"></tbody>
+                            </table>
+                        </div>
+                        <!-- Add Post Modal -->
+                        <div id="add-post-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                                <h3 class="text-lg font-semibold mb-4">Add New Artist Post</h3>
+                                <form id="add-post-form" class="space-y-4">
+                                    <div>
+                                        <label class="block text-gray-600">Artist Name</label>
+                                        <input type="text" id="new-post-artist-name" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Bio</label>
+                                        <textarea id="new-post-bio" class="w-full p-2 border rounded" rows="4"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Performance Time</label>
+                                        <input type="datetime-local" id="new-post-performance-time" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Stage</label>
+                                        <input type="text" id="new-post-stage" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Images</label>
+                                        <input type="file" id="new-post-images" multiple accept="image/*" class="w-full p-2 border rounded">
+                                        <div id="new-post-images-preview" class="image-preview flex flex-wrap mt-2"></div>
+                                    </div>
+                                    <div class="flex justify-end space-x-2">
+                                        <button type="button" id="cancel-add-post" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</button>
+                                        <button type="button" id="submit-add-post" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Post</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Edit Post Modal -->
+                        <div id="edit-post-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                                <h3 class="text-lg font-semibold mb-4">Edit Artist Post</h3>
+                                <form id="edit-post-form" class="space-y-4">
+                                    <input type="hidden" id="edit-post-id">
+                                    <div>
+                                        <label class="block text-gray-600">Artist Name</label>
+                                        <input type="text" id="edit-post-artist-name" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Bio</label>
+                                        <textarea id="edit-post-bio" class="w-full p-2 border rounded" rows="4"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Performance Time</label>
+                                        <input type="datetime-local" id="edit-post-performance-time" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Stage</label>
+                                        <input type="text" id="edit-post-stage" class="w-full p-2 border rounded">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600">Images</label>
+                                        <input type="file" id="edit-post-images" multiple accept="image/*" class="w-full p-2 border rounded">
+                                        <div id="edit-post-images-preview" class="image-preview flex flex-wrap mt-2"></div>
+                                        <div id="existing-post-images" class="image-preview flex flex-wrap mt-2"></div>
+                                    </div>
+                                    <div class="flex justify-end space-x-2">
+                                        <button type="button" id="cancel-edit-post" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</button>
+                                        <button type="button" id="submit-edit-post" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Event Modal -->
+                    <div id="add-event-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                            <h3 class="text-lg font-semibold mb-4">Add New Event</h3>
+                            <form id="add-event-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-600">Event Name</label>
+                                    <input type="text" id="new-event-name" class="w-full p-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600">Date</label>
+                                    <input type="date" id="new-event-date" class="w-full p-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600">Location</label>
+                                    <input type="text" id="new-event-location" class="w-full p-2 border rounded">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600">Status</label>
+                                    <select id="new-event-status" class="w-full p-2 border rounded">
+                                        <option value="Active">Active</option>
+                                        <option value="Pending" selected>Pending</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600">Images</label>
+                                    <input type="file" id="new-event-images" multiple accept="image/*" class="w-full p-2 border rounded">
+                                    <div id="new-event-images-preview" class="image-preview flex flex-wrap mt-2"></div>
+                                </div>
+                                <div class="flex justify-end space-x-2">
+                                    <button type="button" id="cancel-add-event" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</button>
+                                    <button type="button" id="submit-add-event" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Event</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `,
+      users: `
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Manage Users</h2>
+                        <button id="add-user" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add User</button>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-gray-600">
+                                <th class="p-2">Username</th>
+                                <th class="p-2">Email</th>
+                                <th class="p-2">Role</th>
+                                <th class="p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table"></tbody>
+                    </table>
+                </div>
+                <!-- Add User Modal -->
+                <div id="add-user-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">Add New User</h3>
+                        <form id="add-user-form" class="space-y-4">
+                            <div>
+                                <label class="block text-gray-600">Username</label>
+                                <input type="text" id="new-user-username" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Email</label>
+                                <input type="email" id="new-user-email" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Role</label>
+                                <select id="new-user-role" class="w-full p-2 border rounded">
+                                    <option value="Student" selected>Student</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" id="cancel-add-user" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</button>
+                                <button type="button" id="submit-add-user" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `,
+      settings: `
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-lg font-semibold mb-4">System Settings</h2>
+                    <form id="settings-form" class="space-y-4">
+                        <div>
+                            <label class="block text-gray-600">Admin Email</label>
+                            <input type="email" value="admin@example.com" class="w-full p-2 border rounded">
+                        </div>
+                        <button type="button" id="save-settings" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Settings</button>
+                    </form>
+                    <div class="border-t mt-6 pt-6">
+                        <h3 class="text-lg font-semibold mb-4">Change Password</h3>
+                        <form id="password-form" class="space-y-4">
+                            <div>
+                                <label class="block text-gray-600">Current Password</label>
+                                <input type="password" id="current-password" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">New Password</label>
+                                <input type="password" id="new-password" class="w-full p-2 border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600">Confirm New Password</label>
+                                <input type="password" id="confirm-password" class="w-full p-2 border rounded">
+                            </div>
+                            <button type="button" id="change-password" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+            `,
+      logout: `
+                <div class="bg-white p-6 rounded-lg shadow text-center">
+                    <h2 class="text-lg font-semibold mb-4">Logout</h2>
+                    <p class="mb-4">Are you sure you want to logout?</p>
+                    <a href="/users/logout" id="confirm-logout" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer">Confirm Logout</a>
+                </div>
+            `,
+    };
+
+    // Page titles
+    const pageTitles = {
+      dashboard: "Admin Dashboard",
+      events: "Manage Events",
+      users: "Manage Users",
+      settings: "System Settings",
+      logout: "Logout",
+    };
+
+    // Toggle sidebar on mobile
+    const menuToggle = document.getElementById("menu-toggle");
+    const sidebar = document.getElementById("sidebar");
+
+    menuToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("active");
+    });
+
+    // SPA routing
+    const pageContent = document.getElementById("page-content");
+    const pageTitle = document.getElementById("page-title");
+    const navLinks = document.querySelectorAll(".nav-link");
+    let currentEventId = null;
+
+    // Utility function to handle image uploads
+    function handleImageUpload(inputElement, previewElement, callback) {
+      const files = inputElement.files;
+      previewElement.innerHTML = "";
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+      const images = [];
+
+      if (files.length > 0) {
+        Array.from(files).forEach((file, index) => {
+          if (!validImageTypes.includes(file.type)) {
+            alert("Only JPEG, PNG, and GIF images are allowed.");
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            images.push(e.target.result);
+            const imgContainer = document.createElement("div");
+            imgContainer.className = "relative";
+            imgContainer.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <button type="button" class="remove-image absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center" data-index="${index}">×</button>
+                        `;
+            previewElement.appendChild(imgContainer);
+            callback(images);
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // Handle image removal
+        previewElement.addEventListener("click", (e) => {
+          if (e.target.classList.contains("remove-image")) {
+            const index = parseInt(e.target.getAttribute("data-index"));
+            images.splice(index, 1);
+            previewElement.innerHTML = "";
+            images.forEach((src, i) => {
+              const imgContainer = document.createElement("div");
+              imgContainer.className = "relative";
+              imgContainer.innerHTML = `
+                                <img src="${src}" alt="Preview">
+                                <button type="button" class="remove-image absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center" data-index="${i}">×</button>
+                            `;
+              previewElement.appendChild(imgContainer);
+            });
+            callback(images);
+          }
+        });
+      } else {
+        callback(images);
+      }
+    }
+
+    // Utility function to display existing images with remove buttons
+    function displayExistingImages(images, container, callback) {
+      container.innerHTML = "";
+      images.forEach((src, index) => {
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "relative";
+        imgContainer.innerHTML = `
+                    <img src="${src}" alt="Existing Image">
+                    <button type="button" class="remove-existing-image absolute top-0 right-0 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center" data-index="${index}">×</button>
+                `;
+        container.appendChild(imgContainer);
+      });
+
+      container.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-existing-image")) {
+          const index = parseInt(e.target.getAttribute("data-index"));
+          images.splice(index, 1);
+          displayExistingImages(images, container, callback);
+          callback(images);
+        }
+      });
+    }
+
+    function loadPage(page) {
+      pageContent.innerHTML = pages[page] || pages.dashboard;
+      pageTitle.textContent = pageTitles[page] || pageTitles.dashboard;
+
+      // Highlight active link
+      navLinks.forEach((link) => {
+        link.classList.remove("bg-gray-700");
+        if (link.getAttribute("data-page") === page) {
+          link.classList.add("bg-gray-700");
+        }
+      });
+
+      // Page-specific logic
+      if (page === "dashboard") {
+        loadEvents(false);
+      } else if (page === "events") {
+        loadEvents(true);
+      } else if (page === "users") {
+        initUsersPage();
+      } else if (page === "settings") {
+        initSettingsPage();
+      }
+    }
+
+    function loadEvents(showActions = false, editEventId = null) {
+      const isDashboard = !showActions; // Dashboard doesn't show actions
+      const tableBody = document.getElementById("events-table");
+      if (!tableBody) return; // Exit if table not found
+
+      if (showActions) {
+        // Events page logic
+        const eventsListView = document.getElementById("events-list-view");
+        const editEventView = document.getElementById("edit-event-view");
+        const eventsContainer = document.getElementById("events-container");
+
+        if (!eventsContainer) return;
+
+        if (editEventId) {
+          eventsListView.classList.add("hidden");
+          editEventView.classList.remove("hidden");
+          loadEditEvent(editEventId);
+          return;
+        } else {
+          eventsListView.classList.remove("hidden");
+          editEventView.classList.add("hidden");
+        }
+
+        // Add Event Modal logic
+        const addEventButton = document.getElementById("add-event");
+        const addEventModal = document.getElementById("add-event-modal");
+        const cancelAddEvent = document.getElementById("cancel-add-event");
+        const submitAddEvent = document.getElementById("submit-add-event");
+        const addEventForm = document.getElementById("add-event-form");
+        const newEventImages = document.getElementById("new-event-images");
+        const newEventImagesPreview = document.getElementById(
+          "new-event-images-preview"
+        );
+        let newEventImagesData = [];
+
+        addEventButton.addEventListener("click", () => {
+          addEventModal.classList.remove("hidden");
+          newEventImagesData = [];
+          newEventImagesPreview.innerHTML = "";
+        });
+
+        cancelAddEvent.addEventListener("click", () => {
+          addEventModal.classList.add("hidden");
+          addEventForm.reset();
+          newEventImagesPreview.innerHTML = "";
+          newEventImagesData = [];
+        });
+
+        // Close modal when clicking outside the modal content
+        addEventModal.addEventListener("click", (e) => {
+          if (e.target === addEventModal) {
+            addEventModal.classList.add("hidden");
+            addEventForm.reset();
+            newEventImagesPreview.innerHTML = "";
+            newEventImagesData = [];
+          }
+        });
+
+        newEventImages.addEventListener("change", () => {
+          handleImageUpload(newEventImages, newEventImagesPreview, (images) => {
+            newEventImagesData = images;
+          });
+        });
+
+        submitAddEvent.addEventListener("click", () => {
+          const name = document.getElementById("new-event-name").value.trim();
+          const date = document.getElementById("new-event-date").value;
+          const location = document
+            .getElementById("new-event-location")
+            .value.trim();
+          const status = document.getElementById("new-event-status").value;
+
+          if (!name || !date || !location) {
+            alert("Please fill in all required fields.");
+            return;
+          }
+
+          // Basic date validation (ensure date is not in the past)
+          const today = new Date().toISOString().split("T")[0];
+          if (date < today) {
+            alert("Event date cannot be in the past.");
+            return;
+          }
+
+          const newEvent = {
+            id: eventsData.length + 1,
+            name,
+            date,
+            location,
+            status,
+            images: newEventImagesData,
+            posts: [],
+          };
+
+          eventsData.push(newEvent);
+          addEventModal.classList.add("hidden");
+          addEventForm.reset();
+          newEventImagesPreview.innerHTML = "";
+          newEventImagesData = [];
+          alert("Event added successfully!");
+          loadEvents(true);
+        });
+      }
+
+      // Populate events table for both Dashboard and Events pages
+      tableBody.innerHTML = "";
+      eventsData.forEach((event) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                    <td class="p-2">${event.name}</td>
+                    <td class="p-2">${event.date}</td>
+                    <td class="p-2">${event.location}</td>
+                    <td class="p-2">
+                        <span class="${
+                          event.status === "Active"
+                            ? "text-green-600"
+                            : event.status === "Pending"
+                            ? "text-yellow-600"
+                            : "text-red-600"
+                        }">
+                            ${event.status}
+                        </span>
+                    </td>
+                    ${
+                      showActions
+                        ? `
+                        <td class="p-2">
+                            <button class="edit-event text-blue-600 hover:underline" data-id="${event.id}">Edit</button>
+                            <button class="delete-event text-red-600 hover:underline ml-2" data-id="${event.id}">Delete</button>
+                        </td>
+                    `
+                        : ""
+                    }
+                `;
+        tableBody.appendChild(row);
+      });
+
+      if (showActions) {
+        // Event handlers for Edit and Delete buttons
+        document.querySelectorAll(".edit-event").forEach((button) => {
+          button.addEventListener("click", () => {
+            const eventId = button.getAttribute("data-id");
+            loadEvents(true, eventId);
+          });
+        });
+        document.querySelectorAll(".delete-event").forEach((button) => {
+          button.addEventListener("click", () => {
+            const eventId = button.getAttribute("data-id");
+            if (confirm("Are you sure you want to delete this event?")) {
+              const index = eventsData.findIndex((e) => e.id == eventId);
+              if (index !== -1) {
+                eventsData.splice(index, 1);
+                loadEvents(true);
+              }
+            }
+          });
+        });
+      }
+    }
+
+    function loadEditEvent(eventId) {
+      const event = eventsData.find((e) => e.id == eventId);
+      if (!event) {
+        loadEvents(true);
+        return;
+      }
+
+      currentEventId = eventId;
+
+      // Populate event form
+      document.getElementById("event-name").value = event.name;
+      document.getElementById("event-date").value = event.date;
+      document.getElementById("event-location").value = event.location;
+      document.getElementById("event-status").value = event.status;
+
+      // Handle event images
+      const eventImagesInput = document.getElementById("event-images");
+      const eventImagesPreview = document.getElementById(
+        "event-images-preview"
+      );
+      const existingEventImages = document.getElementById(
+        "existing-event-images"
+      );
+      let newEventImages = [];
+      let existingImages = [...event.images];
+
+      displayExistingImages(
+        existingImages,
+        existingEventImages,
+        (updatedImages) => {
+          existingImages = updatedImages;
+        }
+      );
+
+      eventImagesInput.addEventListener("change", () => {
+        handleImageUpload(eventImagesInput, eventImagesPreview, (images) => {
+          newEventImages = images;
+        });
+      });
+
+      // Load posts
+      const postsTable = document.getElementById("posts-table");
+      postsTable.innerHTML = "";
+      event.posts.forEach((post) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                    <td class="p-2">${post.artistName}</td>
+                    <td class="p-2">${post.bio.substring(0, 50)}${
+          post.bio.length > 50 ? "..." : ""
+        }</td>
+                    <td class="p-2">${post.performanceTime}</td>
+                    <td class="p-2">${post.stage}</td>
+                    <td class="p-2">${post.images.length}</td>
+                    <td class="p-2">${post.createdAt}</td>
+                    <td class="p-2">
+                        <button class="edit-post text-blue-600 hover:underline" data-id="${
+                          post.id
+                        }">Edit</button>
+                        <button class="delete-post text-red-600 hover:underline ml-2" data-id="${
+                          post.id
+                        }">Delete</button>
+                    </td>
+                `;
+        postsTable.appendChild(row);
+      });
+
+      // Event handlers
+      document.getElementById("save-event").addEventListener("click", () => {
+        event.name = document.getElementById("event-name").value;
+        event.date = document.getElementById("event-date").value;
+        event.location = document.getElementById("event-location").value;
+        event.status = document.getElementById("event-status").value;
+        event.images = [...existingImages, ...newEventImages];
+        alert("Event updated successfully!");
+        loadEvents(true);
+      });
+
+      document.getElementById("cancel-edit").addEventListener("click", () => {
+        loadEvents(true);
+      });
+
+      // Add Post Modal logic
+      const addPostButton = document.getElementById("add-post");
+      const addPostModal = document.getElementById("add-post-modal");
+      const cancelAddPost = document.getElementById("cancel-add-post");
+      const submitAddPost = document.getElementById("submit-add-post");
+      const addPostForm = document.getElementById("add-post-form");
+      const newPostImages = document.getElementById("new-post-images");
+      const newPostImagesPreview = document.getElementById(
+        "new-post-images-preview"
+      );
+      let newPostImagesData = [];
+
+      addPostButton.addEventListener("click", () => {
+        addPostModal.classList.remove("hidden");
+        newPostImagesData = [];
+        newPostImagesPreview.innerHTML = "";
+      });
+
+      cancelAddPost.addEventListener("click", () => {
+        addPostModal.classList.add("hidden");
+        addPostForm.reset();
+        newPostImagesPreview.innerHTML = "";
+        newPostImagesData = [];
+      });
+
+      // Close add modal when clicking outside the modal content
+      addPostModal.addEventListener("click", (e) => {
+        if (e.target === addPostModal) {
+          addPostModal.classList.add("hidden");
+          addPostForm.reset();
+          newPostImagesPreview.innerHTML = "";
+          newPostImagesData = [];
+        }
+      });
+
+      newPostImages.addEventListener("change", () => {
+        handleImageUpload(newPostImages, newPostImagesPreview, (images) => {
+          newPostImagesData = images;
+        });
+      });
+
+      submitAddPost.addEventListener("click", () => {
+        const artistName = document
+          .getElementById("new-post-artist-name")
+          .value.trim();
+        const bio = document.getElementById("new-post-bio").value.trim();
+        const performanceTime = document.getElementById(
+          "new-post-performance-time"
+        ).value;
+        const stage = document.getElementById("new-post-stage").value.trim();
+
+        if (!artistName || !bio || !performanceTime || !stage) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        // Basic performance time validation (ensure it's not in the past)
+        const now = new Date().toISOString().slice(0, 16);
+        if (performanceTime < now) {
+          alert("Performance time cannot be in the past.");
+          return;
+        }
+
+        const newPost = {
+          id: event.posts.length + 1,
+          artistName,
+          bio,
+          performanceTime,
+          stage,
+          createdAt: new Date().toISOString().split("T")[0],
+          images: newPostImagesData,
+        };
+
+        event.posts.push(newPost);
+        addPostModal.classList.add("hidden");
+        addPostForm.reset();
+        newPostImagesPreview.innerHTML = "";
+        newPostImagesData = [];
+        alert("Artist post added successfully!");
+        loadEditEvent(eventId);
+      });
+
+      // Edit Post Modal logic
+      const editPostModal = document.getElementById("edit-post-modal");
+      const cancelEditPost = document.getElementById("cancel-edit-post");
+      const submitEditPost = document.getElementById("submit-edit-post");
+      const editPostForm = document.getElementById("edit-post-form");
+      const editPostImages = document.getElementById("edit-post-images");
+      const editPostImagesPreview = document.getElementById(
+        "edit-post-images-preview"
+      );
+      const existingPostImages = document.getElementById(
+        "existing-post-images"
+      );
+
+      document.querySelectorAll(".edit-post").forEach((button) => {
+        button.addEventListener("click", () => {
+          const postId = button.getAttribute("data-id");
+          const post = event.posts.find((p) => p.id == postId);
+          if (post) {
+            document.getElementById("edit-post-id").value = post.id;
+            document.getElementById("edit-post-artist-name").value =
+              post.artistName;
+            document.getElementById("edit-post-bio").value = post.bio;
+            document.getElementById("edit-post-performance-time").value =
+              post.performanceTime;
+            document.getElementById("edit-post-stage").value = post.stage;
+
+            let newPostImages = [];
+            let existingImages = [...post.images];
+
+            displayExistingImages(
+              existingImages,
+              existingPostImages,
+              (updatedImages) => {
+                existingImages = updatedImages;
+              }
+            );
+
+            editPostImages.addEventListener("change", () => {
+              handleImageUpload(
+                editPostImages,
+                editPostImagesPreview,
+                (images) => {
+                  newPostImages = images;
+                }
+              );
+            });
+
+            editPostModal.classList.remove("hidden");
+
+            submitEditPost.onclick = () => {
+              const postId = document.getElementById("edit-post-id").value;
+              const artistName = document
+                .getElementById("edit-post-artist-name")
+                .value.trim();
+              const bio = document.getElementById("edit-post-bio").value.trim();
+              const performanceTime = document.getElementById(
+                "edit-post-performance-time"
+              ).value;
+              const stage = document
+                .getElementById("edit-post-stage")
+                .value.trim();
+
+              if (!artistName || !bio || !performanceTime || !stage) {
+                alert("Please fill in all required fields.");
+                return;
+              }
+
+              // Basic performance time validation (ensure it's not in the past)
+              const now = new Date().toISOString().slice(0, 16);
+              if (performanceTime < now) {
+                alert("Performance time cannot be in the past.");
+                return;
+              }
+
+              const post = event.posts.find((p) => p.id == postId);
+              if (post) {
+                post.artistName = artistName;
+                post.bio = bio;
+                post.performanceTime = performanceTime;
+                post.stage = stage;
+                post.images = [...existingImages, ...newPostImages];
+                editPostModal.classList.add("hidden");
+                editPostForm.reset();
+                editPostImagesPreview.innerHTML = "";
+                existingPostImages.innerHTML = "";
+                alert("Artist post updated successfully!");
+                loadEditEvent(eventId);
+              }
+            };
+          }
+        });
+      });
+
+      cancelEditPost.addEventListener("click", () => {
+        editPostModal.classList.add("hidden");
+        editPostForm.reset();
+        editPostImagesPreview.innerHTML = "";
+        existingPostImages.innerHTML = "";
+      });
+
+      // Close edit modal when clicking outside the modal content
+      editPostModal.addEventListener("click", (e) => {
+        if (e.target === editPostModal) {
+          editPostModal.classList.add("hidden");
+          editPostForm.reset();
+          editPostImagesPreview.innerHTML = "";
+          existingPostImages.innerHTML = "";
+        }
+      });
+
+      document.querySelectorAll(".delete-post").forEach((button) => {
+        button.addEventListener("click", () => {
+          const postId = button.getAttribute("data-id");
+          if (confirm("Are you sure you want to delete this artist post?")) {
+            event.posts = event.posts.filter((p) => p.id != postId);
+            loadEditEvent(eventId);
+          }
+        });
+      });
+    }
+
+    function initUsersPage() {
+      const tableBody = document.getElementById("users-table");
+      tableBody.innerHTML = "";
+      usersData.forEach((user) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                    <td class="p-2">${user.username}</td>
+                    <td class="p-2">${user.email}</td>
+                    <td class="p-2">${user.role}</td>
+                    <td class="p-2">
+                        <button class="edit-user text-blue-600 hover:underline" data-id="${user.id}">Edit</button>
+                        <button class="delete-user text-red-600 hover:underline ml-2" data-id="${user.id}">Delete</button>
+                    </td>
+                `;
+        tableBody.appendChild(row);
+      });
+
+      const addUserButton = document.getElementById("add-user");
+      const addUserModal = document.getElementById("add-user-modal");
+      const cancelAddUser = document.getElementById("cancel-add-user");
+      const submitAddUser = document.getElementById("submit-add-user");
+      const addUserForm = document.getElementById("add-user-form");
+
+      addUserButton.addEventListener("click", () => {
+        addUserModal.classList.remove("hidden");
+      });
+
+      cancelAddUser.addEventListener("click", () => {
+        addUserModal.classList.add("hidden");
+        addUserForm.reset();
+      });
+
+      // Close modal when clicking outside the modal content
+      addUserModal.addEventListener("click", (e) => {
+        if (e.target === addUserModal) {
+          addUserModal.classList.add("hidden");
+          addUserForm.reset();
+        }
+      });
+
+      submitAddUser.addEventListener("click", () => {
+        const username = document
+          .getElementById("new-user-username")
+          .value.trim();
+        const email = document.getElementById("new-user-email").value.trim();
+        const role = document.getElementById("new-user-role").value;
+
+        if (!username || !email) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert("Please enter a valid email address.");
+          return;
+        }
+
+        const newUser = {
+          id: usersData.length + 1,
+          username,
+          email,
+          role,
+        };
+
+        usersData.push(newUser);
+        addUserModal.classList.add("hidden");
+        addUserForm.reset();
+        alert("User added successfully!");
+        initUsersPage();
+      });
+
+      document.querySelectorAll(".edit-user").forEach((button) => {
+        button.addEventListener("click", () => {
+          const userId = button.getAttribute("data-id");
+          alert(`Edit user ${userId} functionality to be implemented`);
+        });
+      });
+
+      document.querySelectorAll(".delete-user").forEach((button) => {
+        button.addEventListener("click", () => {
+          const userId = button.getAttribute("data-id");
+          if (confirm("Are you sure you want to delete this user?")) {
+            const index = usersData.findIndex((u) => u.id == userId);
+            if (index !== -1) {
+              usersData.splice(index, 1);
+              initUsersPage();
+            }
+          }
+        });
+      });
+    }
+
+    function initSettingsPage() {
+      document.getElementById("save-settings").addEventListener("click", () => {
+        alert("Settings saved successfully!");
+      });
+      document
+        .getElementById("change-password")
+        .addEventListener("click", () => {
+          const currentPassword =
+            document.getElementById("current-password").value;
+          const newPassword = document.getElementById("new-password").value;
+          const confirmPassword =
+            document.getElementById("confirm-password").value;
+
+          if (!currentPassword || !newPassword || !confirmPassword) {
+            alert("Please fill in all password fields.");
+            return;
+          }
+
+          if (newPassword !== confirmPassword) {
+            alert("New password and confirm password do not match.");
+            return;
+          }
+
+          // Placeholder for actual password change logic
+          alert("Password changed successfully!");
+          document.getElementById("password-form").reset();
+        });
+    }
+
+    // Handle navigation
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const page = link.getAttribute("data-page");
+        window.location.hash = page;
+        loadPage(page);
+        if (window.innerWidth < 768) {
+          sidebar.classList.remove("active");
+        }
+      });
+    });
+
+    // Load page based on hash or default to dashboard
+    window.addEventListener("hashchange", () => {
+      const page = window.location.hash.slice(1) || "dashboard";
+      loadPage(page);
+    });
+
+    // Initial load
+    document.addEventListener("DOMContentLoaded", () => {
+      const page = window.location.hash.slice(1) || "dashboard";
+      loadPage(page);
+    });
+  </script>
+</div>

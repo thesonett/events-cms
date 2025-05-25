@@ -55,7 +55,7 @@ router.post('/create', async (req, res) => {
     res.redirect(`/users/register`)
 })
 
-// dashboard page only for users
+// profile page only for users
 router.get('/user/:id', isAuthenticated, isUser, async (req, res) => {
     const id = req.params.id
     const { user } = await getUserById(id)

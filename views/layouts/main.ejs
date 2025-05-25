@@ -103,7 +103,7 @@
 
   <body class="flex flex-col min-h-screen font-sans bg-white text-gray-800">
     <!-- Navigation -->
-    <nav id="header" class="bg-white shadow-lg sticky top-0 z-50 fade-in">
+    <nav id="navbar" class="bg-white shadow-lg sticky top-0 z-50 fade-in">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
           <a href="/" class="text-2xl font-bold text-red-600 nav-link">Event CMS</a>
@@ -117,7 +117,7 @@
                 <a href="/dashboard" class="nav-link text-gray-700">Dashboard</a>
               <% } %>
               <% if(userId) { %>
-                <a href="/users/user/<%= userId %>" class="nav-link text-gray-700">Dashboard</a>
+                <a href="/users/user/<%= userId %>" class="nav-link text-gray-700">Profile</a>
               <% } %>
               <a href="/users/logout" class="text-gray-700 hover:text-red-600">Logout</a>
             <% } else { %>
