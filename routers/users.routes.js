@@ -1,8 +1,7 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { isAuthenticated } from '../middleware/auth.js'
-import renderPage from '../services/render.js'
+import { isAuthenticated, isUser } from '../middleware/auth.js'
 import {
     createUser,
     deleteUserById,
@@ -24,11 +23,9 @@ router.get('/register', async (req, res) => {
 
     const { organizingCommitties, success, message } = await getOrganizingCommittees()
     const rolesResult = await getRoles();
-
     const roles = rolesResult.success ? rolesResult.roles : [];
 
     res.render('pages/registration', { organizingCommitties, roles, notify })
-    // renderPage(res, 'registration', { organizingCommitties, roles, notify }) // testing
 })
 
 // create new user
@@ -39,13 +36,10 @@ router.post('/create', async (req, res) => {
 
     // if user chooses 'other' option
     if (organizing_committee_id === 'other' && new_organizing_committee?.trim()) {
-        const capitalizedName = new_organizing_committee.trim().toLowerCase()
-        .split(' ').filter(word => word.length > 0).map(word => 
+        const capitalizedName = new_organizing_committee.trim().toLowerCase().split(' ').filter(word => word.length > 0).map(word => 
             word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
 
-        const { organizingCommittee, message, success } = await createOrganizingCommittee({
-            name: capitalizedName
-        })
+        const { organizingCommittee, message, success } = await createOrganizingCommittee({ name: capitalizedName })
 
         if (!success) {
             req.flash('message', message)
@@ -61,15 +55,14 @@ router.post('/create', async (req, res) => {
     res.redirect(`/users/register`)
 })
 
-// dashboard page
-router.get('/user/:id', isAuthenticated, async (req, res) => {
+// dashboard page only for users
+router.get('/user/:id', isAuthenticated, isUser, async (req, res) => {
     const id = req.params.id
     const { user } = await getUserById(id)
     const { name } = await getOrganizingCommitteeById(user.organizing_committee_id)
     const { role } = await getRoleById(user.role_id)
 
     res.render('pages/user', { user, name, role })
-    // renderPage(res, 'user', { user, name, role }) // testing
 })
 
 // login
@@ -84,11 +77,11 @@ router.post('/login', async (req, res) => {
 
     req.session.user = { id: user.id }
 
-    const token = jwt.sign({ _id: user.id, email: user.email }, process.env.MY_SECRET_KEY, { expiresIn: '24h' })
+    const token = jwt.sign({ _id: user.id, email: user.email, role_id: user.role_id }, process.env.MY_SECRET_KEY, { expiresIn: '24h' })
     res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000 })
 
     req.flash('message', message)
-    return res.redirect(`/users/user/${user.id}`)
+    return res.redirect('/')
 })
 
 // login page
@@ -96,19 +89,19 @@ router.get('/login', (req, res) => {
     const notify = req.flash('message')[0]
 
     res.clearCookie('connect.sid')
+    res.clearCookie('token')
     res.setHeader('Cache-Control', 'no-store')
 
     res.render('pages/login', { notify })
-    // renderPage(res, 'login', { notify }) // testing
 })
 
 // logout
-router.post('/logout', (req, res) => { // TODO: NOT DESTROYING SESSION FOR NOW!
-    req.flash('message', 'Logged out successfully!')
+router.all('/logout', (req, res) => { // TODO: NOT DESTROYING SESSION FOR NOW!
+  req.flash('message', 'Logged out successfully!')
 
-    res.clearCookie('connect.sid')
-    res.clearCookie('token')
-    res.redirect('/users/login')
+  res.clearCookie('connect.sid')
+  res.clearCookie('token')
+  res.redirect('/users/login')
 })
 
 // delete user

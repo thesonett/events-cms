@@ -1,7 +1,3 @@
-TODOS:
+NEXT TASKS✅
 
-1. Fixing bugs of controllers. ✅
-2. JWT token based authentication. ✅
-3. adding login & registration page for testing user routes. ✅
-4. adding views structure. ✅
-5. working on other routes.
+1. working on admin dashboard page & It's routes.

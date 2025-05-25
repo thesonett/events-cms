@@ -10,11 +10,11 @@ async function initializeDB() {
     ])
     
     await OrganizingCommittee.bulkCreate([
-      { name: "AIIMS Delhi" },
+      { name: "Kolkata University" },
       { name: "MAKAUT" },
       { name: "IIT Kharagpur" },
       { name: "NIT Durgapur" },
-      { name: "Kolkata University" },
+      { name: "AIIMS Delhi" },
     ]);
 
     }).catch((error) => {

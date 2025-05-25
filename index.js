@@ -7,6 +7,7 @@ import expressLayouts from 'express-ejs-layouts';
 
 import router from './routers/index.js'
 import initializeDB from './database/data.js'
+import { isLoggedIn } from './middleware/auth.js'
 
 dotenv.config();
 const app = express()
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
     res.setHeader('Expires', '0')
     next()
 });
+app.use(isLoggedIn)
 app.use('/', router)
 
 // settings
