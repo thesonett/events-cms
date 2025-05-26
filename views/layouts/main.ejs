@@ -113,13 +113,13 @@
             <a href="#" class="nav-link text-gray-700">Contact Us</a>
             
             <% if (isLoggedIn) { %>
+              <a href="/users/logout" class="text-gray-700 hover:text-red-600">Logout</a>
               <% if (isAdmin) { %>
-                <a href="/dashboard" class="nav-link text-gray-700">Dashboard</a>
+                <a href="/dashboard" class="nav-link text-gray-700"><i class="fas fa-user-circle text-2xl text-gray-600"></i></a>
               <% } %>
               <% if(userId) { %>
-                <a href="/users/user/<%= userId %>" class="nav-link text-gray-700">Profile</a>
+                <a href="/users/user/<%= userId %>" class="nav-link text-gray-700"><i class="fas fa-user-circle text-2xl text-gray-600"></i></a>
               <% } %>
-              <a href="/users/logout" class="text-gray-700 hover:text-red-600">Logout</a>
             <% } else { %>
               <a href="/users/register" class="text-gray-700 hover:text-red-600">Sign Up</a>
               <a href="/users/login" class="text-gray-700 hover:text-red-600">Login</a>

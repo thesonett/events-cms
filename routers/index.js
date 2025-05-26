@@ -8,8 +8,7 @@ const router = express.Router()
 
 router.use('/users', userRoutes)
 router.use('/images', imageRoutes)
-// router.use('/dashboard', isAuthenticated, isAdmin, dashboardRoutes)
-router.use('/dashboard', dashboardRoutes)
+router.use('/dashboard', isAuthenticated, isAdmin, dashboardRoutes)
 
 router.get('/', (req, res) => { 
   res.render('pages/home')

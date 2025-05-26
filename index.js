@@ -1,9 +1,9 @@
 import express from 'express'
 import session from 'express-session'
 import dotenv from 'dotenv';
-import flash from 'connect-flash';
+import flash from 'connect-flash'
 import cookieParser from 'cookie-parser'
-import expressLayouts from 'express-ejs-layouts';
+import expressLayouts from 'express-ejs-layouts'
 
 import router from './routers/index.js'
 import initializeDB from './database/data.js'
@@ -11,7 +11,6 @@ import { isLoggedIn } from './middleware/auth.js'
 
 dotenv.config()
 const app = express()
-const PORT = 3000
 
 // middlewares
 app.use(expressLayouts)
@@ -43,6 +42,6 @@ app.set('layout', './layouts/main')
 initializeDB()
 
 // server
-app.listen(PORT, () => {
-    console.log(`\n::: Server started at port number: ${PORT} ::::\n`)
+app.listen(process.env.DB_PORT, () => {
+    console.log(`\n::: Server started at port number: ${process.env.DB_PORT} ::::\n`)
 })

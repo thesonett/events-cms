@@ -65,6 +65,50 @@ async function getUsers() {
     }
 }
 
+async function getActiveUsers(id) {
+    try {
+        const { user }  = await getUserById(id)
+        const users = await Users.findAll({
+            where: {
+                organizing_committee_id: user.organizing_committee_id,
+                status: 1,
+                role_id: 2,
+            },
+            attributes: {
+                exclude: ['password']
+            }
+        })
+
+        return { success: true, users }
+    }
+    catch(error) {
+        console.log('Exception occurred inside getActiveUsers!\n', error)
+        return { success: false, message: 'Exception:::: Active users not found!' }
+    }
+}
+
+async function getOnlyUsers(id) {
+    try {
+        const { user }  = await getUserById(id)
+        const users = await Users.findAll({
+            where: {
+                organizing_committee_id: user.organizing_committee_id,
+                role_id: 2,
+            },
+            attributes: {
+                exclude: ['password']
+            }
+        })
+
+        return { success: true, users }
+    }
+    catch(error) {
+        console.log('Exception occurred inside getOnlyUsers!\n', error)
+        return { success: false, message: 'Exception:::: Active users not found!' }
+    }
+}
+
+
 async function getUserByRoleId(role_id) {
     try {
         const user = await Users.findOne({ where: { role_id, is_owner: true, status: 1 } })
@@ -150,6 +194,8 @@ export {
 
     getUser,
     getUsers,
+    getActiveUsers,
+    getOnlyUsers,
 
     getUserByRoleId,
     getUsersByRoleId,

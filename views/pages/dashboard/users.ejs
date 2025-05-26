@@ -1,0 +1,39 @@
+<h2 class="text-2xl font-bold mb-4">Registered Users for <%= organizingCommittee %>'s Events</h2>
+
+<table class="min-w-full bg-white border rounded shadow">
+  <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+    <tr>
+      <th class="py-3 px-6 text-left">Name</th>
+      <th class="py-3 px-6 text-left">Email</th>
+      <th class="py-3 px-6 text-left">Username</th>
+      <th class="py-3 px-6 text-left">Verified On</th>
+      <th class="py-3 px-6 text-left">Created On</th>
+      <th class="py-3 px-6 text-left">Updated On</th>
+      <th class="py-3 px-6 text-left">Status</th>
+    </tr>
+  </thead>
+  <tbody class="text-gray-700 text-sm">
+    <% if (onlyUsers && onlyUsers.length > 0) { %>
+      <% onlyUsers.forEach(user => { %>
+        <tr class="border-b hover:bg-gray-100">
+          <td class="py-3 px-6"><%= user.first_name %> <%= user.last_name %></td>
+          <td class="py-3 px-6"><%= user.email %></td>
+          <td class="py-3 px-6"><%= user.username %></td>
+          <td class="py-3 px-6"><%= user.email_verified_at %></td>
+          <td class="py-3 px-6"><%= user.createdAt %></td>
+          <td class="py-3 px-6"><%= user.updatedAt %></td>
+         <td class="py-3 px-6 capitalize">
+          <span class="px-2 py-1 rounded-full text-white text-xs font-semibold 
+            <%= user.status ? 'bg-green-600' : 'bg-rose-600' %>">
+            <%= user.status ? 'Active' : 'Inactive' %>
+          </span>
+        </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="4" class="text-center py-4">No users found!</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

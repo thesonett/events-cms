@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const sequelize = new Sequelize({
+const sequelize = new Sequelize(/*process.env.DB_PUBLIC_URL,*/ {
     host: process.env.DB_HOST,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,

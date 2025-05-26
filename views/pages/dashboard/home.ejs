@@ -1,0 +1,53 @@
+<!-- Dashboard Content -->
+<div id="dashboard-home">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-lg font-semibold text-gray-700">Total Events</h3>
+      <p class="text-3xl font-bold text-gray-900">1,234</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-lg font-semibold text-gray-700">Active Users</h3>
+      <p class="text-3xl font-bold text-gray-900"><%= activeUsers.length %></p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-lg font-semibold text-gray-700">Upcoming Events</h3>
+      <p class="text-3xl font-bold text-gray-900">456</p>
+    </div>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">Recent Activity</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="text-gray-600">
+            <th class="p-3">User</th>
+            <th class="p-3">Action</th>
+            <th class="p-3">Date</th>
+            <th class="p-3">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t">
+            <td class="p-3">John Doe</td>
+            <td class="p-3">Logged in</td>
+            <td class="p-3">2025-05-26</td>
+            <td class="p-3"><span class="text-green-500">Success</span></td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-3">Jane Smith</td>
+            <td class="p-3">Updated profile</td>
+            <td class="p-3">2025-05-25</td>
+            <td class="p-3"><span class="text-green-500">Success</span></td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-3">Bob Johnson</td>
+            <td class="p-3">Failed login</td>
+            <td class="p-3">2025-05-24</td>
+            <td class="p-3"><span class="text-red-500">Failed</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

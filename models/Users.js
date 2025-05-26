@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize'
 import OrganizingCommittee from './OrganizingCommittee.js'
 import Role from './Role.js';
 
-const User = sequelize.define('users_model', {
+const Users = sequelize.define('users_model', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -66,4 +66,4 @@ const User = sequelize.define('users_model', {
   timestamps: true,
 });
 
-export default User
+export default Users

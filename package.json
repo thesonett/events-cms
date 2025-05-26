@@ -10,6 +10,7 @@
     "test": "nodemon index.js"
   },
   "dependencies": {
+    "@railway/cli": "^4.5.2",
     "@tailwindcss/cli": "^4.1.6",
     "bcrypt": "^5.1.1",
     "body-parser": "^2.2.0",
