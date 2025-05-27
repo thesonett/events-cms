@@ -80,6 +80,13 @@ import {
     findOnePostByField,
 } from './postController.js'
 
+import {
+    createActivity,
+    updateActivity,
+    deleteActivity,
+    getActivities,
+} from './activitiesController.js'
+
 export {
     // categories
     createCategory,
@@ -154,4 +161,10 @@ export {
     getPostsByStatus,
     getPostById,
     findOnePostByField, // for testing purpose
+
+    // activities
+    createActivity,
+    updateActivity,
+    deleteActivity,
+    getActivities,
 }

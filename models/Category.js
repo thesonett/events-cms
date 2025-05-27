@@ -6,15 +6,22 @@ const Category = sequelize.define('category_model', {
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
-    unique: true
   },
   category: {
     type: DataTypes.STRING(255),
     allowNull: false,
   }
-}, {
+}, 
+{
+  indexes: [
+    {
+      unique: true,
+      fields: ['id'],
+      name: 'unique_category_id',
+    }
+  ],
   tableName: 'category',
   timestamps: true,
-});
+})
 
 export default Category

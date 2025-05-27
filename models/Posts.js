@@ -11,7 +11,6 @@ const Posts = sequelize.define('posts_model', {
   title: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    unique: true,
   },
   description: {
     type: DataTypes.STRING(255),
@@ -49,7 +48,15 @@ const Posts = sequelize.define('posts_model', {
         key: 'id',
     }
   },
-}, {
+}, 
+{
+  indexes: [
+    {
+      unique: true,
+      fields: ['title'],
+      name: 'unique_post_title_id',
+    },
+  ],
   tableName: 'posts',
   timestamps: true,
 });

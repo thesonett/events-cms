@@ -3,7 +3,7 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
     <div class="bg-white p-6 rounded-lg shadow">
       <h3 class="text-lg font-semibold text-gray-700">Total Events</h3>
-      <p class="text-3xl font-bold text-gray-900">1,234</p>
+      <p class="text-3xl font-bold text-gray-900">test</p>
     </div>
     <div class="bg-white p-6 rounded-lg shadow">
       <h3 class="text-lg font-semibold text-gray-700">Active Users</h3>
@@ -11,7 +11,7 @@
     </div>
     <div class="bg-white p-6 rounded-lg shadow">
       <h3 class="text-lg font-semibold text-gray-700">Upcoming Events</h3>
-      <p class="text-3xl font-bold text-gray-900">456</p>
+      <p class="text-3xl font-bold text-gray-900">test</p>
     </div>
   </div>
 
@@ -21,32 +21,26 @@
       <table class="w-full text-left">
         <thead>
           <tr class="text-gray-600">
-            <th class="p-3">User</th>
-            <th class="p-3">Action</th>
-            <th class="p-3">Date</th>
-            <th class="p-3">Status</th>
+            <th class="p-3">Action ID</th>
+            <th class="p-3">Actions</th>
+            <th class="p-3">Actions Performed On</th>
           </tr>
         </thead>
         <tbody>
+        <% if (activities && activities.length) { %>
+        <% activities.forEach(activity => { %>
           <tr class="border-t">
-            <td class="p-3">John Doe</td>
-            <td class="p-3">Logged in</td>
-            <td class="p-3">2025-05-26</td>
-            <td class="p-3"><span class="text-green-500">Success</span></td>
+            <td class="p-3"><%= activity.id || 'No actions performed yet' %></td>
+            <td class="p-3"><%= activity.actions || 'No actions performed yet' %></td>
+            <td class="p-3"><%= activity.actionsPerformedOn || 'N/A' %></td>
           </tr>
-          <tr class="border-t">
-            <td class="p-3">Jane Smith</td>
-            <td class="p-3">Updated profile</td>
-            <td class="p-3">2025-05-25</td>
-            <td class="p-3"><span class="text-green-500">Success</span></td>
-          </tr>
-          <tr class="border-t">
-            <td class="p-3">Bob Johnson</td>
-            <td class="p-3">Failed login</td>
-            <td class="p-3">2025-05-24</td>
-            <td class="p-3"><span class="text-red-500">Failed</span></td>
-          </tr>
-        </tbody>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="2" class="p-3 text-center text-gray-500">No activity records available</td>
+        </tr>
+      <% } %>
+      </tbody>
       </table>
     </div>
   </div>

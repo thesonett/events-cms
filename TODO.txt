@@ -1,5 +1,4 @@
 NEXT TASKS✅
 
-1. adding ejs layout for dashboard section.✅
-1. working on dashboard page...
-3. working on dashboard route...
+1. activity database creation.
+2. working on dashboard events page.

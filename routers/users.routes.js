@@ -106,7 +106,7 @@ router.all('/logout', (req, res) => { // TODO: NOT DESTROYING SESSION FOR NOW!
 
 // delete user
 router.post('/delete/:id', async (req, res) => {
-    const id = req.params.id;
+    const id = req.params.id
     const { success, message } = await deleteUserById(id)
 
     if (success) {

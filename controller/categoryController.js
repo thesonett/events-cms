@@ -1,11 +1,11 @@
 import { Category } from "../models/index.js";
 
 async function createCategory({ id, category }) {
+    if (!category) {
+        return { success: false, message: 'Category name is required!' }
+    }
+    
     try {
-        if (!category) {
-            return { success: false, message: 'Category name is required!' }
-        }
-
         const createdCategory = await Category.create({ id, category })
         return { success: true, message: 'Category created!', category: createdCategory }
     } 
@@ -51,8 +51,8 @@ async function getCategories() {
     try {
         const categories = await Category.findAll({ attributes: ['id', 'category'] })
     
-        if(!categories) {
-            return {success: false, message: 'Categories are not found!'};
+        if(!categories.length) {
+            return { success: false, message: 'Categories are not found!' }
         }
     
         return { success: true, categories }
@@ -68,10 +68,10 @@ async function getCategoryById(id) {
         const categoryName = await Category.findOne({ where: { id }, attributes: ['name'] })
     
         if(!categoryName) {
-            return {success: false, message: 'Category name not found!'}
+            return { success: false, message: 'Category name not found!' }
         }
     
-        return {success: true, categoryName}
+        return { success: true, categoryName }
     }
     catch(error) {
         console.log('Exception occured inside getCategoryById!\n', error)

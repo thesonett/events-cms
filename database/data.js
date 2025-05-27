@@ -4,63 +4,36 @@ import sequelize from './config.js'
 
 dotenv.config()
 
-// dummy dataset for testing
+const seedData = async () => {
+  await Role.bulkCreate([
+    { role: 'admin' },
+    { role: 'user' }
+  ]);
+
+  await OrganizingCommittee.bulkCreate([
+    { name: 'IIT Kharagpur' },
+    { name: 'NIT Durgapur' },
+    { name: 'MAKAUT' },
+  ]);
+};
+
 async function initializeDB() {
-  if (process.env.DB_FORCE_SYNC === 'true') {
-    await sequelize.sync({ force: true }).then(async () => {
-      await Role.bulkCreate([
-        { role: "admin" }, 
-        { role: "user" } 
-      ])
-      
-      await OrganizingCommittee.bulkCreate([
-        { name: "Kolkata University" },
-        { name: "MAKAUT" },
-        { name: "IIT Kharagpur" },
-        { name: "NIT Durgapur" },
-        { name: "AIIMS Delhi" },
-      ])
-  
-      })
-      .catch((error) => {
-        console.error('Exception occurred inside initializeDB!\n', error)
-      })
+  try {
+    const shouldForceSync = process.env.DB_FORCE_SYNC === 'true';
+    await sequelize.sync({ force: shouldForceSync })
 
-      console.log('\n:::: Database synced with force! :::: \n')
-  }
-  else {
-    await sequelize.sync().then(async () => {
-      // Seed Roles
-      const roleCount = await Role.count()
-      if (roleCount === 0) {
-        await Role.bulkCreate([
-          { role: "admin" }, 
-          { role: "user" }
-        ])
+    console.log(`\n:::: Database synced ${shouldForceSync ? 'with' : 'without'} force! :::: \n`)
 
-        console.log("Roles seeded!\n")
-      }
+    const roleCount = await Role.count()
+    const committeeCount = await OrganizingCommittee.count()
 
-      // Seed Organizing Committees
-      const committeeCount = await OrganizingCommittee.count()
-      if (committeeCount === 0) {
-        await OrganizingCommittee.bulkCreate([
-          { name: "Kolkata University" },
-          { name: "MAKAUT" },
-          { name: "IIT Kharagpur" },
-          { name: "NIT Durgapur" },
-          { name: "AIIMS Delhi" },
-        ])
-
-        console.log("Organizing Committees seeded!\n")
-      }
-  
-      })
-      .catch((error) => {
-        console.error('Exception occurred inside initializeDB!\n', error)
-      })
-
-    console.log('\n:::: Database synced without force! :::: \n')
+    if (shouldForceSync || roleCount === 0 || committeeCount === 0) {
+      await seedData()
+      console.log('Seeded Roles and Committees!\n')
+    }
+  } 
+  catch (error) {
+    console.error('Exception occurred inside initializeDB!\n', error)
   }
 }
 
