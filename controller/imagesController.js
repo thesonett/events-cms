@@ -1,12 +1,8 @@
 import { Images } from '../models/index.js'
 
-async function createImage({ file_name, original_filename, size, entity_type, entity_id }) {
-    if (!file_name || !original_filename || !entity_type || !entity_id) {
-        return { success: false, message: 'Missing required image fields!' }
-    }
-
+async function createImage({ file_name, original_filename, image_url, size, entity_type, entity_id, events_id, posts_id }) { 
     try {
-        const image = await Images.create({ file_name, original_filename, size, entity_type, entity_id })
+        const image = await Images.create({ file_name, original_filename, image_url, size, entity_type, entity_id, events_id, posts_id: null })
         return { success: true, message: 'Image uploaded!', image }
 
     } 

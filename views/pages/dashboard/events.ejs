@@ -112,33 +112,32 @@
 <div id="addEventModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
   <div id="addEventContent" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
     <h2 class="text-xl font-semibold mb-4">Add New Event</h2>
-    <form>
+    <form action="/dashboard/events/event/create" method="POST" enctype="multipart/form-data">
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1">Event Name</label>
-        <input type="text" class="w-full border rounded px-3 py-2" placeholder="Enter event name" required>
+        <input type="text" name="title" class="w-full border rounded px-3 py-2" placeholder="Enter event name" required>
       </div>
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1">Description</label>
-        <textarea class="w-full border rounded px-3 py-2" placeholder="Enter description" required></textarea>
+        <textarea name="description" class="w-full border rounded px-3 py-2" placeholder="Enter description" required></textarea>
       </div>
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1">Date</label>
-        <input type="date" class="w-full border rounded px-3 py-2" required>
+        <input type="date" name="date" class="w-full border rounded px-3 py-2" required>
       </div>
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1">Category</label>
-        <select id="categorySelect" class="w-full border rounded px-3 py-2" required>
-          <option value="Tech">Tech</option>
-          <option value="Cultural">Cultural</option>
-          <option value="Sports">Sports</option>
-          <option value="Workshop">Workshop</option>
+        <select name="category_id" id="categorySelect" class="w-full border rounded px-3 py-2" required>
+          <% categories.forEach(category => { %>
+            <option value="<%= category.id %>"><%= category.category %></option>
+          <% }) %>
           <option value="Other">Other</option>
         </select>
-        <input id="customCategoryInput" type="text" class="w-full border rounded px-3 py-2 mt-2 hidden" placeholder="Enter custom category">
+        <input id="customCategoryInput" type="text" class="w-full border rounded px-3 py-2 mt-2 hidden" name="customCategory" placeholder="Enter custom category">
       </div>
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1">Event Image</label>
-        <input type="file" accept="image/*" class="w-full border rounded px-3 py-2">
+        <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-2">
       </div>
       <div class="flex justify-end space-x-2">
         <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded" data-modal-close="addEventModal" data-modal-content="addEventContent">Cancel</button>
@@ -211,18 +210,12 @@
 
 </script>
 
-
-<!-- 
-const cloudinary = require('cloudinary').v2;
-
-cloudinary.config({
-  cloud_name: 'your_cloud_name',
-  api_key: 'your_api_key',
-  api_secret: 'your_api_secret'
-});
-
-cloudinary.uploader.upload('path/to/local/file.jpg', {
-  folder: 'events'
-}, (error, result) => {
-  console.log(result.secure_url); // Public URL
-}); -->
+<% if (notify) { %>
+    <script>
+      Swal.fire({
+        text: "<%- notify %>",
+        icon: "info",
+        confirmButtonColor: "#ec4899"
+      });
+    </script>
+<% } %>

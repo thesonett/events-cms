@@ -1,12 +1,12 @@
 import { Category } from "../models/index.js";
 
-async function createCategory({ id, category }) {
+async function createCategory({ category }) {
     if (!category) {
         return { success: false, message: 'Category name is required!' }
     }
     
     try {
-        const createdCategory = await Category.create({ id, category })
+        const createdCategory = await Category.create({ category })
         return { success: true, message: 'Category created!', category: createdCategory }
     } 
     catch (error) {
@@ -65,7 +65,7 @@ async function getCategories() {
 
 async function getCategoryById(id) {
     try {
-        const categoryName = await Category.findOne({ where: { id }, attributes: ['name'] })
+        const categoryName = await Category.findOne({ where: { id }, attributes: ['category'] })
     
         if(!categoryName) {
             return { success: false, message: 'Category name not found!' }
