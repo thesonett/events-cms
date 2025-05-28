@@ -5,7 +5,7 @@ const Category = sequelize.define('category_model', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    allowNull: false,
+    autoIncrement: true,
   },
   category: {
     type: DataTypes.STRING(255),
@@ -13,13 +13,6 @@ const Category = sequelize.define('category_model', {
   }
 }, 
 {
-  indexes: [
-    {
-      unique: true,
-      fields: ['id'],
-      name: 'unique_category_id',
-    }
-  ],
   tableName: 'category',
   timestamps: true,
 })

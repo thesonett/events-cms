@@ -1,0 +1,194 @@
+<div class="bg-white p-6 rounded-lg shadow">
+  <!-- Title and Add Post on one line -->
+  <div class="flex items-center justify-between mb-1">
+    <h3 class="text-lg font-semibold">Manage Posts for Tech Conference 2025</h3>
+    <button onclick="openModal('addPostModal')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Add Post
+    </button>
+  </div>
+
+  <!-- Back to events below title -->
+  <div class="mb-4">
+    <a href="/dashboard/events" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm">
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to events
+    </a>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="text-gray-600 border-b">
+        <tr>
+          <th class="py-2 px-4 font-medium">ID</th>
+          <th class="py-2 px-4 font-medium">Post Title</th>
+          <th class="py-2 px-4 font-medium">Description</th>
+          <th class="py-2 px-4 font-medium">Venue</th>
+          <th class="py-2 px-4 font-medium">Location</th>
+          <th class="py-2 px-4 font-medium">Duration</th>
+          <th class="py-2 px-4 font-medium">Organized By</th>
+          <th class="py-2 px-4 font-medium">Time</th>
+          <th class="py-2 px-4 font-medium">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-2 px-4">1</td>
+          <td class="py-2 px-4">Techno Fest Party</td>
+          <td class="py-2 px-4">test description</td>
+          <td class="py-2 px-4">Techno Mall</td>
+          <td class="py-2 px-4">Salt Lake Sector-V</td>
+          <td class="py-2 px-4">2hrs</td>
+          <td class="py-2 px-4">CSE Dept</td>
+          <td class="py-2 px-4">11am</td>
+          <td class="py-2 px-4">upcoming</td>
+          <td class="py-2 px-4 space-x-2">
+            <a href="#" onclick="openModal('editPostModal')" class="text-blue-600 hover:underline">Edit</a>
+            <a href="#" class="text-red-600 hover:underline">Delete</a>
+          </td>
+        </tr>
+        <!-- Add more posts -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Edit Post Modal -->
+<div id="editPostModal" 
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative transform transition-all duration-300 scale-95 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-xl font-semibold mb-4">Edit Post</h3>
+
+    <form id="editPostForm" class="space-y-4">
+      <div>
+        <label for="editPostTitle" class="block font-medium mb-1">Title</label>
+        <input type="text" id="editPostTitle" name="title" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="editPostDescription" class="block font-medium mb-1">Description</label>
+        <textarea id="editPostDescription" name="description" required class="w-full border rounded px-3 py-2"></textarea>
+      </div>
+
+      <div>
+        <label for="editPostVenue" class="block font-medium mb-1">Venue</label>
+        <input type="text" id="editPostVenue" name="venue" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="editPostLocation" class="block font-medium mb-1">Location</label>
+        <input type="text" id="editPostLocation" name="location" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="editPostDuration" class="block font-medium mb-1">Duration</label>
+        <input type="text" id="editPostDuration" name="duration" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="editPostOrganizedBy" class="block font-medium mb-1">Organized By</label>
+        <input type="text" id="editPostOrganizedBy" name="organizedBy" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="editPostTime" class="block font-medium mb-1">Time</label>
+        <input type="time" id="editPostTime" name="time" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="editPostImages" class="block font-medium mb-1">Images</label>
+        <input type="file" id="editPostImages" name="images" multiple accept="image/*" class="w-full" />
+      </div>
+
+      <div class="flex justify-end space-x-3 pt-4 border-t">
+        <button type="button" onclick="closeModal('editPostModal')" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Update Post</button>
+      </div>
+    </form>
+
+    <button onclick="closeModal('editPostModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700" aria-label="Close modal">
+      &times;
+    </button>
+  </div>
+</div>
+
+
+<!-- Add Post Modal -->
+<div id="addPostModal" 
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative transform transition-all duration-300 scale-95 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-xl font-semibold mb-4">Add New Post</h3>
+
+    <form id="addPostForm" class="space-y-4">
+      <div>
+        <label for="postTitle" class="block font-medium mb-1">Title</label>
+        <input type="text" id="postTitle" name="title" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="postDescription" class="block font-medium mb-1">Description</label>
+        <textarea id="postDescription" name="description" required class="w-full border rounded px-3 py-2"></textarea>
+      </div>
+
+      <div>
+        <label for="postVenue" class="block font-medium mb-1">Venue</label>
+        <input type="text" id="postVenue" name="venue" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="postLocation" class="block font-medium mb-1">Location</label>
+        <input type="text" id="postLocation" name="location" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="postDuration" class="block font-medium mb-1">Duration</label>
+        <input type="text" id="postDuration" name="duration" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="postOrganizedBy" class="block font-medium mb-1">Organized By</label>
+        <input type="text" id="postOrganizedBy" name="organizedBy" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="postTime" class="block font-medium mb-1">Time</label>
+        <input type="time" id="postTime" name="time" required class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label for="postImages" class="block font-medium mb-1">Images</label>
+        <input type="file" id="postImages" name="images" multiple accept="image/*" class="w-full" />
+      </div>
+
+      <div class="flex justify-end space-x-3 pt-4 border-t">
+        <button type="button" onclick="closeModal('addPostModal')" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Post</button>
+      </div>
+    </form>
+
+    <button onclick="closeModal('addPostModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700" aria-label="Close modal">
+      &times;
+    </button>
+  </div>
+</div>
+
+
+<script>
+  function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('pointer-events-none', 'opacity-0');
+    // trigger reflow so transition happens
+    modal.offsetWidth;
+    modal.querySelector('div').classList.remove('scale-95');
+  }
+
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.querySelector('div').classList.add('scale-95');
+    modal.classList.add('opacity-0');
+    setTimeout(() => {
+      modal.classList.add('pointer-events-none');
+    }, 300);
+  }
+</script>

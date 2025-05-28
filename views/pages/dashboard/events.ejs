@@ -1,0 +1,228 @@
+<div class="bg-white p-6 rounded-lg shadow">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold">Manage Events</h3>
+    <button data-modal-open="addEventModal" data-modal-content="addEventContent" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Add Event
+    </button>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="text-gray-600 border-b">
+        <tr>
+          <th class="py-2 px-4 font-medium">ID</th>
+          <th class="py-2 px-4 font-medium">Event Name</th>
+          <th class="py-2 px-4 font-medium">Description</th>
+          <th class="py-2 px-4 font-medium">Date</th>
+          <th class="py-2 px-4 font-medium">Category</th>
+          <th class="py-2 px-4 font-medium">Status</th>
+          <th class="py-2 px-4 font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-2 px-4">1</td>
+          <td class="py-2 px-4">Tech Conference 2025</td>
+          <td class="py-2 px-4">test Description</td>
+          <td class="py-2 px-4">2025-06-10</td>
+          <td class="py-2 px-4">test category</td>
+          <td class="py-2 px-4 text-green-600 font-medium">upcoming</td>
+          <td class="py-2 px-4 space-x-2">
+            <a href="#" class="text-blue-600 hover:underline" data-modal-open="editEventModal" data-modal-content="editEventContent">Edit</a>
+            <a href="#" class="text-red-600 hover:underline">Delete</a>
+            <a href="/dashboard/events/post" class="text-blue-600 hover:underline">View Posts</a>
+          </td>
+        </tr>
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-2 px-4">2</td>
+          <td class="py-2 px-4">Tech Conference 2025</td>
+          <td class="py-2 px-4">test Description</td>
+          <td class="py-2 px-4">2025-06-10</td>
+          <td class="py-2 px-4">test category</td>
+          <td class="py-2 px-4 text-yellow-500 font-medium">ongoing</td>
+          <td class="py-2 px-4 space-x-2">
+            <a href="#" class="text-blue-600 hover:underline" data-modal-open="editEventModal" data-modal-content="editEventContent">Edit</a>
+            <a href="#" class="text-red-600 hover:underline">Delete</a>
+            <a href="#" class="text-blue-600 hover:underline">View Posts</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editEventModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+  <div id="editEventContent" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
+    <h2 class="text-xl font-semibold mb-4">Edit Event</h2>
+    <form>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Event Name</label>
+        <input type="text" class="w-full border rounded px-3 py-2" placeholder="Enter event name" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Description</label>
+        <textarea class="w-full border rounded px-3 py-2" placeholder="Enter description" required></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Date</label>
+        <input type="date" class="w-full border rounded px-3 py-2" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Category</label>
+        <select id="editCategorySelect" class="w-full border rounded px-3 py-2" required>
+          <option value="Tech">Tech</option>
+          <option value="Cultural">Cultural</option>
+          <option value="Sports">Sports</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Other">Other</option>
+        </select>
+        <input id="editCustomCategoryInput" type="text" class="w-full border rounded px-3 py-2 mt-2 hidden" placeholder="Enter custom category">
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Event Image</label>
+        <input type="file" accept="image/*" class="w-full border rounded px-3 py-2">
+      </div>
+      <div class="flex justify-end space-x-2">
+        <button type="button" class="bg-gray-300 px-4 py-2 rounded" data-modal-close="editEventModal" data-modal-content="editEventContent">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const editCategorySelect = document.getElementById('editCategorySelect');
+  const editCustomCategoryInput = document.getElementById('editCustomCategoryInput');
+
+  editCategorySelect.addEventListener('change', () => {
+    if (editCategorySelect.value === 'Other') {
+      editCustomCategoryInput.classList.remove('hidden');
+      editCustomCategoryInput.setAttribute('name', 'customCategory');
+      editCustomCategoryInput.setAttribute('required', 'true');
+    } else {
+      editCustomCategoryInput.classList.add('hidden');
+      editCustomCategoryInput.removeAttribute('required');
+      editCustomCategoryInput.removeAttribute('name');
+    }
+  });
+</script>
+
+
+<!-- Add Modal -->
+<div id="addEventModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+  <div id="addEventContent" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
+    <h2 class="text-xl font-semibold mb-4">Add New Event</h2>
+    <form>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Event Name</label>
+        <input type="text" class="w-full border rounded px-3 py-2" placeholder="Enter event name" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Description</label>
+        <textarea class="w-full border rounded px-3 py-2" placeholder="Enter description" required></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Date</label>
+        <input type="date" class="w-full border rounded px-3 py-2" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Category</label>
+        <select id="categorySelect" class="w-full border rounded px-3 py-2" required>
+          <option value="Tech">Tech</option>
+          <option value="Cultural">Cultural</option>
+          <option value="Sports">Sports</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Other">Other</option>
+        </select>
+        <input id="customCategoryInput" type="text" class="w-full border rounded px-3 py-2 mt-2 hidden" placeholder="Enter custom category">
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Event Image</label>
+        <input type="file" accept="image/*" class="w-full border rounded px-3 py-2">
+      </div>
+      <div class="flex justify-end space-x-2">
+        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded" data-modal-close="addEventModal" data-modal-content="addEventContent">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Event</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const categorySelect = document.getElementById('categorySelect');
+  const customCategoryInput = document.getElementById('customCategoryInput');
+
+  categorySelect.addEventListener('change', () => {
+    if (categorySelect.value === 'Other') {
+      customCategoryInput.classList.remove('hidden');
+      customCategoryInput.setAttribute('name', 'customCategory');
+      customCategoryInput.setAttribute('required', 'true');
+    } else {
+      customCategoryInput.classList.add('hidden');
+      customCategoryInput.removeAttribute('required');
+      customCategoryInput.removeAttribute('name');
+    }
+  });
+</script>
+
+<script>
+  function showModal(modalId, contentId) {
+    const modal = document.getElementById(modalId);
+    const content = document.getElementById(contentId);
+
+    modal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      content.classList.remove('scale-95', 'opacity-0');
+      content.classList.add('scale-100', 'opacity-100');
+    });
+  }
+
+  function hideModal(modalId, contentId) {
+    const modal = document.getElementById(modalId);
+    const content = document.getElementById(contentId);
+
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 300);
+  }
+
+  document.querySelectorAll('[data-modal-open]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      showModal(btn.dataset.modalOpen, btn.dataset.modalContent);
+    });
+  });
+
+  document.querySelectorAll('[data-modal-close]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      hideModal(btn.dataset.modalClose, btn.dataset.modalContent);
+    });
+  });
+
+  const input = document.querySelector('#event-image');
+  input.addEventListener('change', () => {
+    if (input.files.length > 1) {
+      alert('Please select only one image!');
+      input.value = ''; // Reset the input
+    }
+  });
+
+</script>
+
+
+<!-- 
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: 'your_cloud_name',
+  api_key: 'your_api_key',
+  api_secret: 'your_api_secret'
+});
+
+cloudinary.uploader.upload('path/to/local/file.jpg', {
+  folder: 'events'
+}, (error, result) => {
+  console.log(result.secure_url); // Public URL
+}); -->

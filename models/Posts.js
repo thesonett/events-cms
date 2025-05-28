@@ -33,7 +33,7 @@ const Posts = sequelize.define('posts_model', {
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM('upcoming', 'ongoing', 'completed', 'cancelled', 'postponed'),
+    type: DataTypes.ENUM('upcoming', 'ongoing', 'completed'),
     defaultValue: 'upcoming'
   },
   start: {

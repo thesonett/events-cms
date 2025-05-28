@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { OrganizingCommittee, Role } from '../models/index.js'
+import { OrganizingCommittee, Role, Category } from '../models/index.js'
 import sequelize from './config.js'
 
 dotenv.config()
@@ -8,18 +8,27 @@ const seedData = async () => {
   await Role.bulkCreate([
     { role: 'admin' },
     { role: 'user' }
-  ]);
+  ])
 
   await OrganizingCommittee.bulkCreate([
     { name: 'IIT Kharagpur' },
     { name: 'NIT Durgapur' },
     { name: 'MAKAUT' },
-  ]);
-};
+  ])
+
+  await Category.bulkCreate([
+    { category: 'Educational' },
+    { category: 'Entertainment' },
+    { category: 'Sports' },
+    { category: 'Corporate' },
+    { category: 'Cultural' },
+    { category: 'Social' },
+  ])
+}
 
 async function initializeDB() {
   try {
-    const shouldForceSync = process.env.DB_FORCE_SYNC === 'true';
+    const shouldForceSync = process.env.DB_FORCE_SYNC === 'true'
     await sequelize.sync({ force: shouldForceSync })
 
     console.log(`\n:::: Database synced ${shouldForceSync ? 'with' : 'without'} force! :::: \n`)

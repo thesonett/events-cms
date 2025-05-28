@@ -49,11 +49,13 @@ router.get('/users', async (req, res) => {
 
 // dashboard delete user
 router.post('/delete/user/:id', async (req, res) => {
+    const token = req.cookies?.token
+    const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
+
     const id = req.params.id
     const { user } = await getUserById(id)
     const { message } = await deleteUserById(user.id)
-
-    await createActivity({ actions: message? message : null, user_id: user.id })
+    await createActivity({ actions: message? message : null, user_id: decoded._id })
 
     req.flash('message', message)
     return res.redirect('/dashboard/users')
@@ -88,7 +90,7 @@ router.post('/settings/update/profile', async (req, res) => {
         email,
     })
 
-    await createActivity({ actions: message? message : null, user_id: user.id })
+    await createActivity({ actions: message? message : null, user_id: decoded._id })
 
     req.flash('message', message)
     return res.redirect('/dashboard/settings')
@@ -121,15 +123,10 @@ router.post('/settings/update/password', async (req, res) => {
     }
 
     const { message } = await updateUserById(user.id, { password: newPassword })
-    await createActivity({ actions: message? message : null, user_id: user.id })
+    await createActivity({ actions: message? message : null, user_id: decoded._id })
 
     req.flash('message', message)
     return res.redirect('/dashboard/settings')
-})
-
-// events page
-router.get('/events', (req, res) => {
-    res.send('events page!')
 })
 
 export default router

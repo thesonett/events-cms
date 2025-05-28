@@ -1,4 +1,3 @@
 NEXT TASKS✅
 
-1. activity database creation.
-2. working on dashboard events page.
+1. working on dashboard events page.

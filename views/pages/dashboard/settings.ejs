@@ -117,8 +117,41 @@
         </button>
       </form>
     </div>
+
+    <!-- Delete Account -->
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
+      <h2 class="text-xl font-semibold text-grey-700 mb-4">Wanna Delete Your Account?</h2>
+      <form id="deleteAccountForm" action="/users/delete/<%= admin.id %>" method="POST">
+        <button
+          type="button"
+          id="deleteAccountBtn"
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        >
+          Delete
+        </button>
+      </form>
+    </div>
   </div>
 </div>
+
+<script>
+  document.getElementById("deleteAccountBtn").addEventListener("click", function () {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action will permanently delete your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById("deleteAccountForm").submit();
+      }
+    });
+  });
+</script>
+
 
 <% if (notify) { %>
     <script>
