@@ -39,8 +39,11 @@ import {
 import {
     createImage,
     deleteImageById,
+    deleteImageByEventId,
     updateImageById,
+    updateImageByEventId,
     getImageById,
+    getImageByEventId,
     getImageByEntityId,
     getImagesByEntityId,
     getImageByFileName,
@@ -124,8 +127,11 @@ export {
     // images
     createImage,
     deleteImageById,
+    deleteImageByEventId,
     updateImageById,
+    updateImageByEventId,
     getImageById,
+    getImageByEventId,
     getImageByEntityId,
     getImagesByEntityId,
     getImageByFileName,

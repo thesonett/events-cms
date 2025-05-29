@@ -18,7 +18,7 @@ async function createEvent({title, description, date, category_id, organizing_co
 async function deleteEventById(id) {
     try {
         const event = await Events.destroy({ where: { id }})
-        return { success: true, message: 'event deleted!' };
+        return { success: true, message: 'Event deleted!' }
     }
     catch (error) {
         console.log('Exception occured inside deleteEventById!\n', error)
@@ -56,7 +56,6 @@ async function getEventsByCategoryId(category_id) {
     }
 }
 
-
 async function getEventsByOrganizingCommitteeId(organizing_committee_id) {
     try {
         const events = await Events.findAll({ where: { organizing_committee_id } })
@@ -65,7 +64,7 @@ async function getEventsByOrganizingCommitteeId(organizing_committee_id) {
             return { success: false, message: 'Events not found!'}
         }
     
-        return {success: true, events}
+        return { success: true, events }
     }
     catch(error) {
         console.log('Exception occured inside getEventsByOrganizingCommitteeId!\n', error)
@@ -120,7 +119,7 @@ async function getEventsByYear(id, date) {
         const targetYear = date.split('/')[2]; // date -> 17/05/2025 -> 2025
         const filteredEvents = response.events.filter(event => {
             const eventYear = new Date(event.date).getFullYear().toString()
-            return eventYear === targetYear;
+            return eventYear === targetYear
         });
 
         return { success: true, filteredEvents }

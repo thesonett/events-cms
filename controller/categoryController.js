@@ -65,17 +65,17 @@ async function getCategories() {
 
 async function getCategoryById(id) {
     try {
-        const categoryName = await Category.findOne({ where: { id }, attributes: ['category'] })
+        const category = await Category.findOne({ where: { id: id }, attributes: ['category'] })
     
-        if(!categoryName) {
-            return { success: false, message: 'Category name not found!' }
+        if(!category) {
+            return { success: false, message: 'Category not found!' }
         }
     
-        return { success: true, categoryName }
+        return { success: true, category }
     }
     catch(error) {
         console.log('Exception occured inside getCategoryById!\n', error)
-        return { success: false, message: 'Exception::: Category name not found!'}
+        return { success: false, message: 'Exception::: Category not found!'}
     }
 }
 

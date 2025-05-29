@@ -1,8 +1,8 @@
 import { Images } from '../models/index.js'
 
-async function createImage({ file_name, original_filename, image_url, size, entity_type, entity_id, events_id, posts_id }) { 
+async function createImage({ file_name, original_filename, image_url, size, entity_type, entity_id, event_id }) { 
     try {
-        const image = await Images.create({ file_name, original_filename, image_url, size, entity_type, entity_id, events_id, posts_id: null })
+        const image = await Images.create({ file_name, original_filename, image_url, size, entity_type, entity_id, event_id, posts_id: null })
         return { success: true, message: 'Image uploaded!', image }
 
     } 
@@ -24,6 +24,18 @@ async function deleteImageById(id) {
     }
 }
 
+async function deleteImageByEventId(event_id) {
+    try {
+        const image = await Images.destroy({ where: { event_id, entity_type: 'event' } })
+        return image ? { success: true, message: 'Image deleted!' } : 
+                       { success: false, message: 'Unable to delete image or image not found!' }
+    }
+    catch (error) {
+        console.error('Exception occurred inside deleteImageByEventId!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete image or image not found!' }
+    }
+}
+
 async function updateImageById(id, updates) {
     try {
         const [status] = await Images.update(updates, { where: { id } })
@@ -40,6 +52,22 @@ async function updateImageById(id, updates) {
     }
 }
 
+async function updateImageByEventId(event_id, updates) {
+    try {
+        const [status] = await Images.update(updates, { where: { event_id } })
+        if (!status) {
+            return { success: false, message: 'Image not found or no changes made!' }
+        }
+    
+        const updatedImage = await Images.findOne({ where: { event_id } })
+        return { success: true, message: 'Image updated!', updatedImage }
+    }
+    catch (error) {
+        console.log('Exception occurred inside updateImageByEventId!\n', error)
+        return { success: false, message: 'Exception::: Image not found or no changes made!'}
+    }
+}
+
 async function getImageById(id) {
     try {
         const image = await Images.findOne({ where: { id } });
@@ -47,6 +75,17 @@ async function getImageById(id) {
     }
     catch (error) {
         console.log('Exception occurred inside getImageById!\n', error)
+        return { success: false, message: 'Exception::: Image not found!' }
+    }
+}
+
+async function getImageByEventId(event_id) {
+    try {
+        const image = await Images.findOne({ where: { event_id, entity_type: 'event' } });
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
+    }
+    catch (error) {
+        console.log('Exception occurred inside getImageByEventsId!\n', error)
         return { success: false, message: 'Exception::: Image not found!' }
     }
 }
@@ -179,10 +218,15 @@ async function fetchImagesByCondition(condition, multiple = false) {
 
 export {
     createImage,
+
     deleteImageById,
+    deleteImageByEventId,
+
     updateImageById,
+    updateImageByEventId,
 
     getImageById,
+    getImageByEventId,
 
     getImageByEntityId,
     getImagesByEntityId,

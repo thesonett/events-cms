@@ -35,7 +35,7 @@ const Images = sequelize.define(
       defaultValue: 'event',
     },
     // foreign keys
-    events_id: {
+    event_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

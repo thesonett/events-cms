@@ -2,8 +2,8 @@ import express from 'express'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
-import { createCategory, createEvent, createImage, getCategories, getUserById } from '../controller/index.js'
-import { uploadImage, upload } from '../services/cloudinary.js'
+import { createActivity, createCategory, createEvent, createImage, deleteEventById, deleteImageByEventId, getCategories, getCategoryById, getEventsByOrganizingCommitteeId, getImageByEventId, getUserById, updateEventById, updateImageByEventId } from '../controller/index.js'
+import { uploadImage, upload, deleteCloudinaryImage, updateCloudinaryImage } from '../services/cloudinary.js'
 
 const router = express.Router()
 dotenv.config()
@@ -17,25 +17,25 @@ router.get('/', async (req, res) => {
     
     const { user } = await getUserById(decoded._id)
     const { categories } = await getCategories()
+    const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
+    
+    const totalEvents = await Promise.all(events.map(async (event) => {
+        const { category } = await getCategoryById(event.category_id)
+        const { image, success } = await getImageByEventId(event.id)
+
+        return {
+            ...event.get({plain: true}),
+            category: category.category,
+            image: success? image.file_name : null,
+        }
+    }))
 
     res.render('pages/dashboard/events', {
         layout:'layouts/dashboardLayout',
         admin: user,
         categories,
+        events: totalEvents,
         notify: message? message : null,
-    })
-})
-
-// posts page
-router.get('/post', async (req, res) => {
-    const token = req.cookies?.token
-    const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
-
-    const { user } = await getUserById(decoded._id)
-    
-    res.render('pages/dashboard/posts', {
-        layout:'layouts/dashboardLayout',
-        admin: user,
     })
 })
 
@@ -77,10 +77,84 @@ router.post('/event/create', upload.single('image'), async(req, res) => {
         }
     }
 
-    await createImage({ file_name, original_filename, image_url, size, entity_type: 'event', entity_id: event.id, events_id: event.id })
+    await createImage({ file_name, original_filename, image_url, size, entity_id: 1, entity_type: 'event', event_id: event.id })
+
+    await createActivity({ actions: message? message : null, user_id: decoded._id })
 
     req.flash('message', message)
     res.redirect('/dashboard/events')
 })
+
+// delete event and it's associate image
+router.post('/event/delete/:id', async (req, res) => {
+    const eventId = req.params.id
+    const sessionUser = req.user
+
+    const { image, success } = await getImageByEventId(eventId)
+    if (success && image?.file_name) {
+        await deleteCloudinaryImage(image.file_name)
+    }
+
+    await deleteImageByEventId(eventId)
+    const { message } = await deleteEventById(eventId)
+
+    await createActivity({ actions: message || null, user_id: sessionUser._id })
+
+    req.flash('message', message)
+    res.redirect('/dashboard/events')
+})
+
+// update event
+router.post('/event/update/:id', upload.single('image'), async (req, res) => {
+    const eventId = req.params.id
+    const sessionUser = req.user
+
+    const { user } = await getUserById(sessionUser._id)
+    const { events } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id)
+    const targetEvent = events.find(event => event.id === parseInt(eventId))
+
+    if (!targetEvent) {
+        req.flash('message', 'Event not found!')
+        return res.redirect('/dashboard/events')
+    }
+
+    const { title, description, date, category_id, customCategory } = req.body
+    let finalCategoryId = category_id
+
+    if (category_id === 'Other' && customCategory) {
+        const { category } = await createCategory({ category: customCategory })
+        finalCategoryId = category.id
+    }
+
+    await updateEventById(targetEvent.id, { title, description, date, category_id: finalCategoryId })
+
+    // only if user uploads an image
+    if (req.file) {
+        const { image } = await getImageByEventId(eventId)
+        const { success , imageData } = await updateCloudinaryImage({
+            old_file_name: image.file_name,
+            original_filename: req.file.originalname,
+            buffer: req.file.buffer
+        })
+
+        if (success) {
+            await updateImageByEventId(eventId, {
+                file_name: imageData.file_name,
+                original_filename: req.file.originalname,
+                image_url: imageData.image_url,
+                size: `${req.file.size}`,
+                entity_id: 1,
+                entity_type: 'event',
+                event_id: eventId
+            })
+        }
+    }
+
+    await createActivity({ actions: `Updated event: ${title}`, user_id: sessionUser._id })
+
+    req.flash('message', 'Event updated successfully!')
+    res.redirect('/dashboard/events')
+})
+
 
 export default router

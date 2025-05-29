@@ -57,11 +57,20 @@ router.post('/create', async (req, res) => {
 
 // profile page only for users
 router.get('/user/:id', isAuthenticated, isUser, async (req, res) => {
-    const id = req.params.id
+    const id = parseInt(req.params.id)
+    const sessionUser = req.user
+
+    if(id !== sessionUser._id) {
+        return res.redirect(`/users/user/${sessionUser._id}`)
+    }
+
     const { user } = await getUserById(id)
     const { name } = await getOrganizingCommitteeById(user.organizing_committee_id)
     const { role } = await getRoleById(user.role_id)
-
+    if (role === 'admin') {
+        return res.redirect(`/users/user/${sessionUser._id}`)
+    }
+    
     res.render('pages/user', { user, name, role })
 })
 

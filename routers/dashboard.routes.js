@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import express from 'express'
 import bcrypt from 'bcrypt'
 
-import { createActivity, deleteUserById, getActiveUsers, getActivities, getOnlyUsers, getOrganizingCommitteeById, getUserById, updateUserById } from '../controller/index.js'
+import { createActivity, deleteUserById, getActiveUsers, getActivities, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getUserById, updateUserById } from '../controller/index.js'
 
 dotenv.config()
 const router = express.Router()
@@ -14,6 +14,7 @@ router.get('/', async (req, res) => {
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
     const { users } = await getActiveUsers(decoded._id)
     const { user } = await getUserById(decoded._id)
+    const { events } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id)
 
     const result = await getActivities(user.id)
     const activities = result.success ? result.activities : []
@@ -22,8 +23,8 @@ router.get('/', async (req, res) => {
         layout:'layouts/dashboardLayout',  
         admin: user,
         activities,
-
         activeUsers: users,
+        events,
     })
 })
 

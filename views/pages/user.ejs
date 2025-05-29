@@ -7,11 +7,6 @@
                 <p><span class="font-semibold">First Name:</span> <%= user.first_name %></p>
                 <p><span class="font-semibold">Last Name:</span> <%= user.last_name %></p>
                 <p><span class="font-semibold">Username:</span> <%= user.username %></p>
-                <p>
-                    <span class="font-semibold">Password:</span>
-                    <input type="password" value="<%= user.password %>" disabled
-                    class="ml-2 bg-gray-100 border border-gray-300 text-gray-800 rounded px-2 py-1 w-auto" />
-                </p>
                 <p><span class="font-semibold">Email:</span> <%= user.email %></p>
                 <p><span class="font-semibold">Status:</span> 
                     <span class="<%= user.status ? 'text-green-600' : 'text-red-600' %>">
