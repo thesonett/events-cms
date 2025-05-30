@@ -1,4 +1,9 @@
-<h2 class="text-2xl font-bold mb-4">Registered Users List for the events of <%= organizingCommittee %></h2>
+<div class="flex justify-between items-center mb-4">
+  <h2 class="text-2xl font-bold">Registered Users List for the events of <%= organizingCommittee %></h2>
+  <button onclick="showModal('addUserModal', 'addUserContent')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    Add User
+  </button>
+</div>
 
 <table class="min-w-full bg-white border rounded shadow">
   <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -48,6 +53,77 @@
     <% } %>
   </tbody>
 </table>
+
+<!-- Add User Modal -->
+<div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+  <div id="addUserContent" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
+    <h2 class="text-xl font-semibold mb-4 text-center">Add New User</h2>
+    <form action="/dashboard/user/create" method="POST" class="space-y-4">
+      <div>
+        <label for="first_name" class="block text-sm font-medium mb-1">First Name</label>
+        <input type="text" name="first_name" id="first_name" placeholder="First Name" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required>
+      </div>
+      <div>
+        <label for="last_name" class="block text-sm font-medium mb-1">Last Name</label>
+        <input type="text" name="last_name" id="last_name" placeholder="Last Name" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required>
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+        <input type="email" name="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required>
+      </div>
+      <div>
+        <label for="username" class="block text-sm font-medium mb-1">Username</label>
+        <input type="text" name="username" id="username" placeholder="Username" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required>
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium mb-1">Password</label>
+        <input type="password" name="password" id="password" placeholder="Password" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required>
+      </div>
+      <div>
+        <label for="organizing_committee_id" class="block text-sm font-medium mb-1">Organizing Committee</label>
+        <select name="organizing_committee_id" id="organizing_committee_id" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required disabled>
+            <option value="<%= admin.organizing_committee_id %>" selected><%= organizingCommittee %></option>
+        </select>
+        <input type="hidden" name="organizing_committee_id" value="<%= admin.organizing_committee_id %>">
+      </div>
+
+      <input type="hidden" name="role_id" value="2">
+
+      <div class="flex justify-end space-x-2 pt-4">
+        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded" data-modal-close="addUserModal" data-modal-content="addUserContent">Cancel</button>
+        <button type="submit" class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700">Add User</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  function showModal(modalId, contentId) {
+    const modal = document.getElementById(modalId);
+    const content = document.getElementById(contentId);
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+      content.classList.remove('scale-95', 'opacity-0');
+    }, 10);
+  }
+
+  function closeModal(modal, content) {
+    content.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+    }, 200);
+  }
+
+  document.querySelectorAll('[data-modal-close]').forEach(button => {
+    button.addEventListener('click', () => {
+      const modal = document.getElementById(button.dataset.modalClose);
+      const content = document.getElementById(button.dataset.modalContent);
+      closeModal(modal, content);
+    });
+  });
+</script>
+
 
 <% if (notify) { %>
     <script>

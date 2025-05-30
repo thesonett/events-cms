@@ -1,8 +1,8 @@
 import { Posts } from '../models/index.js'
 
-async function createPost({ title, description, venue, start, location, duration, organizer, status, event_id }) {
+async function createPost({ title, description, venue, time, date, location, duration, organizer, status, event_id }) {
     try {
-        const post = await Posts.create({ title, description, venue, start, location, duration, organizer, status, event_id })
+        const post = await Posts.create({ title, description, venue, time, date, location, duration, organizer, status, event_id })
 
         return { success: true, message: 'Post created!', post }
     }
@@ -160,10 +160,21 @@ async function getPostByStatus(status) {
 async function getPostsByStatus(status) {
     try {
         const posts = await Posts.findAll({ where: { status } })
-        return posts.length ? {success: true, posts} : {success: false, message: 'Posts not found!'}
+        return posts.length ? { success: true, posts } : { success: false, message: 'Posts not found!' }
     }
     catch(error) {
         console.error('Exception occurred inside getPostsByStatus!\n', error)
+        return { success: false, message: 'Exception::: Posts not found!' }
+    }
+}
+
+async function getAllPosts() {
+    try {
+        const posts = await Posts.findAll()
+        return posts.length ? { success: true, posts } : { success: false, message: 'Posts not found!' }
+    }
+    catch(error) {
+        console.error('Exception occurred inside getAllPosts!\n', error)
         return { success: false, message: 'Exception::: Posts not found!' }
     }
 }
@@ -199,5 +210,7 @@ export {
     getPostsByStatus,
 
     getPostById,
+    getAllPosts,
+    
     findOnePostByField,
 }

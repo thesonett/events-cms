@@ -2,3 +2,8 @@ NEXT TASKS✅
 
 1. Working on dashboard posts page.
 2. Admin can add users as well. create an 'add user' button inside users dashboard nav.
+    
+
+BUGS✅
+1. An organization can only have one admin. But here, I can able to make many admin of a same organization which I don't want.
+2. Admin can't add user.

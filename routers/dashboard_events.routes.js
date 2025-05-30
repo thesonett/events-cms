@@ -2,7 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
-import { createActivity, createCategory, createEvent, createImage, deleteEventById, deleteImageByEventId, getCategories, getCategoryById, getEventsByOrganizingCommitteeId, getImageByEventId, getUserById, updateEventById, updateImageByEventId } from '../controller/index.js'
+import { createActivity, createCategory, createEvent, createImage, deleteEventById, deleteImageByEventId, deleteImagesByPostId, deletePostByEventId, deletePostById, getCategories, getCategoryById, getEventsByOrganizingCommitteeId, getImageByEventId, getImagesByPostId, getPostsByEventId, getUserById, updateEventById, updateImageByEventId } from '../controller/index.js'
 import { uploadImage, upload, deleteCloudinaryImage, updateCloudinaryImage } from '../services/cloudinary.js'
 
 const router = express.Router()
@@ -87,17 +87,30 @@ router.post('/event/create', upload.single('image'), async(req, res) => {
 
 // delete event and it's associate image
 router.post('/event/delete/:id', async (req, res) => {
-    const eventId = req.params.id
+    const eventId = Number(req.params.id)
     const sessionUser = req.user
 
     const { image, success } = await getImageByEventId(eventId)
-    if (success && image?.file_name) {
+    if (success && image?.file_name && image.file_name !== 'default.jpg') {
         await deleteCloudinaryImage(image.file_name)
     }
-
     await deleteImageByEventId(eventId)
-    const { message } = await deleteEventById(eventId)
 
+    // delete all the posts of this event with all post images
+    const { posts = [] } = await getPostsByEventId(eventId)
+    for (const post of posts) {
+        const { images = [] } = await getImagesByPostId(post.id)
+        for (const img of images) {
+            if (img?.file_name) {
+                await deleteCloudinaryImage(img.file_name)
+            }
+        }
+
+        await deleteImagesByPostId(post.id)
+        await deletePostById(post.id)
+    }
+
+    const { message } = await deleteEventById(eventId)
     await createActivity({ actions: message || null, user_id: sessionUser._id })
 
     req.flash('message', message)
@@ -106,7 +119,7 @@ router.post('/event/delete/:id', async (req, res) => {
 
 // update event
 router.post('/event/update/:id', upload.single('image'), async (req, res) => {
-    const eventId = req.params.id
+    const eventId = Number(req.params.id)
     const sessionUser = req.user
 
     const { user } = await getUserById(sessionUser._id)

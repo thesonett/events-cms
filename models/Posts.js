@@ -36,8 +36,12 @@ const Posts = sequelize.define('posts_model', {
     type: DataTypes.ENUM('upcoming', 'ongoing', 'completed'),
     defaultValue: 'upcoming'
   },
-  start: {
+  time: {
       type: DataTypes.TIME,
+      defaultValue: DataTypes.NOW
+  },
+  date: {
+      type: DataTypes.DATEONLY,
       defaultValue: DataTypes.NOW
   },
   // Foreign keys

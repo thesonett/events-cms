@@ -80,7 +80,7 @@ async function getEventsByRoleId(role_id) {
             return { success: false, message: 'Events not found!'}
         }
     
-        return {success: true, events}
+        return { success: true, events }
     }
     catch (error) {
         console.error('Exception occurred inside getEventsByRoleId!\n', error)
@@ -100,6 +100,22 @@ async function getEventById(id) {
     catch(error) {
         console.error('Exception occurred inside getEventById!\n', error)
         return { success: false, message: 'Exception::: Event not found!'}
+    }
+}
+
+async function getAllEvents() {
+    try {
+        const events = await Events.findAll()
+    
+        if(!events || !events.length) {
+            return { success: false, message: 'Events not found!'}
+        }
+    
+        return { success: true, events }
+    }
+    catch (error) {
+        console.error('Exception occurred inside getAllEvents!\n', error)
+        return { success: false, message: 'Exception::: Events not found!'}
     }
 }
 
@@ -140,4 +156,5 @@ export {
     getEventsByOrganizingCommitteeId,
     getEventsByRoleId,
     getEventsByYear,
+    getAllEvents,
 }

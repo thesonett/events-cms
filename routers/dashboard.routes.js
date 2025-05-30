@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken'
 import express from 'express'
 import bcrypt from 'bcrypt'
 
-import { createActivity, deleteUserById, getActiveUsers, getActivities, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getUserById, updateUserById } from '../controller/index.js'
+import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getUserById, updateUserById } from '../controller/index.js'
+import { getStatus } from '../services/status.js'
 
 dotenv.config()
 const router = express.Router()
@@ -14,8 +15,10 @@ router.get('/', async (req, res) => {
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
     const { users } = await getActiveUsers(decoded._id)
     const { user } = await getUserById(decoded._id)
-    const { events } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id)
+    const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
+    const { posts = [] } = await getAllPosts()
 
+    const upcomingEvents = posts.filter(post => getStatus(post.date, post.time) === 'upcoming')
     const result = await getActivities(user.id)
     const activities = result.success ? result.activities : []
     
@@ -25,6 +28,7 @@ router.get('/', async (req, res) => {
         activities,
         activeUsers: users,
         events,
+        upcomingEvents,
     })
 })
 
@@ -47,6 +51,24 @@ router.get('/users', async (req, res) => {
         organizingCommittee: name,
     })
 })
+
+// dashboard create new user
+router.post('/user/create', async (req, res) => {
+    const sessionUser = req.user
+    const { first_name, last_name, email, username, password, organizing_committee_id, role_id } = req.body
+
+    if (!first_name || !last_name || !email || !username || !password) {
+        req.flash('message', 'Please fill all required fields!')
+        return res.redirect('/dashboard/users')
+    }
+
+    const { message } = await createUser({ first_name, last_name, email, password, username, status: 1, is_owner: true, organizing_committee_id, role_id })
+
+    await createActivity({ actions: message || null, user_id: sessionUser._id })
+    req.flash('message', message)
+    res.redirect(`/dashboard/users`)
+})
+
 
 // dashboard delete user
 router.post('/delete/user/:id', async (req, res) => {

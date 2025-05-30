@@ -40,10 +40,13 @@ import {
     createImage,
     deleteImageById,
     deleteImageByEventId,
+    deleteImagesByPostId,
     updateImageById,
     updateImageByEventId,
+    updateImageByPostId,
     getImageById,
     getImageByEventId,
+    getImagesByPostId,
     getImageByEntityId,
     getImagesByEntityId,
     getImageByFileName,
@@ -65,6 +68,7 @@ import {
     getEventsByOrganizingCommitteeId,
     getEventsByRoleId,
     getEventsByYear,
+    getAllEvents,
 } from './eventsController.js'
 
 import {
@@ -80,6 +84,7 @@ import {
     getPostByStatus,
     getPostsByStatus,
     getPostById,
+    getAllPosts,
     findOnePostByField,
 } from './postController.js'
 
@@ -128,10 +133,13 @@ export {
     createImage,
     deleteImageById,
     deleteImageByEventId,
+    deleteImagesByPostId,
     updateImageById,
     updateImageByEventId,
+    updateImageByPostId,
     getImageById,
     getImageByEventId,
+    getImagesByPostId,
     getImageByEntityId,
     getImagesByEntityId,
     getImageByFileName,
@@ -152,6 +160,7 @@ export {
     getEventsByOrganizingCommitteeId,
     getEventsByRoleId,
     getEventsByYear,
+    getAllEvents,
 
     // posts
     createPost,
@@ -166,6 +175,7 @@ export {
     getPostByStatus,
     getPostsByStatus,
     getPostById,
+    getAllPosts,
     findOnePostByField, // for testing purpose
 
     // activities

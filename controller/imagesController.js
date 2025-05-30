@@ -1,8 +1,8 @@
 import { Images } from '../models/index.js'
 
-async function createImage({ file_name, original_filename, image_url, size, entity_type, entity_id, event_id }) { 
+async function createImage({ file_name, original_filename, image_url, size, entity_type, entity_id, event_id, post_id=null }) { 
     try {
-        const image = await Images.create({ file_name, original_filename, image_url, size, entity_type, entity_id, event_id, posts_id: null })
+        const image = await Images.create({ file_name, original_filename, image_url, size, entity_type, entity_id, event_id, post_id })
         return { success: true, message: 'Image uploaded!', image }
 
     } 
@@ -26,12 +26,24 @@ async function deleteImageById(id) {
 
 async function deleteImageByEventId(event_id) {
     try {
-        const image = await Images.destroy({ where: { event_id, entity_type: 'event' } })
+        const image = await Images.destroy({ where: { event_id, entity_type: 'event', entity_id: 1 } })
         return image ? { success: true, message: 'Image deleted!' } : 
                        { success: false, message: 'Unable to delete image or image not found!' }
     }
     catch (error) {
         console.error('Exception occurred inside deleteImageByEventId!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete image or image not found!' }
+    }
+}
+
+async function deleteImagesByPostId(post_id) {
+    try {
+        const image = await Images.destroy({ where: { post_id, entity_type: 'post', entity_id: 2 } })
+        return image ? { success: true, message: 'Image deleted!' } : 
+                       { success: false, message: 'Unable to delete image or image not found!' }
+    }
+    catch (error) {
+        console.error('Exception occurred inside deleteImagesByPostId!\n', error)
         return { success: false, message: 'Exception::: Unable to delete image or image not found!' }
     }
 }
@@ -68,10 +80,26 @@ async function updateImageByEventId(event_id, updates) {
     }
 }
 
+async function updateImageByPostId(post_id, updates) {
+    try {
+        const [status] = await Images.update(updates, { where: { post_id } })
+        if (!status) {
+            return { success: false, message: 'Image not found or no changes made!' }
+        }
+    
+        const updatedImage = await Images.findOne({ where: { post_id } })
+        return { success: true, message: 'Image updated!', updatedImage }
+    }
+    catch (error) {
+        console.log('Exception occurred inside updateImageByPostId!\n', error)
+        return { success: false, message: 'Exception::: Image not found or no changes made!'}
+    }
+}
+
 async function getImageById(id) {
     try {
         const image = await Images.findOne({ where: { id } });
-        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     }
     catch (error) {
         console.log('Exception occurred inside getImageById!\n', error)
@@ -81,12 +109,25 @@ async function getImageById(id) {
 
 async function getImageByEventId(event_id) {
     try {
-        const image = await Images.findOne({ where: { event_id, entity_type: 'event' } });
-        return image ? { success: true, image } : { success: false, message: 'Image not found!' };
+        const image = await Images.findOne({ where: { event_id, entity_type: 'event', entity_id: 1 } })
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     }
     catch (error) {
         console.log('Exception occurred inside getImageByEventsId!\n', error)
         return { success: false, message: 'Exception::: Image not found!' }
+    }
+}
+
+async function getImagesByPostId(post_id) {
+    try {
+        const images = await Images.findAll({ where: { post_id, entity_type: 'post', entity_id: 2 } });
+        return images.length ? 
+            { success: true, images } : 
+            { success: false, message: 'Images not found!' };
+    }
+    catch (error) {
+        console.log('Exception occurred inside getImagesByPostId!\n', error)
+        return { success: false, message: 'Exception::: Images not found!' }
     }
 }
 
@@ -177,7 +218,7 @@ async function getImagesByEntityRef(entity_id, entity_type) {
         return images.length ? { success: true, images } : { success: false, message: 'Images not found!' }
     } 
     catch (error) {
-        console.error('Exception occurred in getImagesByEntityRef\n!', error);
+        console.error('Exception occurred in getImagesByEntityRef\n!', error)
         return { success: false, message: 'Exception::: Images not found!' }
     }
 }
@@ -221,12 +262,15 @@ export {
 
     deleteImageById,
     deleteImageByEventId,
+    deleteImagesByPostId,
 
     updateImageById,
     updateImageByEventId,
+    updateImageByPostId,
 
     getImageById,
     getImageByEventId,
+    getImagesByPostId,
 
     getImageByEntityId,
     getImagesByEntityId,
