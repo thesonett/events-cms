@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 
-import { createActivity, createImage, createPost, deleteImageById, deleteImagesByPostId, deletePostById, getImagesByPostId, getPostsByEventId, getUserById, updateImageByEventId, updateImageById, updateImageByPostId, updatePostById } from '../controller/index.js'
+import { createActivity, createImage, createPost, deleteImageById, deleteImagesByPostId, deletePostById, getEventById, getImagesByPostId, getPostsByEventId, getUserById, updateImageByEventId, updateImageById, updateImageByPostId, updatePostById } from '../controller/index.js'
 import { deleteCloudinaryImage, updateCloudinaryImage, upload, uploadImage } from '../services/cloudinary.js'
 import { getStatus } from '../services/status.js'
 
@@ -18,6 +18,7 @@ router.get('/post/:id', async (req, res) => {
 
     const { user } = await getUserById(sessionUser._id)
     const { posts = [] } = await getPostsByEventId(eventId)
+    const { event } = await getEventById(eventId)
 
     // getting image names
     const image_names = {}
@@ -31,6 +32,7 @@ router.get('/post/:id', async (req, res) => {
         admin: user,
         eventId,
         posts,
+        eventName: event.title,
         image_names,
         notify: message? message : null,
     })

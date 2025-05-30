@@ -2,7 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
-import { createActivity, createCategory, createEvent, createImage, deleteEventById, deleteImageByEventId, deleteImagesByPostId, deletePostByEventId, deletePostById, getCategories, getCategoryById, getEventsByOrganizingCommitteeId, getImageByEventId, getImagesByPostId, getPostsByEventId, getUserById, updateEventById, updateImageByEventId } from '../controller/index.js'
+import { createActivity, createCategory, createEvent, createImage, deleteEventById, deleteImageByEventId, deleteImagesByPostId, deletePostByEventId, deletePostById, getCategories, getCategoryById, getEventsByOrganizingCommitteeId, getImageByEventId, getImagesByPostId, getOrganizingCommitteeById, getPostsByEventId, getUserById, updateEventById, updateImageByEventId } from '../controller/index.js'
 import { uploadImage, upload, deleteCloudinaryImage, updateCloudinaryImage } from '../services/cloudinary.js'
 
 const router = express.Router()
@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
     const { user } = await getUserById(decoded._id)
     const { categories } = await getCategories()
     const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
+    const { name: organizingCommitteeName } = await getOrganizingCommitteeById(user.organizing_committee_id)
     
     const totalEvents = await Promise.all(events.map(async (event) => {
         const { category } = await getCategoryById(event.category_id)
@@ -35,6 +36,7 @@ router.get('/', async (req, res) => {
         admin: user,
         categories,
         events: totalEvents,
+        organizingCommitteeName,
         notify: message? message : null,
     })
 })
