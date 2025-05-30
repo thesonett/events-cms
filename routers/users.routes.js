@@ -8,10 +8,11 @@ import {
     createOrganizingCommittee,
     getOrganizingCommitteeById,
     getOrganizingCommittees,
-    getRoleById,
+    getRoleNameById,
     getRoles,
     getUser,
     getUserById,
+    isAdminExistsForCommittee,
 } from '../controller/index.js'
 
 dotenv.config()
@@ -49,6 +50,15 @@ router.post('/create', async (req, res) => {
         finalOrganizingCommitteeId = organizingCommittee.id
     }
 
+    // check if admin for that organization is already there? if so, then return to register page with msg!
+    if(role_id === '1') { // only if user try to register as admin
+        const {success, message: specialMsg} = await isAdminExistsForCommittee(finalOrganizingCommitteeId)
+        if(success) { // admin exists!
+            req.flash('message', specialMsg)
+            return res.redirect('/users/register')
+        }
+    }
+
     const { message } = await createUser({ first_name, last_name, email, password, username, status: 1, is_owner: true, organizing_committee_id: finalOrganizingCommitteeId, role_id })
     
     req.flash('message', message)
@@ -66,7 +76,7 @@ router.get('/user/:id', isAuthenticated, isUser, async (req, res) => {
 
     const { user } = await getUserById(id)
     const { name } = await getOrganizingCommitteeById(user.organizing_committee_id)
-    const { role } = await getRoleById(user.role_id)
+    const { role } = await getRoleNameById(user.role_id)
     if (role === 'admin') {
         return res.redirect(`/users/user/${sessionUser._id}`)
     }

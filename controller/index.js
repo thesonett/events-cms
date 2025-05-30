@@ -26,6 +26,7 @@ import {
     getUserByRoleId,
     getUsersByRoleId,
     getUserById,
+    isAdminExistsForCommittee,
 } from './userController.js'
 
 import { 
@@ -33,7 +34,7 @@ import {
     deleteRoleById,
     updateRoleById,
     getRoles,
-    getRoleById,
+    getRoleNameById,
 } from './roleController.js'
 
 import {
@@ -121,13 +122,14 @@ export {
     getUserByRoleId,
     getUsersByRoleId,
     getUserById,
+    isAdminExistsForCommittee,
 
     // roles
     createRole,
     deleteRoleById,
     updateRoleById,
     getRoles,
-    getRoleById,
+    getRoleNameById,
 
     // images
     createImage,

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import { getRoleById } from '../controller/index.js'
+import { getRoleNameById } from '../controller/index.js'
 
 dotenv.config()
 
@@ -30,7 +30,7 @@ async function isAdmin(req, res, next) {
         const decoded = jwt.verify(req.cookies?.token, process.env.MY_SECRET_KEY)
         req.user = decoded
         
-        const { role } = await getRoleById(req.user.role_id)
+        const { role } = await getRoleNameById(req.user.role_id)
         if(role === 'admin') {
             return next()
         }
@@ -49,7 +49,7 @@ async function isUser(req, res, next) {
         const decoded = jwt.verify(req.cookies?.token, process.env.MY_SECRET_KEY)
         req.user = decoded
         
-        const { role } = await getRoleById(req.user.role_id)
+        const { role } = await getRoleNameById(req.user.role_id)
         if(role === 'user') {
             return next()
         }
@@ -76,7 +76,7 @@ async function isLoggedIn(req, res, next) {
             res.locals.isLoggedIn = true
             res.locals.userId = req.user._id
 
-            const { role } = await getRoleById(req.user.role_id)
+            const { role } = await getRoleNameById(req.user.role_id)
             if (role === 'admin') {
                 res.locals.isAdmin = true
                 res.locals.userId = null

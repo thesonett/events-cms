@@ -62,7 +62,7 @@ async function getRoles() {
   }
 }
 
-async function getRoleById(id) {
+async function getRoleNameById(id) {
   try {
     const roleData = await Role.findOne({ where: { id }, attributes: ['role'] })
 
@@ -74,7 +74,7 @@ async function getRoleById(id) {
 
   }
   catch(error) {
-    console.error('Exception occurred inside getRoleById!\n', error)
+    console.error('Exception occurred inside getRoleNameById!\n', error)
     return { success: false, message: 'Exception:::: No role found!' }
   }
 }
@@ -85,5 +85,5 @@ export {
   updateRoleById,
 
   getRoles,
-  getRoleById,
+  getRoleNameById,
 }

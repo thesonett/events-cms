@@ -147,6 +147,17 @@ async function getUserById(id) {
     }
 }
 
+async function isAdminExistsForCommittee(organizing_committee_id) {
+    try {
+        const user = await Users.findOne({ where: { organizing_committee_id, role_id: 1 } })
+        return user ? { success: true, message: 'Admin is already there!' } : { success: false, message: 'User not found!' }
+    }
+    catch (error) {
+        console.log('Exception occurred inside isAdminExistsForCommittee!\n', error)
+        return { success: false, message: 'Exception:::: User not found!' }
+    }
+}
+
 async function deleteUserById(id) {
     try {
         const user = await Users.destroy({ where: { id } })
@@ -201,4 +212,6 @@ export {
     getUsersByRoleId,
 
     getUserById,
+
+    isAdminExistsForCommittee,
 }
