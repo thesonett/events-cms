@@ -1,0 +1,97 @@
+<div id="events-content" class="flex-grow fade-in">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 font-heading">Explore Events</h1>
+    
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Sidebar Filters -->
+      <aside class="w-full lg:w-1/4 bg-white p-6 rounded-xl shadow-lg lg:sticky lg:top-24 self-start h-fit">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 font-heading">Filters</h2>
+        
+        <!-- Category Filter -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-700 mb-2">Category</h3>
+          <div class="space-y-2">
+            <% if (allCategories && allCategories.length) { %>
+            <% allCategories.map(category => { %>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 accent-red-600" name="category" value="<%= category.id %>" />
+                  <span><%= category.category %></span>
+                </label>
+              <% }) %>
+            <% } else { %>
+              <label class="flex items-center">
+                <input type="checkbox" class="mr-2 accent-red-600" name="category" value="no" />
+                <span>No category found!</span>
+              </label>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Published By Filter -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-700 mb-2">Organizers</h3>
+          <div class="space-y-2">
+            <% if (allOrganizers && allOrganizers.length) { %>
+            <% allOrganizers.map(organizer => { %>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 accent-red-600" name="organizer" value="<%= organizer.id %>" />
+                  <span><%= organizer.name %></span>
+                </label>
+              <% }) %>
+            <% } else { %>
+                <label class="flex items-center">
+                  <input type="checkbox" class="mr-2 accent-red-600" name="date" value="no" />
+                  <span>No publisher found!</span>
+                </label>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Reset Filters -->
+        <button id="reset-filters" class="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
+          Reset Filters
+        </button>
+      </aside>
+
+      <!-- Event Cards -->
+      <div class="w-full lg:w-3/4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% if (totalEvents && totalEvents.length) { %>
+            <% totalEvents.map(event => { %>
+              <a href="/events/<%= event.id %>" class="block event-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                <img src="<%= event.image %>" alt="Event" class="w-full h-48 object-cover" />
+                <div class="p-4">
+                  <h3 class="text-xl font-bold text-gray-800 font-heading"><%= event.title %></h3>
+                  <p class="text-l font-bold text-gray-600 text-sm"><%= event.description %></p>
+                  <p class="text-gray-600 text-sm mt-1">
+                    <i class="fas fa-calendar-alt mr-2"></i>Published On<br>
+                    <%= event.date.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true
+                    }) %>
+                  </p>
+                  <p class="text-gray-600 text-sm"><%= event.category %></p>
+                  <p class="text-l font-bold text-red-700 text-sm mt-2"><%= event.organizer %></p>
+                </div>
+              </a>
+            <% }) %>
+          <% } else { %> 
+            <div class="event-card bg-white rounded-xl shadow-md overflow-hidden">
+              <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="Event" class="w-full h-48 object-cover" />
+              <div class="p-4">
+                <h3 class="text-xl font-bold text-gray-800 font-heading">No events found!</h3>
+                <p class="text-gray-600 text-sm mt-1"><i class="fas fa-calendar-alt mr-2"></i>NA</p>
+                <p class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-2"></i>NA</p>
+                <p class="text-gray-600 text-sm mt-2">NA</p>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

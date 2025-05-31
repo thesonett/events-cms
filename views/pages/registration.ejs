@@ -1,5 +1,11 @@
-<div class="flex items-center justify-center py-10 bg-gray-100 px-4">
-  <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-8">
+<div class="relative flex items-center justify-center min-h-screen bg-gray-100 px-4">
+  <!-- Background Image with Blur -->
+  <div class="absolute inset-0 w-full h-full bg-cover bg-center" style="background-image: url('https://instaily.com/_next/static/media/test.b3910688.jpg');">
+    <div class="absolute inset-0 backdrop-blur-md bg-black/30"></div>
+  </div>
+  
+  <!-- Sign Up Form Container -->
+  <div class="relative bg-white rounded-xl shadow-lg w-full max-w-md p-8 z-10">
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Sign Up</h2>
     <p class="text-center text-gray-600 mb-6">Create your account</p>
     <form action="/users/create" method="POST" class="space-y-4">

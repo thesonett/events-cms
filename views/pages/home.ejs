@@ -1,4 +1,97 @@
-<div class="text-center p-8 max-w-md w-full">
-    <h1 class="text-3xl font-bold text-rose-600 mb-4">Welcome to Home Page</h1>
-    <p class="text-gray-700 text-lg">This is the home page content.</p>
-</div>
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-red-900 via-gray-900 to-red-700 fade-in relative overflow-hidden py-16">
+    <div class="absolute inset-0 opacity-30">
+      <div class="w-full h-full bg-[url('https://instaily.com/_next/static/media/test.b3910688.jpg')] bg-cover bg-center blur-xl transform scale-110"></div>
+    </div>
+    <div class="relative text-center text-white p-8 max-w-5xl w-full mx-auto">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold font-heading text-white mb-6 animate-fade-in-down">Welcome to Event CMS</h1>
+      <p class="text-lg sm:text-xl md:text-2xl text-gray-100 mb-8 animate-fade-in-up">Discover the best events in your city—college events, concerts, movies, sports, and more!</p>
+      <div class="search-bar flex items-center max-w-2xl mx-auto bg-white/90 rounded-full shadow-lg p-2 transition-all duration-300 hover:shadow-xl">
+        <i class="fas fa-search text-gray-500 mx-4"></i>
+        <input type="text" placeholder="Search for events, movies, and more..." class="w-full bg-transparent outline-none text-gray-900 text-lg" />
+        <button class="ml-4 bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 transition-all duration-300 font-semibold">Search</button>
+      </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-16 bg-gray-50 fade-in">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-red-800 text-center mb-12 animate-fade-in">Explore Categories</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <% if (categories && categories.length) { %>
+          <% categories.map(category => { %>
+              <div class="category-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <img src="https://u9m4v4n3.delivery.rocketcdn.me/wp-content/uploads/2020/09/cover-categorie-defaut.jpg" alt="Concerts" class="w-full h-48 object-cover rounded-t-xl" />
+                <div class="p-6">
+                  <h3 class="text-xl font-bold font-heading text-red-700"><%= category.category %></h3>
+                 <p class="text-gray-600 mt-2">Find the best <%= category.category.toLowerCase() %> events and experiences.</p>
+                </div>
+              </div>    
+            <% }) %>
+        <% } else { %>
+          <div class="category-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <img src="https://u9m4v4n3.delivery.rocketcdn.me/wp-content/uploads/2020/09/cover-categorie-defaut.jpg" alt="Concerts" class="w-full h-48 object-cover rounded-t-xl" />
+              <div class="p-6">
+                <h3 class="text-xl font-bold font-heading text-red-700">Sorry! No Categories found!</h3>
+              </div>
+            </div>  
+        <% } %>
+      </div>
+    </div>
+</section>
+
+<!-- Featured Events Section -->
+<section class="py-16 bg-white fade-in">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-red-800 text-center mb-12 animate-fade-in">Upcoming Different Types of Events!</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+         <% if (totalEvents && totalEvents.length) { %>
+          <% totalEvents.map(event => { %>
+              <a href="/events/<%= event.id %>" class="block event-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <img src="<%= event.image %>" alt="Event Image" class="w-full h-56 object-cover rounded-t-xl" />
+                <div class="p-6">
+                  <h3 class="text-xl font-bold font-heading text-red-700"><%= event.title %></h3>
+                  <p class="font-bold text-gray-600 mt-2"><%= event.description %></p>
+                  <p class="text-gray-600 mt-2"><%= event.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", hour12: true }) %></p>
+                  <h3 class="text-l font-bold font-heading text-blue-700">Published By <%= event.organizer %></h3>
+                  <p class="text-gray-600 mt-2"><%= event.category %></p>
+                </div>
+              </a>
+            <% }) %>
+        <% } else { %>
+            <div class="event-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="Event" class="w-full h-56 object-cover rounded-t-xl" />
+              <div class="p-6">
+                <h3 class="text-xl font-bold font-heading text-red-700">Sorry! No events found!</h3>
+              </div>
+            </div>
+        <% } %>
+      </div>
+    </div>
+</section>
+
+<!-- Additional CSS for Animations -->
+<style>
+    .animate-fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    .animate-fade-in-down {
+      animation: fadeInDown 1s ease-in-out;
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+</style>

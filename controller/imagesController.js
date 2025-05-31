@@ -118,6 +118,17 @@ async function getImageByEventId(event_id) {
     }
 }
 
+async function getImageUrlByEventId(event_id) {
+    try {
+        const image = await Images.findOne({ where: { event_id, entity_type: 'event', entity_id: 1 }, attributes: ['image_url'] })
+        return image ? { success: true, image } : { success: false, message: 'Image not found!' }
+    }
+    catch (error) {
+        console.log('Exception occurred inside getImageUrlByEventId!\n', error)
+        return { success: false, message: 'Exception::: Image not found!' }
+    }
+}
+
 async function getImagesByPostId(post_id) {
     try {
         const images = await Images.findAll({ where: { post_id, entity_type: 'post', entity_id: 2 } });
@@ -270,6 +281,7 @@ export {
 
     getImageById,
     getImageByEventId,
+    getImageUrlByEventId,
     getImagesByPostId,
 
     getImageByEntityId,
