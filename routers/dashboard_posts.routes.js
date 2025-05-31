@@ -17,8 +17,17 @@ router.get('/post/:id', async (req, res) => {
     const message = req.flash('message')[0]
 
     const { user } = await getUserById(sessionUser._id)
-    const { posts = [] } = await getPostsByEventId(eventId)
+    let { posts = [] } = await getPostsByEventId(eventId)
     const { event } = await getEventById(eventId)
+
+    // Apply filters
+    const { status, date } = req.query
+    if (status) {
+        posts = posts.filter(post => post.status === status)
+    }
+    if (date) {
+        posts = posts.filter(post => new Date(post.date).toISOString().split('T')[0] === date)
+    }
 
     // getting image names
     const image_names = {}
@@ -35,6 +44,10 @@ router.get('/post/:id', async (req, res) => {
         eventName: event.title,
         image_names,
         notify: message? message : null,
+
+        // for filters
+        selectedStatus: status || '',
+        selectedDate: date || ''
     })
 })
 

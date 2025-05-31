@@ -13,7 +13,17 @@ import {
     getUser,
     getUserById,
     isAdminExistsForCommittee,
+    getEventsByOrganizingCommitteeId,
+    deleteEventById,
+    deletePostById,
+    deleteImagesByPostId,
+    getImagesByPostId,
+    getPostsByEventId,
+    deleteImageByEventId,
+    getImageByEventId,
+    deleteActivityByUserId,
 } from '../controller/index.js'
+import { deleteCloudinaryImage } from '../services/cloudinary.js'
 
 dotenv.config()
 const router = express.Router()
@@ -124,17 +134,53 @@ router.all('/logout', (req, res) => { // TODO: NOT DESTROYING SESSION FOR NOW!
 })
 
 // delete user
+// if suppose, admin deleted his profile so, it's associate events and posts gonna be deleted!
 router.post('/delete/:id', async (req, res) => {
-    const id = req.params.id
-    const { success, message } = await deleteUserById(id)
+    const userId = req.params.id
+    const sessionUser = req.user
+    const { user, message: userMsg } = await getUserById(userId)
+    console.log(user) // testing
 
-    if (success) {
-        req.flash('message', message)
-        res.clearCookie('token')
-        return res.redirect('/users/login')
+    if (!user) {
+        req.flash('message', userMsg)
+        return res.redirect('/dashboard/settings')
     }
 
-    res.status(500).send({ error: message })
+    const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
+    for (const event of events) {
+        const { image, success } = await getImageByEventId(event.id);
+        if (success && image?.file_name && image.file_name !== 'default.jpg') {
+            await deleteCloudinaryImage(image.file_name);
+        }
+        await deleteImageByEventId(event.id)
+
+        const { posts = [] } = await getPostsByEventId(event.id)
+        for (const post of posts) {
+            const { images = [] } = await getImagesByPostId(post.id)
+            for (const img of images) {
+                if (img?.file_name && img.file_name !== 'default.jpg') {
+                    await deleteCloudinaryImage(img.file_name)
+                }
+            }
+            await deleteImagesByPostId(post.id)
+            await deletePostById(post.id)
+        }
+
+        await deleteEventById(event.id)
+    }
+
+    const { success, message } = await deleteUserById(user.id)
+
+    if (!success) {
+        req.flash('message', message)
+        return res.redirect('/dashboard/settings')
+    }
+
+    await deleteActivityByUserId(sessionUser._id)
+
+    req.flash('message', message)
+    res.clearCookie('token')
+    return res.redirect('/users/login')
 })
 
 

@@ -35,20 +35,29 @@ router.get('/', async (req, res) => {
 // dashboard users page
 router.get('/users', async (req, res) => {
     const message = req.flash('message')[0]
+    const selectedStatus = req.query.status || ''
 
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
-    const { users } = await getOnlyUsers(decoded._id)
+    let { users } = await getOnlyUsers(decoded._id)
     const { user } = await getUserById(decoded._id)
     const { name } = await getOrganizingCommitteeById(user.organizing_committee_id)
+
+    // Filter users by status
+    if (selectedStatus === 'active') {
+        users = users.filter(user => user.status === 1)
+    } 
+    else if (selectedStatus === 'inactive') {
+        users = users.filter(user => user.status === 0)
+    }
 
     res.render('pages/dashboard/users', { 
         layout:'layouts/dashboardLayout',  
         admin: user,
-        notify: message? message : null,
-        
         onlyUsers: users,
         organizingCommittee: name,
+        selectedStatus,
+        notify: message? message : null,
     })
 })
 

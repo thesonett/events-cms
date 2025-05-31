@@ -1,8 +1,18 @@
 <div class="flex justify-between items-center mb-4">
   <h2 class="text-2xl font-bold">Registered Users List for the events of <%= organizingCommittee %></h2>
-  <button onclick="showModal('addUserModal', 'addUserContent')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-    Add User
-  </button>
+  <div class="flex items-center space-x-4">
+    <div>
+      <label class="block text-sm font-medium mb-1" for="filterStatusSelect">Filter by Status</label>
+      <select id="filterStatusSelect" class="border rounded px-3 py-2">
+        <option value="">Show All</option>
+        <option value="active" <%= selectedStatus === 'active' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%= selectedStatus === 'inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+    </div>
+    <button onclick="showModal('addUserModal', 'addUserContent')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Add User
+    </button>
+  </div>
 </div>
 
 <table class="min-w-full bg-white border rounded shadow">
@@ -35,7 +45,7 @@
             </span>
           </td>
           <td class="py-3 px-6">
-            <form action="/dashboard/delete/user/<%= user.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
+            <form action="/dashboard/delete/user/<%= user.id %>?status=<%= selectedStatus || '' %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
               <button
                 type="submit"
                 class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-1 px-3 rounded-full transition duration-200"
@@ -58,7 +68,7 @@
 <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
   <div id="addUserContent" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
     <h2 class="text-xl font-semibold mb-4 text-center">Add New User</h2>
-    <form action="/dashboard/user/create" method="POST" class="space-y-4">
+    <form action="/dashboard/user/create?status=<%= selectedStatus || '' %>" method="POST" class="space-y-4">
       <div>
         <label for="first_name" class="block text-sm font-medium mb-1">First Name</label>
         <input type="text" name="first_name" id="first_name" placeholder="First Name" class="w-full px-3 py-2 border rounded focus:ring-rose-500" required>
@@ -122,8 +132,14 @@
       closeModal(modal, content);
     });
   });
-</script>
 
+  // Filter users by status
+  const filterStatusSelect = document.getElementById('filterStatusSelect');
+  filterStatusSelect.addEventListener('change', () => {
+    const selectedStatus = filterStatusSelect.value;
+    window.location.href = `/dashboard/users?status=${selectedStatus}`;
+  });
+</script>
 
 <% if (notify) { %>
     <script>

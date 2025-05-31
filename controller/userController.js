@@ -164,11 +164,11 @@ async function deleteUserById(id) {
         
         return user ? 
             { success: true, message: 'User got deleted!' } : 
-            { success: false, message: 'User not found!' }
+            { success: false, message: 'Unable to delete user!' }
     }
     catch (error) {
         console.log('Exception occurred inside deleteUserById!\n', error)
-        return { success: false, message: 'Exception:::: User not found!' }
+        return { success: false, message: 'Exception:::: Unable to delete user!' }
     }
 }
 

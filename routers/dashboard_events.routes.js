@@ -11,14 +11,20 @@ dotenv.config()
 // events page
 router.get('/', async (req, res) => {
     const message = req.flash('message')[0]
+    const selectedCategory = req.query.category || ''
 
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
     
     const { user } = await getUserById(decoded._id)
     const { categories } = await getCategories()
-    const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
+    let { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
     const { name: organizingCommitteeName } = await getOrganizingCommitteeById(user.organizing_committee_id)
+
+    // Filter events by category if a category is selected
+    if (selectedCategory) {
+        events = events.filter(event => event.category_id === parseInt(selectedCategory))
+    }
     
     const totalEvents = await Promise.all(events.map(async (event) => {
         const { category } = await getCategoryById(event.category_id)
@@ -37,6 +43,7 @@ router.get('/', async (req, res) => {
         categories,
         events: totalEvents,
         organizingCommitteeName,
+        selectedCategory,
         notify: message? message : null,
     })
 })

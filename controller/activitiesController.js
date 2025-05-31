@@ -59,6 +59,23 @@ async function deleteActivity(id) {
     }
 }
 
+async function deleteActivityByUserId(user_id) {
+    try {
+        const activity = await Activities.destroy({ where: { user_id } })
+
+        if (!activity) {
+            return { success: false, message: 'Activity not found!' }
+        }
+
+        return { success: true, message: 'Activity deleted successfully!' }
+    } 
+    catch (error) {
+        console.error('Exception occurred in deleteActivityByUserId!\n', error)
+        return { success: false, message: 'Exception::: Activity deletion failed!' }
+    }
+}
+
+
 async function getActivities(user_id) {
     try {
         const activities = await Activities.findAll({ where: { user_id } })
@@ -79,5 +96,6 @@ export {
     createActivity,
     updateActivity,
     deleteActivity,
+    deleteActivityByUserId,
     getActivities,
 }

@@ -13,18 +13,22 @@ const Images = sequelize.define(
     file_name: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      defaultValue: 'default.jpg',
     },
     original_filename: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      defaultValue: 'default.jpg',
     },
     image_url: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      defaultValue: 'https://instaily.com/_next/static/media/test.b3910688.jpg',
     },
     size: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      defaultValue: '0',
     },
     entity_id: {
       type: DataTypes.INTEGER,

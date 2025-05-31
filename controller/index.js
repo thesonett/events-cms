@@ -63,6 +63,7 @@ import {
 import {
     createEvent,
     deleteEventById,
+    deleteEventByOrganizingCommitteeId,
     updateEventById,
     getEventById,
     getEventsByCategoryId,
@@ -93,6 +94,7 @@ import {
     createActivity,
     updateActivity,
     deleteActivity,
+    deleteActivityByUserId,
     getActivities,
 } from './activitiesController.js'
 
@@ -156,6 +158,7 @@ export {
     // events
     createEvent,
     deleteEventById,
+    deleteEventByOrganizingCommitteeId,
     updateEventById,
     getEventById,
     getEventsByCategoryId,
@@ -184,5 +187,6 @@ export {
     createActivity,
     updateActivity,
     deleteActivity,
+    deleteActivityByUserId,
     getActivities,
 }

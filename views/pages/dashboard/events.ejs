@@ -1,9 +1,20 @@
 <div class="bg-white p-6 rounded-lg shadow">
   <div class="flex items-center justify-between mb-4">
     <h3 class="text-lg font-semibold">Manage Events for <%= organizingCommitteeName %></h3>
-    <button data-modal-open="addEventModal" data-modal-content="addEventContent" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-      Add Event
-    </button>
+    <div class="flex items-center space-x-4">
+      <div>
+        <label class="block text-sm font-medium mb-1" for="filterCategorySelect">Filter by Category</label>
+        <select id="filterCategorySelect" class="border rounded px-3 py-2">
+          <option value="">All Categories</option>
+          <% categories.forEach(category => { %>
+            <option value="<%= category.id %>" <%= category.id == selectedCategory ? 'selected' : '' %>><%= category.category %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button data-modal-open="addEventModal" data-modal-content="addEventContent" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Add Event
+      </button>
+    </div>
   </div>
   <div class="overflow-x-auto">
     <table class="w-full text-left">
@@ -30,7 +41,7 @@
               <td class="py-2 px-4"><%= event.image || 'No Image' %></td>
               <td class="py-2 px-4 space-x-2">
                 <a href="javascript:void(0)" class="text-blue-600 hover:underline" onclick="showModal('editEventModal-<%= event.id %>', 'editEventContent-<%= event.id %>'); return false;">Edit</a>
-                <form action="/dashboard/events/event/delete/<%= event.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this event?')">
+                <form action="/dashboard/events/event/delete/<%= event.id %>?category=<%= selectedCategory || '' %>" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this event?')">
                   <button type="submit" class="text-red-600 hover:underline">Delete</button>
                 </form>
                 <a href="/dashboard/posts/post/<%= event.id %>" class="text-blue-600 hover:underline">View Posts</a>
@@ -53,7 +64,7 @@
     <div id="editEventModal-<%= event.id %>" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
       <div id="editEventContent-<%= event.id %>" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
         <h2 class="text-xl font-semibold mb-4">Edit Event</h2>
-        <form action="/dashboard/events/event/update/<%= event.id %>" method="POST" enctype="multipart/form-data">
+        <form action="/dashboard/events/event/update/<%= event.id %>?category=<%= selectedCategory || '' %>" method="POST" enctype="multipart/form-data">
           <div class="mb-4">
             <label class="block text-sm font-medium mb-1" for="eventTitle-<%= event.id %>">Event Name</label>
             <input id="eventTitle-<%= event.id %>" name="title" type="text" class="w-full border rounded px-3 py-2" placeholder="Enter event name" value="<%= event.title %>" required>
@@ -132,7 +143,7 @@
 <div id="addEventModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
   <div id="addEventContent" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 scale-95 opacity-0">
     <h2 class="text-xl font-semibold mb-4">Add New Event</h2>
-    <form action="/dashboard/events/event/create" method="POST" enctype="multipart/form-data">
+    <form action="/dashboard/events/event/create?category=<%= selectedCategory || '' %>" method="POST" enctype="multipart/form-data">
       <div class="mb-4">
         <label class="block text-sm font-medium mb-1">Event Name</label>
         <input type="text" name="title" class="w-full border rounded px-3 py-2" placeholder="Enter event name" required>
@@ -182,6 +193,13 @@
       customCategoryInput.removeAttribute('required');
       customCategoryInput.removeAttribute('name');
     }
+  });
+
+  // Filter events by category
+  const filterCategorySelect = document.getElementById('filterCategorySelect');
+  filterCategorySelect.addEventListener('change', () => {
+    const selectedCategory = filterCategorySelect.value;
+    window.location.href = `/dashboard/events?category=${selectedCategory}`;
   });
 
   // Modal show/hide functions

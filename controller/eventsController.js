@@ -26,6 +26,17 @@ async function deleteEventById(id) {
     }
 }
 
+async function deleteEventByOrganizingCommitteeId(organizing_committee_id) {
+    try {
+        const event = await Events.destroy({ where: { organizing_committee_id }})
+        return { success: true, message: 'Event deleted!' }
+    }
+    catch (error) {
+        console.log('Exception occured inside deleteEventByOrganizingCommitteeId!\n', error)
+        return { success: false, message: 'Exception::: Unable to delete event or event not found!'}
+    }
+}
+
 async function updateEventById(id, updates) {
     try {
         const [status] = await Events.update(updates, { where: { id } })
@@ -149,6 +160,7 @@ async function getEventsByYear(id, date) {
 export {
     createEvent,
     deleteEventById,
+    deleteEventByOrganizingCommitteeId,
     updateEventById,
 
     getEventById,
