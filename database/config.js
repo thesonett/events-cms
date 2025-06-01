@@ -2,12 +2,23 @@ import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const sequelize = new Sequelize(/*process.env.DB_PUBLIC_URL,*/ {
-    host: process.env.DB_HOST,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE_NAME,
-    dialect: process.env.DB_DIALECT,
+// for local
+// const sequelize = new Sequelize({
+//     host: process.env.DB_HOST,
+//     username: process.env.DB_USERNAME,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_DATABASE_NAME,
+//     dialect: process.env.DB_DIALECT,
+// })
+
+// for deployment
+const sequelize = new Sequelize(process.env.DB_PUBLIC_URL, {
+    dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    }
+  }
 })
 
 await sequelize.authenticate().then(async () => {
