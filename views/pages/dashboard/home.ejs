@@ -1,46 +1,46 @@
 <!-- Dashboard Content -->
 <div id="dashboard-home">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold text-gray-700">Total Events</h3>
-      <p class="text-3xl font-bold text-gray-900"><%= events?.length || 0 %></p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+      <h3 class="text-base sm:text-lg font-semibold text-gray-700">Total Events</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-gray-900"><%= events?.length || 0 %></p>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold text-gray-700">Active Users</h3>
-      <p class="text-3xl font-bold text-gray-900"><%= activeUsers?.length || 0 %></p>
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+      <h3 class="text-base sm:text-lg font-semibold text-gray-700">Active Users</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-gray-900"><%= activeUsers?.length || 0 %></p>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold text-gray-700">Total Upcoming Events</h3>
-      <p class="text-3xl font-bold text-gray-900"><%= upcomingEvents?.length || 0 %></p>
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+      <h3 class="text-base sm:text-lg font-semibold text-gray-700">Total Upcoming Events</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-gray-900"><%= upcomingEvents?.length || 0 %></p>
     </div>
   </div>
 
-  <div class="bg-white p-6 rounded-lg shadow">
-    <h3 class="text-lg font-semibold text-gray-700 mb-4">Recent Activity</h3>
+  <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+    <h3 class="text-base sm:text-lg font-semibold text-gray-700 mb-4">Recent Activity</h3>
     <div class="overflow-x-auto">
-      <table class="w-full text-left">
+      <table class="w-full text-left text-sm sm:text-base">
         <thead>
           <tr class="text-gray-600">
-            <th class="p-3">Action ID</th>
-            <th class="p-3">Actions</th>
-            <th class="p-3">Actions Performed On</th>
+            <th class="p-2 sm:p-3 whitespace-nowrap">Action ID</th>
+            <th class="p-2 sm:p-3 whitespace-nowrap">Actions</th>
+            <th class="p-2 sm:p-3 whitespace-nowrap hidden sm:table-cell">Actions Performed On</th>
           </tr>
         </thead>
         <tbody>
         <% if (activities && activities.length) { %>
-        <% activities.forEach(activity => { %>
-          <tr class="border-t">
-            <td class="p-3"><%= activity.id || 'No actions performed yet' %></td>
-            <td class="p-3"><%= activity.actions || 'No actions performed yet' %></td>
-            <td class="p-3"><%= activity.actionsPerformedOn || 'N/A' %></td>
+          <% activities.forEach(activity => { %>
+            <tr class="border-t">
+              <td class="p-2 sm:p-3 break-words"><%= activity.id || 'No actions performed yet' %></td>
+              <td class="p-2 sm:p-3 break-words"><%= activity.actions || 'No actions performed yet' %></td>
+              <td class="p-2 sm:p-3 break-words hidden sm:table-cell"><%= activity.actionsPerformedOn || 'N/A' %></td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="3" class="p-2 sm:p-3 text-center text-gray-500 text-sm sm:text-base">No activity records available</td>
           </tr>
-        <% }) %>
-      <% } else { %>
-        <tr>
-          <td colspan="2" class="p-3 text-center text-gray-500">No activity records available</td>
-        </tr>
-      <% } %>
-      </tbody>
+        <% } %>
+        </tbody>
       </table>
     </div>
   </div>

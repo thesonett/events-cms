@@ -1,10 +1,10 @@
-<div class="bg-white p-6 rounded-lg shadow">
-  <div class="flex items-center justify-between mb-1">
-    <h3 class="text-lg font-semibold">Manage Posts for <%= eventName %></h3>
-    <div class="flex items-center space-x-4">
+<div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-1 space-y-4 sm:space-y-0">
+    <h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-700">Manage Posts for <%= eventName %></h3>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
       <div>
         <label class="block text-sm font-medium mb-1" for="filterStatusSelect">Filter by Status</label>
-        <select id="filterStatusSelect" class="border rounded px-3 py-2">
+        <select id="filterStatusSelect" class="border rounded px-3 py-2 w-full max-w-xs text-sm sm:text-base focus:ring-blue-500">
           <option value="">Show All</option>
           <option value="upcoming" <%= selectedStatus === 'upcoming' ? 'selected' : '' %>>Upcoming</option>
           <option value="ongoing" <%= selectedStatus === 'ongoing' ? 'selected' : '' %>>Ongoing</option>
@@ -13,9 +13,9 @@
       </div>
       <div>
         <label class="block text-sm font-medium mb-1" for="filterDate">Filter by Date</label>
-        <input type="date" id="filterDate" class="border rounded px-3 py-2" value="<%= selectedDate || '' %>">
+        <input type="date" id="filterDate" class="border rounded px-3 py-2 w-full max-w-xs text-sm sm:text-base focus:ring-blue-500" value="<%= selectedDate || '' %>">
       </div>
-      <button onclick="openModal('addPostModal')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      <button onclick="openModal('addPostModal')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto min-w-[100px] text-sm sm:text-base">
         Add Post
       </button>
     </div>
@@ -23,8 +23,8 @@
 
   <!-- Back to events below title -->
   <div class="mb-4">
-    <a href="/dashboard/events" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm">
-      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <a href="/dashboard/events" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-sm sm:text-base">
+      <svg class="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 19l-7-7 7-7"></path>
       </svg>
       Back to events
@@ -32,38 +32,38 @@
   </div>
 
   <div class="overflow-x-auto">
-    <table class="w-full text-left">
+    <table class="w-full text-left text-sm sm:text-base">
       <thead class="text-gray-600 border-b">
         <tr>
-          <th class="py-2 px-4 font-medium">ID</th>
-          <th class="py-2 px-4 font-medium">Post Title</th>
-          <th class="py-2 px-4 font-medium">Description</th>
-          <th class="py-2 px-4 font-medium">Venue</th>
-          <th class="py-2 px-4 font-medium">Location</th>
-          <th class="py-2 px-4 font-medium">Duration (in hrs)</th>
-          <th class="py-2 px-4 font-medium">Organized By</th>
-          <th class="py-2 px-4 font-medium">Date</th>
-          <th class="py-2 px-4 font-medium">Time</th>
-          <th class="py-2 px-4 font-medium">Status</th>
-          <th class="py-2 px-4 font-medium">Actions</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap">ID</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap">Post Title</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden md:table-cell">Description</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden lg:table-cell">Venue</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden lg:table-cell">Location</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden md:table-cell">Duration (in hrs)</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden xl:table-cell">Organized By</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden lg:table-cell">Date</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap hidden md:table-cell">Time</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap">Status</th>
+          <th class="py-2 px-2 sm:px-4 font-medium whitespace-nowrap">Actions</th>
         </tr>
       </thead>
       <tbody>
         <% if(posts && posts.length) { %>
           <% posts.forEach(post => { %>
             <tr class="border-b hover:bg-gray-50">
-              <td class="py-2 px-4"><%= post.id %></td>
-              <td class="py-2 px-4"><%= post.title %></td>
-              <td class="py-2 px-4"><%= post.description %></td>
-              <td class="py-2 px-4"><%= post.venue %></td>
-              <td class="py-2 px-4"><%= post.location %></td>
-              <td class="py-2 px-4"><%= post.duration %> hrs</td>
-              <td class="py-2 px-4"><%= post.organizer %></td>
-              <td class="py-2 px-4">
+              <td class="py-2 px-2 sm:px-4 break-words"><%= post.id %></td>
+              <td class="py-2 px-2 sm:px-4 break-words"><%= post.title %></td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden md:table-cell"><%= post.description %></td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden lg:table-cell"><%= post.venue %></td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden lg:table-cell"><%= post.location %></td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden md:table-cell"><%= post.duration %> hrs</td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden xl:table-cell"><%= post.organizer %></td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden lg:table-cell">
                 <% const formattedDate = new Date(post.date).toISOString().split('T')[0] %>
                 <%= post.date %>
               </td>
-              <td class="py-2 px-4">
+              <td class="py-2 px-2 sm:px-4 break-words hidden md:table-cell">
                 <% 
                   const [hours, minutes] = post.time.split(':')
                   const date = new Date()
@@ -73,24 +73,24 @@
                 %>
                 <%= formattedTime %>
               </td>
-              <td class="py-2 px-4">
+              <td class="py-2 px-2 sm:px-4">
                 <% let statusColor = '' %>
                 <% if (post.status === 'upcoming') { statusColor = 'text-blue-600' } %>
                 <% if (post.status === 'ongoing') { statusColor = 'text-yellow-600' } %>
                 <% if (post.status === 'completed') { statusColor = 'text-green-600' } %>
-                <span class="<%= statusColor %> font-semibold capitalize"><%= post.status %></span>
+                <span class="<%= statusColor %> font-semibold capitalize text-sm sm:text-base"><%= post.status %></span>
               </td>
-              <td class="py-2 px-4 space-x-2">
-                <a href="javascript:void(0)" onclick="openModal('editPostModal-<%= post.id %>')" class="text-blue-600 hover:underline">Edit</a>
+              <td class="py-2 px-2 sm:px-4 space-x-2 flex flex-wrap gap-2">
+                <a href="javascript:void(0)" onclick="openModal('editPostModal-<%= post.id %>')" class="text-blue-600 hover:underline text-sm sm:text-base">Edit</a>
                 <form action="/dashboard/posts/post/delete/<%= post.id %>?status=<%= selectedStatus || '' %>&date=<%= selectedDate || '' %>" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this post?')">
-                  <button type="submit" class="text-red-600 hover:underline bg-transparent border-none p-0 cursor-pointer">Delete</button>
+                  <button type="submit" class="text-red-600 hover:underline bg-transparent border-none p-0 cursor-pointer text-sm sm:text-base">Delete</button>
                 </form>
               </td>
             </tr>
           <% }) %>
         <% } else { %>
           <tr>
-            <td colspan="10" class="py-4 px-4 text-center text-gray-500">No posts found</td>
+            <td colspan="11" class="py-4 px-2 sm:px-4 text-center text-gray-500 text-sm sm:text-base">No posts found</td>
           </tr>
         <% } %>
       </tbody>
@@ -101,136 +101,135 @@
 <!-- Edit Post Modal -->
 <% if (posts && posts.length) { %>
   <% posts.forEach(post => { %>
-    <div id="editPostModal-<%= post.id %>" onclick="handleBackdropClick(event, 'editPostModal-<%= post.id %>')" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
-      <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative transform transition-all duration-300 scale-95 max-h-[90vh] overflow-y-auto">
-        <h3 class="text-xl font-semibold mb-4">Edit Post</h3>
+    <div id="editPostModal-<%= post.id %>" onclick="handleBackdropClick(event, 'editPostModal-<%= post.id %>')" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl p-4 sm:p-6 md:p-8 relative transform transition-all duration-300 scale-95 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-4">Edit Post</h3>
 
-        <form action="/dashboard/posts/post/update/<%= post.id %>?status=<%= selectedStatus || '' %>&date=<%= selectedDate || '' %>" id="editPostForm-<%= post.id %>" id="editPostForm-<%= post.id %>" id="editPostForm-<%= post.id %>" class="space-y-4" method="POST" enctype="multipart/form-data">
+        <form action="/dashboard/posts/post/update/<%= post.id %>?status=<%= selectedStatus || '' %>&date=<%= selectedDate || '' %>" id="editPostForm-<%= post.id %>" class="space-y-4" method="POST" enctype="multipart/form-data">
           <div>
-            <label for="editPostTitle-<%= post.id %>" class="block font-medium mb-1">Title</label>
-            <input type="text" id="editPostTitle-<%= post.id %>" name="title" value="<%= post.title %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostTitle-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Title</label>
+            <input type="text" id="editPostTitle-<%= post.id %>" name="title" value="<%= post.title %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div>
-            <label for="editPostDescription-<%= post.id %>" class="block font-medium mb-1">Description</label>
-            <textarea id="editPostDescription-<%= post.id %>" name="description" required class="w-full border rounded px-3 py-2"><%= post.description %></textarea>
+            <label for="editPostDescription-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Description</label>
+            <textarea id="editPostDescription-<%= post.id %>" name="description" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500"><%= post.description %></textarea>
           </div>
 
           <div>
-            <label for="editPostVenue-<%= post.id %>" class="block font-medium mb-1">Venue</label>
-            <input type="text" id="editPostVenue-<%= post.id %>" name="venue" value="<%= post.venue %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostVenue-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Venue</label>
+            <input type="text" id="editPostVenue-<%= post.id %>" name="venue" value="<%= post.venue %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div>
-            <label for="editPostLocation-<%= post.id %>" class="block font-medium mb-1">Location</label>
-            <input type="text" id="editPostLocation-<%= post.id %>" name="location" value="<%= post.location %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostLocation-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Location</label>
+            <input type="text" id="editPostLocation-<%= post.id %>" name="location" value="<%= post.location %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div>
-            <label for="editPostDuration-<%= post.id %>" class="block font-medium mb-1">Duration (in hrs)</label>
-            <input type="number" id="editPostDuration-<%= post.id %>" name="duration" value="<%= post.duration %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostDuration-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Duration (in hrs)</label>
+            <input type="number" id="editPostDuration-<%= post.id %>" name="duration" value="<%= post.duration %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div>
-            <label for="editPostOrganizedBy-<%= post.id %>" class="block font-medium mb-1">Organized By</label>
-            <input type="text" id="editPostOrganizedBy-<%= post.id %>" name="organizedBy" value="<%= post.organizer %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostOrganizedBy-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Organized By</label>
+            <input type="text" id="editPostOrganizedBy-<%= post.id %>" name="organizedBy" value="<%= post.organizer %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div>
-            <label for="editPostDate-<%= post.id %>" class="block font-medium mb-1">Date</label>
-            <input type="date" id="editPostDate-<%= post.id %>" name="date" value="<%= post.date %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostDate-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Date</label>
+            <input type="date" id="editPostDate-<%= post.id %>" name="date" value="<%= post.date %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div>
-            <label for="editPostTime-<%= post.id %>" class="block font-medium mb-1">Time</label>
-            <input type="time" id="editPostTime-<%= post.id %>" name="time" value="<%= post.time %>" required class="w-full border rounded px-3 py-2" />
+            <label for="editPostTime-<%= post.id %>" class="block text-sm sm:text-base font-medium mb-1">Time</label>
+            <input type="time" id="editPostTime-<%= post.id %>" name="time" value="<%= post.time %>" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
           </div>
 
           <div class="mb-4">
-            <label class="block text-sm font-medium mb-1" for="postImage-<%= post.id %>">Post Image</label>
-            <input id="postImage-<%= post.id %>" name="images" type="file" multiple accept="image/*" class="w-full border rounded px-3 py-2">
+            <label class="block text-sm sm:text-base font-medium mb-1" for="postImage-<%= post.id %>">Post Image</label>
+            <input id="postImage-<%= post.id %>" name="images" type="file" multiple accept="image/*" class="w-full border rounded px-3 py-2 text-sm sm:text-base">
             
             <% if (image_names[post.id] && image_names[post.id].length > 0) { %>
               <% image_names[post.id].forEach((fileName, index) => { %>
-                <p class="text-xs mt-1 italic" id="selectedFileName-<%= post.id %>-<%= index %>">Current File: <%= fileName %></p>
+                <p class="text-xs sm:text-sm mt-1 italic" id="selectedFileName-<%= post.id %>-<%= index %>">Current File: <%= fileName %></p>
               <% }) %>
             <% } %>
           </div>
 
-          <div class="flex justify-end space-x-3 pt-4 border-t">
-            <button type="button" onclick="closeModal('editPostModal-<%= post.id %>')" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Update Post</button>
+          <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4 border-t">
+            <button type="button" onclick="closeModal('editPostModal-<%= post.id %>')" class="px-4 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto min-w-[100px] text-sm sm:text-base">Cancel</button>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto min-w-[100px] text-sm sm:text-base">Update</button>
           </div>
         </form>
 
-        <button onclick="closeModal('editPostModal-<%= post.id %>')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700" aria-label="Close modal">
-          &times;
+        <button onclick="closeModal('editPostModal-<%= post.id %>')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl" aria-label="Close modal">
+          ×
         </button>
       </div>
     </div>
   <% }) %>
 <% } %>
 
-
 <!-- Add Post Modal -->
-<div id="addPostModal" onclick="handleBackdropClick(event, 'addPostModal')" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative transform transition-all duration-300 scale-95 max-h-[90vh] overflow-y-auto">
-    <h3 class="text-xl font-semibold mb-4">Add New Post</h3>
+<div id="addPostModal" onclick="handleBackdropClick(event, 'addPostModal')" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl p-4 sm:p-6 md:p-8 relative transform transition-all duration-300 scale-95 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-4">Add New Post</h3>
 
     <form action="/dashboard/posts/post/create/<%= eventId %>?status=<%= selectedStatus || '' %>&date=<%= selectedDate || '' %>" id="addPostForm" class="space-y-4" method="POST" enctype="multipart/form-data">
       <div>
-        <label for="postTitle" class="block font-medium mb-1">Title</label>
-        <input type="text" id="postTitle" name="title" required class="w-full border rounded px-3 py-2" />
+        <label for="postTitle" class="block text-sm sm:text-base font-medium mb-1">Title</label>
+        <input type="text" id="postTitle" name="title" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postDescription" class="block font-medium mb-1">Description</label>
-        <textarea id="postDescription" name="description" required class="w-full border rounded px-3 py-2"></textarea>
+        <label for="postDescription" class="block text-sm sm:text-base font-medium mb-1">Description</label>
+        <textarea id="postDescription" name="description" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500"></textarea>
       </div>
 
       <div>
-        <label for="postVenue" class="block font-medium mb-1">Venue</label>
-        <input type="text" id="postVenue" name="venue" required class="w-full border rounded px-3 py-2" />
+        <label for="postVenue" class="block text-sm sm:text-base font-medium mb-1">Venue</label>
+        <input type="text" id="postVenue" name="venue" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postLocation" class="block font-medium mb-1">Location</label>
-        <input type="text" id="postLocation" name="location" required class="w-full border rounded px-3 py-2" />
+        <label for="postLocation" class="block text-sm sm:text-base font-medium mb-1">Location</label>
+        <input type="text" id="postLocation" name="location" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postDuration" class="block font-medium mb-1">Duration (in hrs)</label>
-        <input type="number" id="postDuration" name="duration" required class="w-full border rounded px-3 py-2" />
+        <label for="postDuration" class="block text-sm sm:text-base font-medium mb-1">Duration (in hrs)</label>
+        <input type="number" id="postDuration" name="duration" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postOrganizedBy" class="block font-medium mb-1">Organized By</label>
-        <input type="text" id="postOrganizedBy" name="organizedBy" required class="w-full border rounded px-3 py-2" />
+        <label for="postOrganizedBy" class="block text-sm sm:text-base font-medium mb-1">Organized By</label>
+        <input type="text" id="postOrganizedBy" name="organizedBy" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postTime" class="block font-medium mb-1">Time</label>
-        <input type="time" id="postTime" name="time" required class="w-full border rounded px-3 py-2" />
+        <label for="postTime" class="block text-sm sm:text-base font-medium mb-1">Time</label>
+        <input type="time" id="postTime" name="time" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postDate" class="block font-medium mb-1">Date</label>
-        <input type="date" id="postDate" name="date" required class="w-full border rounded px-3 py-2" />
+        <label for="postDate" class="block text-sm sm:text-base font-medium mb-1">Date</label>
+        <input type="date" id="postDate" name="date" required class="w-full border rounded px-3 py-2 text-sm sm:text-base focus:ring-blue-500" />
       </div>
 
       <div>
-        <label for="postImages" class="block font-medium mb-1">Images</label>
-        <input type="file" id="postImages" name="images" multiple accept="image/*" class="w-full" />
+        <label for="postImages" class="block text-sm sm:text-base font-medium mb-1">Images</label>
+        <input type="file" id="postImages" name="images" multiple accept="image/*" class="w-full border rounded px-3 py-2 text-sm sm:text-base" />
       </div>
 
-      <div class="flex justify-end space-x-3 pt-4 border-t">
-        <button type="button" onclick="closeModal('addPostModal')" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Post</button>
+      <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4 border-t">
+        <button type="button" onclick="closeModal('addPostModal')" class="px-4 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto min-w-[100px] text-sm sm:text-base">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto min-w-[100px] text-sm sm:text-base">Save Post</button>
       </div>
     </form>
 
-    <button onclick="closeModal('addPostModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700" aria-label="Close modal">
-      &times;
+    <button onclick="closeModal('addPostModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl" aria-label="Close modal">
+      ×
     </button>
   </div>
 </div>
