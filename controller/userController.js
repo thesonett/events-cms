@@ -150,7 +150,7 @@ async function getUserById(id) {
 async function isAdminExistsForCommittee(organizing_committee_id) {
     try {
         const user = await Users.findOne({ where: { organizing_committee_id, role_id: 1 } })
-        return user ? { success: true, message: 'Admin is already there!' } : { success: false, message: 'User not found!' }
+        return user ? { success: true, message: 'Admin is already there for this organization!' } : { success: false, message: 'User not found!' }
     }
     catch (error) {
         console.log('Exception occurred inside isAdminExistsForCommittee!\n', error)

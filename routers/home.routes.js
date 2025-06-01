@@ -1,32 +1,38 @@
-import express from 'express'
-import { getAllEvents, getCategories, getCategoryById, getImageUrlByEventId, getOrganizingCommitteeById } from '../controller/index.js'
+import express from "express";
+import {
+  getAllEvents,
+  getCategories,
+  getImagesByPostId,
+  getPostsByEventId,
+} from "../controller/index.js";
 
-const router = express.Router()
+const router = express.Router();
 
 // home page
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const { categories } = await getCategories()
   const { events } = await getAllEvents()
 
   const safeEvents = events || []
 
-   const totalEvents = await Promise.all(safeEvents.map(async (event) => {
-    const { category } = await getCategoryById(event.category_id)
-    const { image, success } = await getImageUrlByEventId(event.id)
-    const { name } = await getOrganizingCommitteeById(event.organizing_committee_id)
+  const allUpcomingEvents = (await Promise.all(safeEvents.map(async event => {
+    const { posts = [] } = await getPostsByEventId(event.id)
 
-    return {
-      ...event.get({ plain: true }),
-      category: category.category,
-      organizer: name,
-      image: success ? image.image_url : null,
-    }
-  }))
+    const postsWithImages = await Promise.all(posts.filter(post => post.status === 'upcoming')
+        .map(async post => {
+          const { images = [] } = await getImagesByPostId(post.id)
+          return {
+            ...post.get({ plain: true }),
+            images: images.map(img => img.get({ plain: true }))
+          }
+        })
+    )
 
-  res.render('pages/home', { 
-    categories: categories || [], 
-    totalEvents,
-  })
+    return { posts: postsWithImages }
+  }))).filter(event => event.posts.length > 0);
+
+
+  res.render("pages/home", { categories: categories || [], allUpcomingEvents: allUpcomingEvents || [] })
 })
 
-export default router
+export default router;

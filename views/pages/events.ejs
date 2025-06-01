@@ -7,50 +7,62 @@
       <aside class="w-full lg:w-1/4 bg-white p-6 rounded-xl shadow-lg lg:sticky lg:top-24 self-start h-fit">
         <h2 class="text-xl font-bold text-gray-800 mb-4 font-heading">Filters</h2>
         
-        <!-- Category Filter -->
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-700 mb-2">Category</h3>
-          <div class="space-y-2">
-            <% if (allCategories && allCategories.length) { %>
-            <% allCategories.map(category => { %>
+        <form id="filter-form" method="GET" action="/events">
+          <!-- Category Filter -->
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Category</h3>
+            <div class="space-y-2">
+              <% if (allCategories && allCategories.length) { %>
+                <% allCategories.forEach(category => { %>
+                  <label class="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      class="mr-2 accent-red-600" 
+                      name="category" 
+                      value="<%= category.id %>" 
+                      <%= (Array.isArray(query.category) ? query.category.includes(String(category.id)) : query.category == String(category.id)) ? 'checked' : '' %> 
+                    />
+                    <span><%= category.category %></span>
+                  </label>
+                <% }) %>
+              <% } else { %>
                 <label class="flex items-center">
-                  <input type="checkbox" class="mr-2 accent-red-600" name="category" value="<%= category.id %>" />
-                  <span><%= category.category %></span>
+                  <input type="checkbox" class="mr-2 accent-red-600" name="category" value="no" />
+                  <span>No category found!</span>
                 </label>
-              <% }) %>
-            <% } else { %>
-              <label class="flex items-center">
-                <input type="checkbox" class="mr-2 accent-red-600" name="category" value="no" />
-                <span>No category found!</span>
-              </label>
-            <% } %>
+              <% } %>
+            </div>
           </div>
-        </div>
 
-        <!-- Published By Filter -->
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-700 mb-2">Organizers</h3>
-          <div class="space-y-2">
-            <% if (allOrganizers && allOrganizers.length) { %>
-            <% allOrganizers.map(organizer => { %>
+          <!-- Published By Filter -->
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Published By</h3>
+            <div class="space-y-2">
+              <% if (allOrganizers && allOrganizers.length) { %>
+                <% allOrganizers.forEach(organizer => { %>
+                  <label class="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      class="mr-2 accent-red-600" 
+                      name="organizer" 
+                      value="<%= organizer.id %>" 
+                      <%= (Array.isArray(query.organizer) ? query.organizer.includes(String(organizer.id)) : query.organizer == String(organizer.id)) ? 'checked' : '' %>
+                    />
+                    <span><%= organizer.name %></span>
+                  </label>
+                <% }) %>
+              <% } else { %>
                 <label class="flex items-center">
-                  <input type="checkbox" class="mr-2 accent-red-600" name="organizer" value="<%= organizer.id %>" />
-                  <span><%= organizer.name %></span>
-                </label>
-              <% }) %>
-            <% } else { %>
-                <label class="flex items-center">
-                  <input type="checkbox" class="mr-2 accent-red-600" name="date" value="no" />
+                  <input type="checkbox" class="mr-2 accent-red-600" name="organizer" value="no" />
                   <span>No publisher found!</span>
                 </label>
-            <% } %>
+              <% } %>
+            </div>
           </div>
-        </div>
 
-        <!-- Reset Filters -->
-        <button id="reset-filters" class="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
-          Reset Filters
-        </button>
+          <!-- Reset Filters -->
+          <button  id="reset-filters" type="button" class="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Reset Filters</button>
+        </form>
       </aside>
 
       <!-- Event Cards -->
@@ -75,7 +87,7 @@
                     }) %>
                   </p>
                   <p class="text-gray-600 text-sm"><%= event.category %></p>
-                  <p class="text-l font-bold text-red-700 text-sm mt-2"><%= event.organizer %></p>
+                  <p class="text-l font-bold text-red-700 text-sm mt-2">Published By <%= event.organizer %></p>
                 </div>
               </a>
             <% }) %>
@@ -95,3 +107,26 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      document.getElementById('filter-form').submit()
+    })
+  })
+
+  document.getElementById('reset-filters').addEventListener('click', () => {
+    document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(cb => cb.checked = false)
+    document.getElementById('filter-form').submit()
+  })
+</script>
+
+<% if (notify) { %>
+    <script>
+      Swal.fire({
+        text: "<%- notify %>",
+        icon: "info",
+        confirmButtonColor: "#ec4899"
+      });
+    </script>
+<% } %>

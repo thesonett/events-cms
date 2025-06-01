@@ -30,7 +30,7 @@
         <input type="password" id="password" name="password" required placeholder="Password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" />
       </div>
       <div>
-        <label for="role_id" class="block text-gray-700 font-semibold mb-1">Select Role</label>
+        <label for="role_id" class="block text-gray-700 font-semibold mb-1">Account Type</label>
         <select name="role_id" id="role_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none">
           <% roles.forEach(role => { %>
             <option value="<%= role.id %>"><%= role.role %></option>
@@ -38,7 +38,7 @@
         </select>
       </div>
       <div>
-        <label for="organizing_committee_id" class="block text-gray-700 font-semibold mb-1">Organizing Committee</label>
+        <label for="organizing_committee_id" class="block text-gray-700 font-semibold mb-1">Select Your Organizing Committee</label>
         <select name="organizing_committee_id" id="organizing_committee_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none">
           <% organizingCommitties.forEach(committee => { %>
             <option value="<%= committee.id %>"><%= committee.name %></option>
