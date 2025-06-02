@@ -1,23 +1,11 @@
 import { Activities } from '../models/index.js'
 
 async function createActivity({ actions, actionsPerformedOn, user_id }) {
-    if (!actions) {
-        return { success: false, message: 'Action is required!' }
-    }
-
     try {
-        const count = await Activities.count()
-        if (count >= 10) {
-            const oldestActivities = await Activities.findAll({ order: [['createdAt', 'ASC']], limit: count - 9 })
-            const idsToDelete = oldestActivities.map(act => act.id)
-            
-            await Activities.destroy({ where: { id: idsToDelete } })
-        }
-
         const timestamp = actionsPerformedOn || new Date()
         const activity = await Activities.create({ actions, actionsPerformedOn: timestamp, user_id })
 
-        return { success: true, message: 'Action created!', activity }
+        return activity ? { success: true, activity } : { success: false, message: 'Unable to create activity!', activity }
     }
     catch(error) {
         console.error('Exception occurred in createActivity!\n', error)
@@ -76,15 +64,17 @@ async function deleteActivityByUserId(user_id) {
 }
 
 
-async function getActivities(user_id) {
+async function getActivities(user_id, pageNo = 1, pageSize = 50) {
     try {
-        const activities = await Activities.findAll({ where: { user_id } })
+        const { count, rows: activities } = await Activities.findAndCountAll({ 
+            where: { user_id },
+            limit: pageSize,
+            offset: (pageNo - 1) * pageSize,
+        })
     
-        if(!activities.length) {
-            return { success: false, message: 'Activities are not found!' }
-        }
-    
-        return { success: true, activities }
+        return activities.length ? 
+            { success: true, activities, totalRecords: count } : 
+            { success: false, message: 'Activities are not found!' }
     }
     catch(error) {
         console.log('Exception occured inside getActivities!\n', error)

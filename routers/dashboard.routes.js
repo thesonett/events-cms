@@ -13,14 +13,18 @@ const router = express.Router()
 router.get('/', async (req, res) => {
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
+
+    const pageNo = parseInt(req.query.pageNo) || 1
+    const pageSize = 5
+
     const { users } = await getActiveUsers(decoded._id)
     const { user } = await getUserById(decoded._id)
     const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
     const { posts = [] } = await getAllPosts()
-
     const upcomingEvents = posts.filter(post => getStatus(post.date, post.time) === 'upcoming')
-    const result = await getActivities(user.id)
-    const activities = result.success ? result.activities : []
+
+    const { activities = [],  totalRecords } = await getActivities(user.id, pageNo, pageSize)
+    const totalPages = Math.ceil(totalRecords / pageSize)
     
     res.render('pages/dashboard/home', { 
         layout:'layouts/dashboardLayout',  
@@ -29,6 +33,9 @@ router.get('/', async (req, res) => {
         activeUsers: users,
         events,
         upcomingEvents,
+        query: req.query,
+        totalPages,
+        pageNo,
     })
 })
 
@@ -36,10 +43,14 @@ router.get('/', async (req, res) => {
 router.get('/users', async (req, res) => {
     const message = req.flash('message')[0]
     const selectedStatus = req.query.status || ''
+    const pageNo = parseInt(req.query.pageNo) || 1
+    const pageSize = 1
 
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
-    let { users } = await getOnlyUsers(decoded._id)
+    let { users, totalRecords } = await getOnlyUsers(decoded._id, pageNo, pageSize)
+    const totalPages = Math.ceil(totalRecords / pageSize)
+
     const { user } = await getUserById(decoded._id)
     const { name } = await getOrganizingCommitteeById(user.organizing_committee_id)
 
@@ -58,6 +69,9 @@ router.get('/users', async (req, res) => {
         organizingCommittee: name,
         selectedStatus,
         notify: message? message : null,
+        query: req.query,
+        totalPages,
+        pageNo,
     })
 })
 

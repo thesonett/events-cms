@@ -52,17 +52,9 @@ const Posts = sequelize.define('posts_model', {
         key: 'id',
     }
   },
-}, 
-{
-  indexes: [
-    {
-      unique: true,
-      fields: ['title'],
-      name: 'unique_post_title_id',
-    },
-  ],
+}, {
   tableName: 'posts',
   timestamps: true,
-});
+})
 
 export default Posts

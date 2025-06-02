@@ -9,8 +9,12 @@ router.get('/', async (req, res) => {
   const message = req.flash('message')[0]
   const filters = req.query
 
+  const pageNo = parseInt(req.query.pageNo) || 1
+  const pageSize = 2
+
   const { categories } = await getCategories()
-  const { events } = await getAllEvents()
+  const { events, totalRecords } = await getAllEvents(pageNo, pageSize)
+  const totalPages = Math.ceil(totalRecords / pageSize)
 
   let safeEvents = events || []
 
@@ -44,66 +48,91 @@ router.get('/', async (req, res) => {
     allCategories: allCategories || [],
     allOrganizers: allOrganizers || [],
     query: filters,
+    totalPages,
+    pageNo,
     notify: message ? message : null,
   })
 })
 
 // events details page
 router.get('/:id', async (req, res) => {
-    const eventId = Number(req.params.id)
-    const filters = req.query
+  const eventId = Number(req.params.id)
+  const filters = req.query
 
-    const { event } = await getEventById(eventId)
-    const { category } = await getCategoryById(event.category_id)
-    const { image } = await getImageUrlByEventId(event.id)
-    const { name: organizer } = await getOrganizingCommitteeById(event.organizing_committee_id)
-    const { posts = [] } = await getPostsByEventId(eventId)
+  const pageNo = parseInt(req.query.pageNo) || 1
+  const pageSize = 2
 
-    let postsWithImages = await Promise.all(
-        posts.map(async post => {
-            const { images = [] } = await getImagesByPostId(post.id)
-            return {
-                ...post.get({ plain: true }),
-                images: images.map(img => img.get({ plain: true }))
-            }
-        })
-    )
+  const { event } = await getEventById(eventId)
+  const { category } = await getCategoryById(event.category_id)
+  const { image } = await getImageUrlByEventId(event.id)
+  const { name: organizer } = await getOrganizingCommitteeById(event.organizing_committee_id)
 
-    // Apply filters
-    if (filters.venue) {
-        const selectedVenues = Array.isArray(filters.venue) ? filters.venue : [filters.venue]
-        postsWithImages = postsWithImages.filter(post => selectedVenues.includes(post.venue))
-    }
+  let { posts = [] } = await getPostsByEventId(eventId)
 
-    if (filters.location) {
-        const selectedLocations = Array.isArray(filters.location) ? filters.location : [filters.location]
-        postsWithImages = postsWithImages.filter(post => selectedLocations.includes(post.location))
-    }
+  let postsWithImages = await Promise.all(
+    posts.map(async post => {
+      const { images = [] } = await getImagesByPostId(post.id)
+      return {
+        ...post.get({ plain: true }),
+        images: images.map(img => img.get({ plain: true }))
+      }
+    })
+  )
 
-    if (filters.duration) {
-        const selectedDurations = Array.isArray(filters.duration) ? filters.duration : [filters.duration]
-        postsWithImages = postsWithImages.filter(post => selectedDurations.includes(String(post.duration)))
-    }
+  // Apply filters
+  if (filters.venue) {
+    const selectedVenues = Array.isArray(filters.venue) ? filters.venue : [filters.venue]
+    postsWithImages = postsWithImages.filter(post => selectedVenues.includes(post.venue))
+  }
 
-    if (filters.status) {
-        const selectedStatuses = Array.isArray(filters.status) ? filters.status : [filters.status]
-        postsWithImages = postsWithImages.filter(post => selectedStatuses.includes(post.status))
-    }
+  if (filters.location) {
+    const selectedLocations = Array.isArray(filters.location) ? filters.location : [filters.location]
+    postsWithImages = postsWithImages.filter(post => selectedLocations.includes(post.location))
+  }
 
-    if (filters.date) {
-        const selectedDates = Array.isArray(filters.date) ? filters.date : [filters.date]
-        postsWithImages = postsWithImages.filter(post => selectedDates.includes(formatDate(post.date)))
-    }
+  if (filters.duration) {
+    const selectedDurations = Array.isArray(filters.duration) ? filters.duration : [filters.duration]
+    postsWithImages = postsWithImages.filter(post => selectedDurations.includes(String(post.duration)))
+  }
 
-    const locations = [...new Set(posts.map(p => p.location))]
-    const venues = [...new Set(posts.map(p => p.venue))]
-    const durations = [...new Set(posts.map(p => p.duration))]
-    const statuses = [...new Set(posts.map(p => p.status))]
-    const dates = [...new Set(posts.map(p => formatDate(p.date)))]
+  if (filters.status) {
+    const selectedStatuses = Array.isArray(filters.status) ? filters.status : [filters.status]
+    postsWithImages = postsWithImages.filter(post => selectedStatuses.includes(post.status))
+  }
 
-    res.render('pages/event_details', { event, category, image, organizer, postsWithImages, locations, venues, durations, statuses, dates, query: req.query })
+  if (filters.date) {
+    const selectedDates = Array.isArray(filters.date) ? filters.date : [filters.date]
+    postsWithImages = postsWithImages.filter(post => selectedDates.includes(formatDate(post.date)))
+  }
+
+  const totalRecords = postsWithImages.length
+  const totalPages = Math.ceil(totalRecords / pageSize)
+  const start = (pageNo - 1) * pageSize
+  const end = start + pageSize
+  postsWithImages = postsWithImages.slice(start, end)
+
+  const locations = [...new Set(posts.map(p => p.location))]
+  const venues = [...new Set(posts.map(p => p.venue))]
+  const durations = [...new Set(posts.map(p => p.duration))]
+  const statuses = [...new Set(posts.map(p => p.status))]
+  const dates = [...new Set(posts.map(p => formatDate(p.date)))]
+
+  res.render('pages/event_details', { 
+    event, 
+    category, 
+    image, 
+    organizer, 
+    postsWithImages, 
+    locations, 
+    venues, 
+    durations, 
+    statuses, 
+    dates, 
+    query: req.query,
+    totalPages,
+    pageNo
+  })
 })
-
 
 // An event's post page
 router.get('/posts/post/:id', async (req, res) => {

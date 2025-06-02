@@ -1,6 +1,6 @@
 <div class="bg-gray-100 min-h-screen">
   <div class="w-full relative">
-    <img src="<%= images[0]?.image_url || 'https://instaily.com/_next/static/media/test.b3910688.jpg' %>" alt="Event Banner" class="w-full h-64 md:h-96 object-cover" />
+    <img src="<%= images[0]?.image_url || 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg' %>" alt="Event Banner" class="w-full h-64 md:h-96 object-cover" />
     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="text-center text-white px-4">
         <h1 class="text-3xl md:text-5xl font-bold font-heading mb-4"><%= post.title || 'Not found!' %></h1>
@@ -17,7 +17,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image -->
           <div>
-            <img src="<%= images[0]?.image_url || 'https://instaily.com/_next/static/media/test.b3910688.jpg' %>" alt="Main" class="w-full h-64 md:h-80 object-cover rounded-lg" />
+            <img src="<%= images[0]?.image_url || 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg' %>" alt="Main" class="w-full h-64 md:h-80 object-cover rounded-lg" />
           </div>
 
           <!-- Info -->
@@ -25,9 +25,17 @@
             <h3 class="text-xl md:text-2xl font-bold text-gray-800 font-heading mb-4"><%= post.title || 'Not found!' %></h3>
             <div class="space-y-3">
               <p class="text-gray-600 text-base"><i class="fas fa-map-marker-alt mr-2 text-red-600"></i><span class="font-semibold">Location:</span> <%= post.location || 'Not found!' %>, <%= post.venue || 'Not found!' %></p>
-              <p class="text-gray-600 text-base"><i class="fas fa-calendar-alt mr-2"></i><span class="font-semibold">Date:</span> <%= post.date || 'Not found!' %></p>
+              <p class="text-gray-600 text-base">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                <span class="font-semibold">Date:</span> 
+                <%= post.date ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not found!' %>
+              </p>
               <p class="text-gray-600 text-base"><i class="fas fa-clock mr-2"></i><span class="font-semibold">Duration:</span> <%= post.duration || 'Not found!' %> hrs</p>
-              <p class="text-gray-600 text-base"><i class="fas fa-clock mr-2"></i><span class="font-semibold">Starts At:</span> <%= post.time || 'Not found!' %></p>
+              <p class="text-gray-600 text-base">
+                <i class="fas fa-clock mr-2"></i>
+                <span class="font-semibold">Starts At:</span> 
+                <%= post.time ? new Date('1970-01-01T' + post.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : 'Not found!' %>
+              </p>
               <p class="text-gray-600 text-base"><i class="fas fa-user mr-2"></i><span class="font-semibold">Organizer:</span> <%= post.organizer || 'Not found!' %></p>
               <p class="text-base font-bold">
                 <i class="text-gray-600 fas fa-info-circle mr-2"></i>
@@ -57,8 +65,8 @@
               <img src="<%= image.image_url %>" alt="Gallery Image" class="w-full h-40 md:h-48 object-cover rounded-lg cursor-pointer" onclick="showFlashcard(<%= i %>)" />
             <% }) %>
           <% } else { %>
-            <script>galleryImages.push("https://instaily.com/_next/static/media/test.b3910688.jpg");</script>
-            <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="Fallback" class="w-full h-40 md:h-48 object-cover rounded-lg cursor-pointer" onclick="showFlashcard(0)" />
+            <script>galleryImages.push("https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg");</script>
+            <img src="https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg" alt="Fallback" class="w-full h-40 md:h-48 object-cover rounded-lg cursor-pointer" onclick="showFlashcard(0)" />
           <% } %>
         </div>
       </div>

@@ -93,7 +93,7 @@
             <% }) %>
           <% } else { %> 
             <div class="event-card bg-white rounded-xl shadow-md overflow-hidden">
-              <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="Event" class="w-full h-48 object-cover" />
+              <img src="https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg" alt="Event" class="w-full h-48 object-cover" />
               <div class="p-4">
                 <h3 class="text-xl font-bold text-gray-800 font-heading">No events found!</h3>
                 <p class="text-gray-600 text-sm mt-1"><i class="fas fa-calendar-alt mr-2"></i>NA</p>
@@ -103,6 +103,43 @@
             </div>
           <% } %>
         </div>
+
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+          <div class="mt-8 flex justify-center space-x-1">
+            
+            <% const maxPagesToShow = 3;
+              const half = Math.floor(maxPagesToShow / 2);
+              let startPage = Math.max(1, pageNo - half);
+              let endPage = startPage + maxPagesToShow - 1;
+              if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+              }
+            %>
+
+            <% if (pageNo > 1) { %>
+              <a href="?pageNo=<%= pageNo - 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+                class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+                &lt;
+              </a>
+            <% } %>
+
+            <% for (let i = startPage; i <= endPage; i++) { %>
+              <a href="?pageNo=<%= i %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+                class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+                <%= i %>
+              </a>
+            <% } %>
+
+            <% if (pageNo < totalPages) { %>
+              <a href="?pageNo=<%= pageNo + 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+                class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+                &gt;
+              </a>
+            <% } %>
+          </div>
+        <% } %>
       </div>
     </div>
   </div>

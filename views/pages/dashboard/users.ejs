@@ -36,9 +36,36 @@
             <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words"><%= user.first_name %> <%= user.last_name %></td>
             <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words"><%= user.email %></td>
             <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden sm:table-cell"><%= user.username %></td>
-            <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden md:table-cell"><%= user.email_verified_at %></td>
-            <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden lg:table-cell"><%= user.createdAt %></td>
-            <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden lg:table-cell"><%= user.updatedAt %></td>
+            <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden md:table-cell">
+              <%= new Date(user.email_verified_at).toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              }) %>
+            </td>
+            <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden lg:table-cell">
+              <%= new Date(user.createdAt).toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              }) %>
+            </td>
+            <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 break-words hidden lg:table-cell">
+              <%= new Date(user.updatedAt).toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              }) %>
+            </td>
             <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 capitalize">
               <span class="px-2 py-1 rounded-full text-white text-xs font-semibold 
                 <%= user.status ? 'bg-green-600' : 'bg-rose-600' %>">
@@ -64,6 +91,44 @@
       <% } %>
     </tbody>
   </table>
+
+  <!-- Pagination -->
+  <% if (totalPages > 1) { %>
+    <div class="mt-8 flex justify-center space-x-1">
+      <% 
+        const maxPagesToShow = 3;
+        const half = Math.floor(maxPagesToShow / 2);
+        let startPage = Math.max(1, pageNo - half);
+        let endPage = startPage + maxPagesToShow - 1;
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+      %>
+
+      <% if (pageNo > 1) { %>
+        <a href="?pageNo=<%= pageNo - 1 %><%= selectedStatus ? `&status=${selectedStatus}` : '' %>"
+          class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+          &lt;
+        </a>
+      <% } %>
+
+      <% for (let i = startPage; i <= endPage; i++) { %>
+        <a href="?pageNo=<%= i %><%= selectedStatus ? `&status=${selectedStatus}` : '' %>"
+          class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-rose-500 text-white border-rose-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+          <%= i %>
+        </a>
+      <% } %>
+
+      <% if (pageNo < totalPages) { %>
+        <a href="?pageNo=<%= pageNo + 1 %><%= selectedStatus ? `&status=${selectedStatus}` : '' %>"
+          class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+          &gt;
+        </a>
+      <% } %>
+    </div>
+  <% } %>
+
 </div>
 
 <!-- Add User Modal -->

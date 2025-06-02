@@ -1,4 +1,5 @@
-import { Posts } from '../models/index.js'
+import { Events, Posts } from '../models/index.js'
+import { getImagesByPostId } from './imagesController.js'
 
 async function createPost({ title, description, venue, time, date, location, duration, organizer, status, event_id }) {
     try {
@@ -104,18 +105,47 @@ async function getPostById(id) {
     }
 }
 
-async function getPostsByEventId(event_id) {
+async function getPostsByEventId(event_id, pageNo = 1, pageSize = 100) {
     try {
-        // gonna help in pagination later
-        const { count, rows } = await Posts.findAndCountAll({ where: { event_id } })
+        const { count, rows: posts } = await Posts.findAndCountAll({
+            where: { event_id },
+            limit: pageSize,
+            offset: (pageNo - 1) * pageSize
+        })
         return count ? 
-            { success: true, posts: rows } : 
+            { success: true, posts, totalRecords: count } : 
             { success: false, message: 'No posts found!' }
     }
     catch(error) {
         console.error('Exception occurred inside getPostsByEventId!\n', error)
         return { success: false, message: 'Exception:::: No posts found!'}
     }
+}
+
+async function getAllUpcomingPosts(pageNo = 1, pageSize = 100) {
+  try {
+    const { count, rows: posts } = await Posts.findAndCountAll({
+      where: { status: 'upcoming' },
+      include: [Events],
+      limit: pageSize,
+      offset: (pageNo - 1) * pageSize
+    })
+
+    const postsWithImages = await Promise.all(posts.map(async post => {
+      const { images = [] } = await getImagesByPostId(post.id)
+      return {
+        ...post.get({ plain: true }),
+        images: images.map(img => img.get({ plain: true }))
+      }
+    }))
+
+    const totalPages = Math.ceil(count / pageSize)
+    return { success: true, posts: postsWithImages, totalPages }
+  } 
+  catch (error) {
+    console.error('Error fetching upcoming posts!\n', error)
+    return { success: false, posts: [], totalPages: 0 }
+  }
 }
 
 async function getPostByOrganizerName(organizer) {
@@ -202,6 +232,7 @@ export {
 
     getPostByEventId,
     getPostsByEventId,
+    getAllUpcomingPosts,
 
     getPostByOrganizerName,
     getPostsByOrganizerName,

@@ -67,15 +67,19 @@ async function getEventsByCategoryId(category_id) {
     }
 }
 
-async function getEventsByOrganizingCommitteeId(organizing_committee_id) {
+async function getEventsByOrganizingCommitteeId(organizing_committee_id, pageNo = 1, pageSize = 100) {
     try {
-        const events = await Events.findAll({ where: { organizing_committee_id } })
-    
+        const { count, rows: events} = await Events.findAndCountAll({ 
+            where: { organizing_committee_id }, 
+            limit: pageSize,
+            offset: (pageNo - 1) * pageSize
+        })
+
         if(!events || !events.length) {
             return { success: false, message: 'Events not found!'}
         }
     
-        return { success: true, events }
+        return { success: true, events, totalRecords: count }
     }
     catch(error) {
         console.log('Exception occured inside getEventsByOrganizingCommitteeId!\n', error)
@@ -114,15 +118,18 @@ async function getEventById(id) {
     }
 }
 
-async function getAllEvents() {
+async function getAllEvents(pageNo = 1, pageSize = 100) {
     try {
-        const events = await Events.findAll()
+        const { count, rows: events } = await Events.findAndCountAll({ 
+            limit: pageSize, 
+            offset: (pageNo - 1) * pageSize,
+        })
     
         if(!events || !events.length) {
             return { success: false, message: 'Events not found!'}
         }
     
-        return { success: true, events }
+        return { success: true, events, totalRecords: count }
     }
     catch (error) {
         console.error('Exception occurred inside getAllEvents!\n', error)
@@ -137,7 +144,7 @@ async function getEventsByYear(id, date) {
     }
 
     try {
-        const response = await getEventsById(id)
+        const response = await Events.findByPk(id)
 
         if (!response.success || !response.events.length) {
             return { success: false, message: 'No events found for given ID' }

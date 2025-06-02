@@ -1,60 +1,124 @@
-<div class="relative flex items-center justify-center min-h-screen bg-gray-100 px-4">
-  <!-- Background Image with Blur -->
-  <div class="absolute inset-0 w-full h-full bg-cover bg-center" style="background-image: url('https://instaily.com/_next/static/media/test.b3910688.jpg');">
-    <div class="absolute inset-0 backdrop-blur-md bg-black/30"></div>
-  </div>
-  
-  <!-- Sign Up Form Container -->
-  <div class="relative bg-white rounded-xl shadow-lg w-full max-w-md p-8 z-10">
-    <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Sign Up</h2>
-    <p class="text-center text-gray-600 mb-6">Create your account</p>
-    <form action="/users/create" method="POST" class="space-y-4">
-      <div>
-        <label for="first_name" class="block text-gray-700 font-semibold mb-1">First Name</label>
-        <input type="text" id="first_name" name="first_name" required placeholder="First name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+<!-- Hero Section with Integrated Flashcard Registration -->
+<section class="bg-gradient-to-r from-red-900 via-gray-900 to-red-700 fade-in relative overflow-hidden py-16">
+    <div class="absolute inset-0 opacity-30">
+      <div class="w-full h-full bg-[url('https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg')] bg-cover bg-center blur-xl transform scale-110"></div>
+    </div>
+    <div class="relative flex flex-col md:flex-row items-center justify-between text-white p-8 max-w-6xl w-full mx-auto gap-8">
+      <!-- Hero Content -->
+      <div class="flex-1 max-w-lg text-center md:text-left animate-fade-in-down">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold font-heading text-white mb-6 whitespace-nowrap">Join Event CMS</h1>
+        <p class="text-lg sm:text-xl md:text-2xl text-gray-100 mb-8">Create your account and start exploring events—college events, concerts, movies, sports, and more!</p>
       </div>
-      <div>
-        <label for="last_name" class="block text-gray-700 font-semibold mb-1">Last Name</label>
-        <input type="text" id="last_name" name="last_name" required placeholder="Last name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+      
+      <!-- Flashcard Registration Form -->
+      <div class="relative bg-white rounded-xl shadow-xl w-full max-w-md p-8 transform transition duration-500 hover:shadow-2xl z-10">
+        <h2 class="text-2xl font-bold text-center text-red-800 mb-2">Sign Up</h2>
+        <p class="text-center text-gray-600 mb-6">Create your account</p>
+        <form action="/users/create" method="POST" class="space-y-5">
+          <div>
+            <label for="first_name" class="block text-gray-700 font-semibold mb-1">First Name</label>
+            <input 
+              type="text" 
+              id="first_name" 
+              name="first_name" 
+              required 
+              placeholder="First name" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black" 
+            />
+          </div>
+          <div>
+            <label for="last_name" class="block text-gray-700 font-semibold mb-1">Last Name</label>
+            <input 
+              type="text" 
+              id="last_name" 
+              name="last_name" 
+              required 
+              placeholder="Last name" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black" 
+            />
+          </div>
+          <div>
+            <label for="email" class="block text-gray-700 font-semibold mb-1">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              placeholder="Email address" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black" 
+            />
+          </div>
+          <div>
+            <label for="username" class="block text-gray-700 font-semibold mb-1">Username</label>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              required 
+              placeholder="Username" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black" 
+            />
+          </div>
+          <div class="relative">
+            <label for="password" class="block text-gray-700 font-semibold mb-1">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required 
+              placeholder="Password" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black" 
+            />
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-3 flex items-center h-full mt-4 text-gray-600 hover:text-red-600 focus:outline-none">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div>
+            <label for="role_id" class="block text-gray-700 font-semibold mb-1">Account Type</label>
+            <select 
+              name="role_id" 
+              id="role_id" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black"
+            >
+              <% roles.forEach(role => { %>
+                <option value="<%= role.id %>"><%= role.role %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div>
+            <label for="organizing_committee_id" class="block text-gray-700 font-semibold mb-1">Select Your Organizing Committee</label>
+            <select 
+              name="organizing_committee_id" 
+              id="organizing_committee_id" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black"
+            >
+              <% organizingCommitties.forEach(committee => { %>
+                <option value="<%= committee.id %>"><%= committee.name %></option>
+              <% }) %>
+              <option value="other">Other</option>
+            </select>
+            <input 
+              type="text" 
+              id="new_organizing_committee" 
+              name="new_organizing_committee" 
+              placeholder="Enter your organizing committee" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:outline-none transition duration-300 text-black mt-2 hidden" 
+            />
+          </div>
+          <button 
+            type="submit" 
+            class="w-full py-3 font-semibold text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:scale-105 transition-transform duration-300"
+          >
+            Submit
+          </button>
+          <p class="text-center text-sm text-gray-700 mt-5">
+            Already have an account?
+            <a href="/users/login" class="text-red-600 hover:underline font-medium">Login</a>
+          </p>
+        </form>
       </div>
-      <div>
-        <label for="email" class="block text-gray-700 font-semibold mb-1">Email</label>
-        <input type="email" id="email" name="email" required placeholder="Email address" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" />
-      </div>
-      <div>
-        <label for="username" class="block text-gray-700 font-semibold mb-1">Username</label>
-        <input type="text" id="username" name="username" required placeholder="Username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" />
-      </div>
-      <div>
-        <label for="password" class="block text-gray-700 font-semibold mb-1">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" />
-      </div>
-      <div>
-        <label for="role_id" class="block text-gray-700 font-semibold mb-1">Account Type</label>
-        <select name="role_id" id="role_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none">
-          <% roles.forEach(role => { %>
-            <option value="<%= role.id %>"><%= role.role %></option>
-          <% }) %>
-        </select>
-      </div>
-      <div>
-        <label for="organizing_committee_id" class="block text-gray-700 font-semibold mb-1">Select Your Organizing Committee</label>
-        <select name="organizing_committee_id" id="organizing_committee_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none">
-          <% organizingCommitties.forEach(committee => { %>
-            <option value="<%= committee.id %>"><%= committee.name %></option>
-          <% }) %>
-          <option value="other">Other</option>
-        </select>
-        <input type="text" id="new_organizing_committee" name="new_organizing_committee" placeholder="Enter your organizing committee" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none mt-2 hidden" />
-      </div>
-      <button type="submit" class="w-full py-3 font-semibold text-white rounded-lg bg-gradient-to-r from-rose-500 to-rose-700 hover:scale-105 transition-transform duration-200">Submit</button>
-      <p class="text-center text-sm text-gray-700 mt-5">
-        Already have an account?
-        <a href="/users/login" class="text-rose-600 hover:underline font-medium">Login</a>
-      </p>
-    </form>
-  </div>
-</div>
+    </div>
+</section>
 
 <% if (notify) { %>
     <script>
@@ -66,8 +130,46 @@
     </script>
 <% } %>
 
-<!-- If user chooses 'other' option -->
+<!-- Updated CSS for Animations and Flashcard Effect -->
+<style>
+    .animate-fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    .animate-fade-in-down {
+      animation: fadeInDown 1s ease-in-out;
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<!-- JavaScript for Password Toggle and Committee Selection -->
 <script>
+  // Password Toggle
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+
+  togglePassword.addEventListener('click', function () {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-eye');
+    icon.classList.toggle('fa-eye-slash');
+  });
+
+  // Committee Selection
   const committeeSelect = document.getElementById('organizing_committee_id');
   const newCommitteeInput = document.getElementById('new_organizing_committee');
 

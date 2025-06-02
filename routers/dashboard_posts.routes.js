@@ -12,13 +12,17 @@ dotenv.config()
 router.get('/post/:id', async (req, res) => {
     const eventId = Number(req.params.id)
     req.session.eventId = eventId
+    const pageNo = parseInt(req.query.pageNo) || 1
+    const pageSize = 2
 
     const sessionUser = req.user
     const message = req.flash('message')[0]
 
     const { user } = await getUserById(sessionUser._id)
-    let { posts = [] } = await getPostsByEventId(eventId)
     const { event } = await getEventById(eventId)
+
+    let { posts = [], totalRecords } = await getPostsByEventId(eventId, pageNo, pageSize)
+    const totalPages = Math.ceil(totalRecords / pageSize)
 
     // Apply filters
     const { status, date } = req.query
@@ -44,6 +48,9 @@ router.get('/post/:id', async (req, res) => {
         eventName: event.title,
         image_names,
         notify: message? message : null,
+        query: req.query,
+        totalPages,
+        pageNo,
 
         // for filters
         selectedStatus: status || '',
@@ -66,7 +73,7 @@ router.post('/post/create/:id', upload.array('images'), async (req, res) => {
         await createImage({
             file_name: 'default.jpg',
             original_filename: 'default.jpg',
-            image_url: 'https://instaily.com/_next/static/media/test.b3910688.jpg',
+            image_url: 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg',
             size: '0',
             entity_type: 'post',
             entity_id: 2,

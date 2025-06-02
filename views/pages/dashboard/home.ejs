@@ -32,7 +32,9 @@
             <tr class="border-t">
               <td class="p-2 sm:p-3 break-words"><%= activity.id || 'No actions performed yet' %></td>
               <td class="p-2 sm:p-3 break-words"><%= activity.actions || 'No actions performed yet' %></td>
-              <td class="p-2 sm:p-3 break-words hidden sm:table-cell"><%= activity.actionsPerformedOn || 'N/A' %></td>
+              <td class="p-2 sm:p-3 break-words hidden sm:table-cell">
+                <%= new Date(activity.actionsPerformedOn).toLocaleString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) %>
+              </td>
             </tr>
           <% }) %>
         <% } else { %>
@@ -43,5 +45,41 @@
         </tbody>
       </table>
     </div>
+    
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+      <div class="mt-8 flex justify-center space-x-1">
+        <% const maxPagesToShow = 3;
+          const half = Math.floor(maxPagesToShow / 2);
+          let startPage = Math.max(1, pageNo - half);
+          let endPage = startPage + maxPagesToShow - 1;
+          if (endPage > totalPages) {
+              endPage = totalPages;
+              startPage = Math.max(1, endPage - maxPagesToShow + 1);
+          }
+        %>
+
+        <% if (pageNo > 1) { %>
+          <a href="?pageNo=<%= pageNo - 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+            class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+            <
+          </a>
+        <% } %>
+
+        <% for (let i = startPage; i <= endPage; i++) { %>
+          <a href="?pageNo=<%= i %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+            class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+            <%= i %>
+          </a>
+        <% } %>
+
+        <% if (pageNo < totalPages) { %>
+          <a href="?pageNo=<%= pageNo + 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+            class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+            >
+          </a>
+        <% } %>
+      </div>
+    <% } %>
   </div>
 </div>

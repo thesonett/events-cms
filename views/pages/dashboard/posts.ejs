@@ -60,16 +60,16 @@
               <td class="py-2 px-2 sm:px-4 break-words hidden md:table-cell"><%= post.duration %> hrs</td>
               <td class="py-2 px-2 sm:px-4 break-words hidden xl:table-cell"><%= post.organizer %></td>
               <td class="py-2 px-2 sm:px-4 break-words hidden lg:table-cell">
-                <% const formattedDate = new Date(post.date).toISOString().split('T')[0] %>
-                <%= post.date %>
+                <%= new Date(post.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) %>
               </td>
+
               <td class="py-2 px-2 sm:px-4 break-words hidden md:table-cell">
                 <% 
-                  const [hours, minutes] = post.time.split(':')
-                  const date = new Date()
-                  date.setHours(parseInt(hours), parseInt(minutes))
-                  const options = { hour: 'numeric', hour12: true }
-                  const formattedTime = date.toLocaleTimeString('en-US', options)
+                  const [hours, minutes] = post.time.split(':');
+                  const date = new Date();
+                  date.setHours(parseInt(hours), parseInt(minutes));
+                  const options = { hour: 'numeric', minute: '2-digit', hour12: true };
+                  const formattedTime = date.toLocaleTimeString('en-US', options);
                 %>
                 <%= formattedTime %>
               </td>
@@ -95,6 +95,42 @@
         <% } %>
       </tbody>
     </table>
+
+    <!-- Pagination Section -->
+    <% if (totalPages > 1) { %>
+      <div class="mt-8 flex justify-center space-x-1">
+        <% const maxPagesToShow = 3;
+          const half = Math.floor(maxPagesToShow / 2);
+          let startPage = Math.max(1, pageNo - half);
+          let endPage = startPage + maxPagesToShow - 1;
+          if (endPage > totalPages) {
+              endPage = totalPages;
+              startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+          %>
+
+          <% if (pageNo > 1) { %>
+            <a href="/dashboard/posts/post/<%= eventId %>?pageNo=<%= pageNo - 1 %><%= selectedStatus ? `&status=${selectedStatus}` : '' %><%= selectedDate ? `&date=${selectedDate}` : '' %>"
+              class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+              &lt;
+            </a>
+          <% } %>
+
+          <% for (let i = startPage; i <= endPage; i++) { %>
+            <a href="/dashboard/posts/post/<%= eventId %>?pageNo=<%= i %><%= selectedStatus ? `&status=${selectedStatus}` : '' %><%= selectedDate ? `&date=${selectedDate}` : '' %>"
+              class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+              <%= i %>
+            </a>
+          <% } %>
+
+          <% if (pageNo < totalPages) { %>
+            <a href="/dashboard/posts/post/<%= eventId %>?pageNo=<%= pageNo + 1 %><%= selectedStatus ? `&status=${selectedStatus}` : '' %><%= selectedDate ? `&date=${selectedDate}` : '' %>"
+              class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+              &gt;
+            </a>
+          <% } %>
+        </div>
+      <% } %>
   </div>
 </div>
 

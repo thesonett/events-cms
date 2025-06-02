@@ -87,20 +87,22 @@ async function getActiveUsers(id) {
     }
 }
 
-async function getOnlyUsers(id) {
+async function getOnlyUsers(id, pageNo = 1, pageSize = 100) {
     try {
         const { user }  = await getUserById(id)
-        const users = await Users.findAll({
+        const { count, rows: users} = await Users.findAndCountAll({
             where: {
                 organizing_committee_id: user.organizing_committee_id,
                 role_id: 2,
             },
             attributes: {
                 exclude: ['password']
-            }
+            },
+            limit: pageSize,
+            offset: (pageNo - 1) * pageSize
         })
 
-        return { success: true, users }
+        return { success: true, users, totalRecords: count }
     }
     catch(error) {
         console.log('Exception occurred inside getOnlyUsers!\n', error)

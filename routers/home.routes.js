@@ -1,38 +1,26 @@
 import express from "express";
 import {
-  getAllEvents,
+  getAllUpcomingPosts,
   getCategories,
-  getImagesByPostId,
-  getPostsByEventId,
 } from "../controller/index.js";
 
 const router = express.Router();
 
 // home page
 router.get("/", async (req, res) => {
-  const { categories } = await getCategories()
-  const { events } = await getAllEvents()
+  const pageNo = parseInt(req.query.pageNo) || 1
+  const pageSize = 1
 
-  const safeEvents = events || []
+  const { categories = [] } = await getCategories()
+  const { success, posts, totalPages } = await getAllUpcomingPosts(pageNo, pageSize)
 
-  const allUpcomingEvents = (await Promise.all(safeEvents.map(async event => {
-    const { posts = [] } = await getPostsByEventId(event.id)
-
-    const postsWithImages = await Promise.all(posts.filter(post => post.status === 'upcoming')
-        .map(async post => {
-          const { images = [] } = await getImagesByPostId(post.id)
-          return {
-            ...post.get({ plain: true }),
-            images: images.map(img => img.get({ plain: true }))
-          }
-        })
-    )
-
-    return { posts: postsWithImages }
-  }))).filter(event => event.posts.length > 0);
-
-
-  res.render("pages/home", { categories: categories || [], allUpcomingEvents: allUpcomingEvents || [] })
+  res.render("pages/home", { 
+    categories: categories, 
+    allUpcomingEvents: success ? posts : [],
+    query: req.query,
+    totalPages,
+    pageNo,
+  })
 })
 
 export default router;
