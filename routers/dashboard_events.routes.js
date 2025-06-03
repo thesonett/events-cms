@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
         return {
             ...event.get({plain: true}),
             category: category.category,
-            image: success? image.file_name : null,
+            image: success? image.image_url : null,
         }
     }))
 

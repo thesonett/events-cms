@@ -68,17 +68,21 @@
             </td>
             <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6 capitalize">
               <span class="px-2 py-1 rounded-full text-white text-xs font-semibold 
-                <%= user.status ? 'bg-green-600' : 'bg-rose-600' %>">
-                <%= user.status ? 'Active' : 'Inactive' %>
+                <%= user.status ? 'bg-green-600' : 'bg-yellow-600' %>">
+                <% if (user.status) { %>
+                  <i class="fa-solid fa-check"></i>
+                <% } else { %>
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                <% } %>
               </span>
             </td>
             <td class="py-2 sm:py-3 px-2 sm:px-4 md:px-6">
               <form action="/dashboard/delete/user/<%= user.id %>?status=<%= selectedStatus || '' %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
                 <button
                   type="submit"
-                  class="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold py-1.5 px-3 rounded-full transition duration-200 min-w-[80px]"
+                  class="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold py-1.5 px-3 rounded-full transition duration-200 min-w-[40px]"
                 >
-                  Delete
+                  <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
               </form>
             </td>

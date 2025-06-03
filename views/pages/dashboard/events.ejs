@@ -46,11 +46,11 @@
                 }) %>
               </td>
               <td class="py-2 px-2 sm:px-4 break-words hidden md:table-cell"><%= event.category %></td>
-              <td class="py-2 px-2 sm:px-4 break-words hidden lg:table-cell"><%= event.image || 'No Image' %></td>
+              <td class="py-2 px-2 sm:px-4 break-words hidden lg:table-cell"><img src="<%= event.image || 'No Image' %>" alt="Event" class="w-30 h-40"></td>
               <td class="py-2 px-2 sm:px-4 space-x-2 flex flex-wrap gap-2">
-                <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm sm:text-base" onclick="showModal('editEventModal-<%= event.id %>', 'editEventContent-<%= event.id %>'); return false;">Edit</a>
+                <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm sm:text-base" onclick="showModal('editEventModal-<%= event.id %>', 'editEventContent-<%= event.id %>'); return false;"><i class="fas fa-edit"></i></a>
                 <form action="/dashboard/events/event/delete/<%= event.id %>?category=<%= selectedCategory || '' %>" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this event?')">
-                  <button type="submit" class="text-red-600 hover:underline text-sm sm:text-base">Delete</button>
+                  <button type="submit" class="text-red-600 hover:underline text-sm sm:text-base"><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </form>
                 <a href="/dashboard/posts/post/<%= event.id %>" class="text-blue-600 hover:underline text-sm sm:text-base">View Posts</a>
               </td>

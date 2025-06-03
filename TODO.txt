@@ -1,7 +1,6 @@
 NEXT TASKS✅
 
-1. add paginations✅
-2. adding icons instead of plain edit and delete button + improving messages
+1. remove 
 2. automation system for date changing (excecute in every 24hrs.)
 3. email system for sending mails + send auto email to all the registered users for upcoming events.
 
