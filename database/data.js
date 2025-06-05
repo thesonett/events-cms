@@ -11,7 +11,7 @@ const seedData = async () => {
   ])
 
   await OrganizingCommittee.bulkCreate([
-    { name: 'test' },
+    { name: 'MAKAUT' },
   ])
 
   await Category.bulkCreate([
