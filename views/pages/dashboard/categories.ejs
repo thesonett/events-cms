@@ -1,0 +1,138 @@
+<h3 class="text-base sm:text-lg md:text-xl font-semibold text-gray-700 mb-3">Find All The Posts of <%= organizingCommitteeName %></h3>
+<div class="w-full font-sans space-y-4">
+  <% if (categories && categories.length) { %>
+    <% categories.forEach(category => { %>
+      <div class="dropdown rounded">
+        <!-- Toggle Button -->
+        <div class="dropdown-toggle bg-[#414141] text-white p-3 rounded-t cursor-pointer flex justify-between items-center">
+          <span><%= category %></span>
+          <svg class="w-5 h-5 transition-transform duration-300 transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+
+        <!-- Dropdown Content -->
+        <div class="dropdown-content bg-white p-4 rounded-b shadow-md overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 invisible">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm sm:text-base">
+              <thead class="text-gray-600 border-b">
+                <tr>
+                  <th class="py-2 px-4">ID</th>
+                  <th class="py-2 px-4">Post Title</th>
+                  <th class="py-2 px-4 hidden md:table-cell">Description</th>
+                  <th class="py-2 px-4 hidden lg:table-cell">Venue</th>
+                  <th class="py-2 px-4 hidden lg:table-cell">Location</th>
+                  <th class="py-2 px-4 hidden md:table-cell">Duration (hrs)</th>
+                  <th class="py-2 px-4 hidden xl:table-cell">Organized By</th>
+                  <th class="py-2 px-4 hidden lg:table-cell">Date</th>
+                  <th class="py-2 px-4 hidden md:table-cell">Time</th>
+                  <th class="py-2 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (postsByCategory[category] && postsByCategory[category].length) { %>
+                  <% postsByCategory[category].forEach(post => { %>
+                    <tr class="border-b hover:bg-gray-100">
+                      <td class="py-2 px-4"><%= post.id %></td>
+                      <td class="py-2 px-4"><%= post.title %></td>
+                      <td class="py-2 px-4 hidden md:table-cell"><%= post.description %></td>
+                      <td class="py-2 px-4 hidden lg:table-cell"><%= post.venue %></td>
+                      <td class="py-2 px-4 hidden lg:table-cell"><%= post.location %></td>
+                      <td class="py-2 px-4 hidden md:table-cell"><%= post.duration %> hrs</td>
+                      <td class="py-2 px-4 hidden xl:table-cell"><%= post.organizer %></td>
+                      <td class="py-2 px-4 hidden lg:table-cell">
+                        <%= new Date(post.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) %>
+                      </td>
+                      <td class="py-2 px-4 hidden md:table-cell">
+                        <% 
+                          const [hours, minutes] = post.time.split(':');
+                          const date = new Date();
+                          date.setHours(parseInt(hours), parseInt(minutes));
+                          const options = { hour: 'numeric', minute: '2-digit', hour12: true };
+                          const formattedTime = date.toLocaleTimeString('en-US', options);
+                        %>
+                        <%= formattedTime %>
+                      </td>
+                      <td class="py-2 px-4">
+                        <% let statusColor = {
+                          'upcoming': 'text-blue-600',
+                          'ongoing': 'text-yellow-600',
+                          'completed': 'text-green-600'
+                        }[post.status] || 'text-gray-600'; %>
+                        <span class="<%= statusColor %> font-semibold capitalize"><%= post.status %></span>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="10" class="py-4 text-center text-gray-500">No posts found</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+    <% } else { %>
+        <p class="py-4 text-center text-gray-500">No categories found!</p>
+    <% } %>
+</div>
+
+<style>
+  .dropdown-content {
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+
+  .dropdown-content.open {
+    max-height: 1000px; /* Adjust based on your content size, should be large enough */
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .dropdown-content:not(.open) {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const toggles = document.querySelectorAll('.dropdown-toggle');
+
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const content = toggle.nextElementSibling;
+      const svg = toggle.querySelector('svg');
+
+      const isOpen = content.classList.contains('open');
+
+      // Close all other dropdowns
+      document.querySelectorAll('.dropdown-content').forEach(dc => {
+        dc.classList.remove('open');
+        dc.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+      });
+
+      // Toggle current one
+      if (!isOpen) {
+        content.classList.add('open');
+        svg.classList.add('rotate-180');
+      } else {
+        content.classList.remove('open');
+        svg.classList.remove('rotate-180');
+      }
+    });
+  });
+
+  // Optional: click outside to close
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown-content').forEach(dc => {
+        dc.classList.remove('open');
+        dc.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+      });
+    }
+  });
+});
+</script>

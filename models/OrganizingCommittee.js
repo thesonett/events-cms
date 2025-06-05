@@ -14,6 +14,6 @@ const OrganizingCommittee = sequelize.define('organizing_committee_model', {
 }, {
   tableName: 'organizing_committee',
   timestamps: true,
-});
+})
 
 export default OrganizingCommittee

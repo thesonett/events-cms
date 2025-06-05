@@ -1,66 +1,82 @@
 import express from 'express'
 import { formatDate, formatTime } from '../services/formatter.js'
-import { getAllEvents, getCategories, getCategoryById, getEventById, getImagesByPostId, getImageUrlByEventId, getOrganizingCommitteeById, getOrganizingCommittees, getPostById, getPostsByEventId } from '../controller/index.js'
+import { getAllPosts, getAllPostsExceptThisId, getCategories, getCategoryById, getEventById, getImagesByPostId, getImageUrlByEventId, getOrganizingCommitteeById, getOrganizingCommittees, getPostById, getPostsByEventId, getRoles } from '../controller/index.js'
 
 const router = express.Router()
 
 // events page
 router.get('/', async (req, res) => {
   const message = req.flash('message')[0]
-  const filters = req.query
 
-  const pageNo = parseInt(req.query.pageNo) || 1
-  const pageSize = 2
+  const { posts: allPostsRaw = [] } = await getAllPosts() // Safe default
 
-  const { categories } = await getCategories()
-  const { events, totalRecords } = await getAllEvents(pageNo, pageSize)
-  const totalPages = Math.ceil(totalRecords / pageSize)
+  const { categories = [] } = await getCategories()
+  const { organizingCommitties = [] } = await getOrganizingCommittees()
+  const statuses = [...new Set(allPostsRaw.map(post => post.status))]
+  const years = [...new Set(allPostsRaw.map(post => post.date.split('-')[0]))]
 
-  let safeEvents = events || []
-
-  // Applying filters
-  if (filters.category) {
-    const selectedCategories = Array.isArray(filters.category) ? filters.category : [filters.category]
-    safeEvents = safeEvents.filter(event => selectedCategories.includes(String(event.category_id)))
-  }
-
-  if (filters.organizer) {
-    const selectedOrganizers = Array.isArray(filters.organizer) ? filters.organizer : [filters.organizer]
-    safeEvents = safeEvents.filter(event => selectedOrganizers.includes(String(event.organizing_committee_id)))
-  }
-
-  const totalEvents = await Promise.all(
-    safeEvents.map(async (event) => {
+  const allPosts = await Promise.all(
+    allPostsRaw.map(async post => {
+      const { images = [] } = await getImagesByPostId(post.id)
+      const { event } = await getEventById(post.event_id)
       const { category } = await getCategoryById(event.category_id)
-      const { image, success } = await getImageUrlByEventId(event.id)
       const { name } = await getOrganizingCommitteeById(event.organizing_committee_id)
 
-      return { ...event.get({ plain: true }), category: category.category, organizer: name, image: success ? image.image_url : null, }
+      return {
+        ...post.get({ plain: true }),
+        images: images.map(img => img.get({ plain: true })),
+        event: event.get({ plain: true }),
+        category: category.category,
+        category_id: event.category_id,
+        OrganizerCommitteeName: name
+      }
     })
   )
 
-  const { categories: allCategories } = await getCategories()
-  const { organizingCommitties: allOrganizers } = await getOrganizingCommittees()
+  // Extract filters from query
+  const selectedCategories = req.query.category ? [].concat(req.query.category) : []
+  const selectedStatuses = req.query.status ? [].concat(req.query.status) : []
+  const selectedYears = req.query.year ? [].concat(req.query.year) : []
+  const selectedOrganizers = req.query.organizer ? [].concat(req.query.organizer) : []
+
+  // Filter posts
+  const filteredPosts = allPosts.filter(post => {
+    const matchCategory = selectedCategories.length ? selectedCategories.includes(String(post.category_id)) : true
+    const matchStatus = selectedStatuses.length ? selectedStatuses.includes(post.status) : true
+    const matchYear = selectedYears.length ? selectedYears.includes(post.date.split('-')[0]) : true
+    const matchOrganizer = selectedOrganizers.length ? selectedOrganizers.includes(String(post.event.organizing_committee_id)) : true
+    return matchCategory && matchStatus && matchYear && matchOrganizer
+  })
+
+  // Pagination
+  const pageNo = parseInt(req.query.pageNo) || 1
+  const pageSize = 5
+  const totalRecords = filteredPosts.length
+  const totalPages = Math.ceil(totalRecords / pageSize)
+  const startIndex = (pageNo - 1) * pageSize
+  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + pageSize)
 
   res.render('pages/events', {
-    categories: categories || [],
-    totalEvents,
-    allCategories: allCategories || [],
-    allOrganizers: allOrganizers || [],
-    query: filters,
+    filteredPosts: paginatedPosts,
     totalPages,
     pageNo,
-    notify: message ? message : null,
+    notify: message || null,
+    query: req.query,
+    categories,
+    statuses,
+    years,
+    organizingCommitties,
+    formatDate,
+    formatTime
   })
 })
 
 // events details page
 router.get('/:id', async (req, res) => {
   const eventId = Number(req.params.id)
-  const filters = req.query
 
   const pageNo = parseInt(req.query.pageNo) || 1
-  const pageSize = 2
+  const pageSize = 5
 
   const { event } = await getEventById(eventId)
   const { category } = await getCategoryById(event.category_id)
@@ -79,68 +95,67 @@ router.get('/:id', async (req, res) => {
     })
   )
 
-  // Apply filters
-  if (filters.venue) {
-    const selectedVenues = Array.isArray(filters.venue) ? filters.venue : [filters.venue]
-    postsWithImages = postsWithImages.filter(post => selectedVenues.includes(post.venue))
-  }
-
-  if (filters.location) {
-    const selectedLocations = Array.isArray(filters.location) ? filters.location : [filters.location]
-    postsWithImages = postsWithImages.filter(post => selectedLocations.includes(post.location))
-  }
-
-  if (filters.duration) {
-    const selectedDurations = Array.isArray(filters.duration) ? filters.duration : [filters.duration]
-    postsWithImages = postsWithImages.filter(post => selectedDurations.includes(String(post.duration)))
-  }
-
-  if (filters.status) {
-    const selectedStatuses = Array.isArray(filters.status) ? filters.status : [filters.status]
-    postsWithImages = postsWithImages.filter(post => selectedStatuses.includes(post.status))
-  }
-
-  if (filters.date) {
-    const selectedDates = Array.isArray(filters.date) ? filters.date : [filters.date]
-    postsWithImages = postsWithImages.filter(post => selectedDates.includes(formatDate(post.date)))
-  }
-
   const totalRecords = postsWithImages.length
   const totalPages = Math.ceil(totalRecords / pageSize)
   const start = (pageNo - 1) * pageSize
   const end = start + pageSize
   postsWithImages = postsWithImages.slice(start, end)
 
-  const locations = [...new Set(posts.map(p => p.location))]
-  const venues = [...new Set(posts.map(p => p.venue))]
-  const durations = [...new Set(posts.map(p => p.duration))]
-  const statuses = [...new Set(posts.map(p => p.status))]
-  const dates = [...new Set(posts.map(p => formatDate(p.date)))]
-
   res.render('pages/event_details', { 
     event, 
     category, 
     image, 
     organizer, 
-    postsWithImages, 
-    locations, 
-    venues, 
-    durations, 
-    statuses, 
-    dates, 
+    postsWithImages,
     query: req.query,
     totalPages,
-    pageNo
+    pageNo,
   })
 })
 
 // An event's post page
 router.get('/posts/post/:id', async (req, res) => {
-    const postId = req.params.id
-    const { post } = await getPostById(postId)
-    const { images } = await getImagesByPostId(post.id)
+  const notify = req.flash('message')[0]
 
-    res.render('pages/post', { post: post || null, images: images || [] })
+  const postId = req.params.id
+  const pageNo = parseInt(req.query.pageNo) || 1
+  const pageSize = 5
+
+  const { post } = await getPostById(postId)
+  const { images } = await getImagesByPostId(post.id)
+
+  const { posts = [], totalRecords } = await getAllPostsExceptThisId(post.id, pageNo, pageSize)
+  const totalPages = Math.ceil(totalRecords / pageSize)
+
+  let postsWithImages = await Promise.all(
+    posts.map(async post => {
+      const { images = [] } = await getImagesByPostId(post.id)
+      const { event } = await getEventById(post.event_id)
+      const { name } = await getOrganizingCommitteeById(event.organizing_committee_id)
+
+      return {
+        ...post.get({ plain: true }),
+        images: images.map(img => img.get({ plain: true })),
+        event: event.get({ plain: true }),
+        OrganizerCommitteeName: name,
+      }
+    })
+  )
+
+  const { organizingCommitties } = await getOrganizingCommittees()
+  const { roles = [] } = await getRoles()
+
+  res.render('pages/post', {
+    roles,
+    organizingCommitties,
+    post: post || null,
+    images: images || [],
+    postsWithImages: postsWithImages || [],
+    query: req.query,
+    totalPages,
+    pageNo,
+    notify,
+  })
 })
 
 export default router

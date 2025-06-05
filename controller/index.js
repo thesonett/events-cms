@@ -88,6 +88,7 @@ import {
     getPostsByStatus,
     getPostById,
     getAllPosts,
+    getAllPostsExceptThisId,
     getAllUpcomingPosts,
     findOnePostByField,
 } from './postController.js'
@@ -184,6 +185,7 @@ export {
     getPostsByStatus,
     getPostById,
     getAllPosts,
+    getAllPostsExceptThisId,
     getAllUpcomingPosts,
     findOnePostByField, // for testing purpose
 

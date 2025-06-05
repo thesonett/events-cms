@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     const selectedCategory = req.query.category || ''
 
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 2
+    const pageSize = 5
 
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
@@ -74,7 +74,7 @@ router.post('/event/create', upload.single('image'), async(req, res) => {
     const { event, message } = await createEvent({ title, description, date, category_id: finalCategoryId, organizing_committee_id: user.organizing_committee_id, role_id: decoded.role_id })
 
     // default image
-    let image_url = 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg'
+    let image_url = 'https://instaily.com/_next/static/media/test.b3910688.jpg'
     let file_name = 'default.jpg'
     let original_filename = 'default.jpg'
     let size = '0'

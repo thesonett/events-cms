@@ -1,19 +1,20 @@
 <div id="events-content" class="flex-grow fade-in">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-8 font-heading">Explore Events</h1>
-    
+
     <div class="flex flex-col lg:flex-row gap-8">
+
       <!-- Sidebar Filters -->
       <aside class="w-full lg:w-1/4 bg-white p-6 rounded-xl shadow-lg lg:sticky lg:top-24 self-start h-fit">
         <h2 class="text-xl font-bold text-gray-800 mb-4 font-heading">Filters</h2>
-        
+
         <form id="filter-form" method="GET" action="/events">
           <!-- Category Filter -->
           <div class="mb-6">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Category</h3>
             <div class="space-y-2">
-              <% if (allCategories && allCategories.length) { %>
-                <% allCategories.forEach(category => { %>
+              <% if (categories && categories.length) { %>
+                <% categories.forEach(category => { %>
                   <label class="flex items-center">
                     <input 
                       type="checkbox" 
@@ -26,120 +27,165 @@
                   </label>
                 <% }) %>
               <% } else { %>
-                <label class="flex items-center">
-                  <input type="checkbox" class="mr-2 accent-red-600" name="category" value="no" />
-                  <span>No category found!</span>
-                </label>
+                <p class="text-gray-500 text-center mt-4">No categories available!</p>
               <% } %>
             </div>
           </div>
 
-          <!-- Published By Filter -->
+          <!-- Status Filter -->
           <div class="mb-6">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Published By</h3>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Status</h3>
             <div class="space-y-2">
-              <% if (allOrganizers && allOrganizers.length) { %>
-                <% allOrganizers.forEach(organizer => { %>
+              <% if (statuses && statuses.length) { %>
+                <% statuses.forEach(status => { %>
+                  <label class="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      class="mr-2 accent-red-600" 
+                      name="status" 
+                      value="<%= status %>" 
+                      <%= (Array.isArray(query.status) ? query.status.includes(String(status)) : query.status == String(status)) ? 'checked' : '' %> 
+                    />
+                    <span><%= status %></span>
+                  </label>
+                <% }) %>
+              <% } else { %>
+                <p class="text-gray-500 text-center mt-4">No status available!</p>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Year Filter -->
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Year</h3>
+            <div class="space-y-2">
+              <% if (years && years.length) { %>
+                <% years.forEach(year => { %>
+                  <label class="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      class="mr-2 accent-red-600" 
+                      name="year" 
+                      value="<%= year %>" 
+                      <%= (Array.isArray(query.year) ? query.year.includes(String(year)) : query.year == String(year)) ? 'checked' : '' %> 
+                    />
+                    <span><%= year %></span>
+                  </label>
+                <% }) %>
+              <% } else { %>
+                <p class="text-gray-500 text-center mt-4">No years available!</p>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Publisher Filter -->
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Publisher</h3>
+            <div class="space-y-2">
+              <% if (organizingCommitties && organizingCommitties.length) { %>
+                <% organizingCommitties.forEach(oc => { %>
                   <label class="flex items-center">
                     <input 
                       type="checkbox" 
                       class="mr-2 accent-red-600" 
                       name="organizer" 
-                      value="<%= organizer.id %>" 
-                      <%= (Array.isArray(query.organizer) ? query.organizer.includes(String(organizer.id)) : query.organizer == String(organizer.id)) ? 'checked' : '' %>
+                      value="<%= oc.id %>" 
+                      <%= (Array.isArray(query.organizer) ? query.organizer.includes(String(oc.id)) : query.organizer == String(oc.id)) ? 'checked' : '' %> 
                     />
-                    <span><%= organizer.name %></span>
+                    <span><%= oc.name %></span>
                   </label>
                 <% }) %>
               <% } else { %>
-                <label class="flex items-center">
-                  <input type="checkbox" class="mr-2 accent-red-600" name="organizer" value="no" />
-                  <span>No publisher found!</span>
-                </label>
+                <p class="text-gray-500 text-center mt-4">No publisher available!</p>
               <% } %>
             </div>
           </div>
 
-          <!-- Reset Filters -->
-          <button  id="reset-filters" type="button" class="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Reset Filters</button>
+          <!-- Reset -->
+          <button id="reset-filters" type="button" class="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors">Reset</button>
         </form>
       </aside>
 
       <!-- Event Cards -->
       <div class="w-full lg:w-3/4">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <% if (totalEvents && totalEvents.length) { %>
-            <% totalEvents.map(event => { %>
-              <a href="/events/<%= event.id %>" class="block event-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <img src="<%= event.image %>" alt="Event" class="w-full h-48 object-cover" />
+          <% if (filteredPosts && filteredPosts.length) { %>
+            <% filteredPosts.forEach(post => { %>
+              <a href="/events/posts/post/<%= post.id %>" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                <% if (post.images && post.images.length) { %>
+                  <img src="<%= post.images[0].image_url %>" alt="Image" class="w-full h-48 object-cover" />
+                <% } else { %>
+                  <img src="https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg" alt="No image" class="w-full h-48 object-cover" />
+                <% } %>
                 <div class="p-4">
-                  <h3 class="text-xl font-bold text-gray-800 font-heading"><%= event.title %></h3>
-                  <p class="text-l font-bold text-gray-600 text-sm"><%= event.description %></p>
+                  <h4 class="text-xl font-bold text-gray-800 font-heading mb-1"><%= post.title %></h4>
+                  <p class="text-gray-600 text-sm"><i class="fas fa-user mr-2"></i>Organizer: <%= post.organizer %></p>
                   <p class="text-gray-600 text-sm mt-1">
-                    <i class="fas fa-calendar-alt mr-2"></i>Published On<br>
-                    <%= event.date.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true
-                    }) %>
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    <%= new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) %>
                   </p>
-                  <p class="text-gray-600 text-sm"><%= event.category %></p>
-                  <p class="text-l font-bold text-red-700 text-sm mt-2">Published By <%= event.organizer %></p>
+                  <p class="text-gray-600 text-sm mt-1">
+                    <i class="fa-solid fa-users mr-2"></i><%= post.OrganizerCommitteeName %></p>
+                  </p>
+                  <p class="text-gray-600 text-sm mt-2"><%= post.category %>
+                  <p class="text-l font-bold mt-2 <%= post.status === 'upcoming' ? 'text-red-600' : post.status === 'ongoing' ? 'text-blue-600' : 'text-green-600' %>"><%= post.status %></p>
                 </div>
               </a>
             <% }) %>
-          <% } else { %> 
-            <div class="event-card bg-white rounded-xl shadow-md overflow-hidden">
-              <img src="https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg" alt="Event" class="w-full h-48 object-cover" />
-              <div class="p-4">
-                <h3 class="text-xl font-bold text-gray-800 font-heading">No events found!</h3>
-                <p class="text-gray-600 text-sm mt-1"><i class="fas fa-calendar-alt mr-2"></i>NA</p>
-                <p class="text-gray-600 text-sm"><i class="fas fa-map-marker-alt mr-2"></i>NA</p>
-                <p class="text-gray-600 text-sm mt-2">NA</p>
-              </div>
-            </div>
+          <% } else { %>
+            <p class="text-gray-500 text-center mt-4">No events available!</p>
           <% } %>
         </div>
 
         <!-- Pagination -->
         <% if (totalPages > 1) { %>
           <div class="mt-8 flex justify-center space-x-1">
-            
             <% const maxPagesToShow = 3;
               const half = Math.floor(maxPagesToShow / 2);
               let startPage = Math.max(1, pageNo - half);
               let endPage = startPage + maxPagesToShow - 1;
               if (endPage > totalPages) {
-                endPage = totalPages;
-                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+                  endPage = totalPages;
+                  startPage = Math.max(1, endPage - maxPagesToShow + 1);
               }
+
+              // Helper: build query string from arrays
+              const buildQuery = () => {
+                let q = '';
+                if (query.category) q += [].concat(query.category).map(c => `&category=${c}`).join('');
+                if (query.status) q += [].concat(query.status).map(s => `&status=${s}`).join('');
+                if (query.year) q += [].concat(query.year).map(y => `&year=${y}`).join('');
+                if (query.organizer) q += `&organizer=${query.organizer}`;
+                if (query.organizer) q += [].concat(query.organizer).map(o => `&organizer=${o}`).join('');
+                return q;
+              };
+              const extraQuery = buildQuery();
             %>
 
             <% if (pageNo > 1) { %>
-              <a href="?pageNo=<%= pageNo - 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+              <a href="?pageNo=<%= pageNo - 1 %><%= extraQuery %>"
                 class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
                 &lt;
               </a>
             <% } %>
 
             <% for (let i = startPage; i <= endPage; i++) { %>
-              <a href="?pageNo=<%= i %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
-                class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+              <a href="?pageNo=<%= i %><%= extraQuery %>"
+                class="px-3 py-1 text-sm rounded border font-medium transition 
+                <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
                 <%= i %>
               </a>
             <% } %>
 
             <% if (pageNo < totalPages) { %>
-              <a href="?pageNo=<%= pageNo + 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+              <a href="?pageNo=<%= pageNo + 1 %><%= extraQuery %>"
                 class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
                 &gt;
               </a>
             <% } %>
           </div>
         <% } %>
+
       </div>
     </div>
   </div>
@@ -148,22 +194,22 @@
 <script>
   document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', () => {
-      document.getElementById('filter-form').submit()
-    })
-  })
+      document.getElementById('filter-form').submit();
+    });
+  });
 
   document.getElementById('reset-filters').addEventListener('click', () => {
-    document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(cb => cb.checked = false)
-    document.getElementById('filter-form').submit()
-  })
+    document.querySelectorAll('#filter-form input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.getElementById('filter-form').submit();
+  });
 </script>
 
 <% if (notify) { %>
-    <script>
-      Swal.fire({
-        text: "<%- notify %>",
-        icon: "info",
-        confirmButtonColor: "#ec4899"
-      });
-    </script>
+  <script>
+    Swal.fire({
+      text: "<%- notify %>",
+      icon: "info",
+      confirmButtonColor: "#ec4899"
+    });
+  </script>
 <% } %>

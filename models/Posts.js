@@ -13,7 +13,7 @@ const Posts = sequelize.define('posts_model', {
     allowNull: false,
   },
   description: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.TEXT('long'),
     allowNull: false,
   },
   venue: {

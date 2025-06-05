@@ -1,4 +1,4 @@
-import { OrganizingCommittee } from "../models/index.js";
+import { OrganizingCommittee } from "../models/index.js"
 
 async function createOrganizingCommittee({ name }) {
     try {
@@ -51,7 +51,7 @@ async function getOrganizingCommittees() {
         const organizingCommitties = await OrganizingCommittee.findAll({ attributes: ['id', 'name'] })
     
         if(!organizingCommitties) {
-            return {success: false, message: 'Organizing committies are not found!'};
+            return {success: false, message: 'Organizing committies are not found!'}
         }
     
         return { success: true, organizingCommitties }
@@ -64,13 +64,13 @@ async function getOrganizingCommittees() {
 
 async function getOrganizingCommitteeById(id) {
     try {
-        const oc = await OrganizingCommittee.findOne({ where: { id }, attributes: ['name'] });
+        const oc = await OrganizingCommittee.findOne({ where: { id }, attributes: ['name'] })
     
         if (!oc) {
-            return { success: false, message: 'Organizing committee not found!' };
+            return { success: false, message: 'Organizing committee not found!' }
         }
     
-        return { success: true, name: oc.name };
+        return { success: true, name: oc.name }
     }
     catch (error) {
         console.log('Exception occurred inside getOrganizingCommitteeById!\n', error)

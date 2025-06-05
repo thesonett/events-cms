@@ -15,7 +15,7 @@ const Events = sequelize.define('events_model', {
         allowNull: false
     },
     description: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.TEXT('long'),
         allowNull: false
     },
     date: {

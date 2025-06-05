@@ -14,6 +14,6 @@ const Role = sequelize.define('role_model', {
 }, {
   tableName: 'role',
   timestamps: true,
-});
+})
 
 export default Role

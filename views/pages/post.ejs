@@ -1,10 +1,9 @@
 <div class="bg-gray-100 min-h-screen">
   <div class="w-full relative">
-    <img src="<%= images[0]?.image_url || 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg' %>" alt="Event Banner" class="w-full h-64 md:h-96 object-cover" />
+    <img src="<%= images[0]?.image_url || 'https://instaily.com/_next/static/media/test.b3910688.jpg' %>" alt="Event Banner" class="w-full h-64 md:h-96 object-cover" />
     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="text-center text-white px-4">
         <h1 class="text-3xl md:text-5xl font-bold font-heading mb-4"><%= post.title || 'Not found!' %></h1>
-        <p class="text-lg md:text-xl max-w-3xl mx-auto"><%= post.description || 'Not found!' %></p>
       </div>
     </div>
   </div>
@@ -17,7 +16,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image -->
           <div>
-            <img src="<%= images[0]?.image_url || 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg' %>" alt="Main" class="w-full h-64 md:h-80 object-cover rounded-lg" />
+            <img src="<%= images[0]?.image_url || 'https://instaily.com/_next/static/media/test.b3910688.jpg' %>" alt="Main" class="w-full h-64 md:h-80 object-cover rounded-lg" />
           </div>
 
           <!-- Info -->
@@ -47,8 +46,19 @@
             </div>
 
             <div class="mt-6">
-              <h4 class="text-lg font-semibold text-gray-700 mb-2">About this Event</h4>
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">About the Event</h4>
               <p class="text-gray-600 text-base"><%= post.description || 'Not found!' %></p>
+            </div>
+            <div class="mt-6">
+              <% if (post.status === 'completed' || post.status === 'ongoing') { %>
+                <a href="javascript:void(0)" class="inline-block bg-gray-400 text-white font-semibold text-lg px-6 py-3 rounded-lg cursor-not-allowed opacity-50 pointer-events-none"><i class="fa-solid fa-bell mr-2"></i>Notify Me</a>
+              <% } else { %>
+                <a id="notifyBtn-<%= post.id %>" 
+                  href="/booking/<%= post.id %>"
+                  class="inline-block bg-red-600 text-white font-semibold text-lg px-6 py-3 rounded-lg hover:bg-red-700 transition duration-300">
+                  <i class="fa-solid fa-bell mr-2"></i>Notify Me
+                </a>
+              <% } %>
             </div>
           </div>
         </div>
@@ -65,23 +75,96 @@
               <img src="<%= image.image_url %>" alt="Gallery Image" class="w-full h-40 md:h-48 object-cover rounded-lg cursor-pointer" onclick="showFlashcard(<%= i %>)" />
             <% }) %>
           <% } else { %>
-            <script>galleryImages.push("https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg");</script>
-            <img src="https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg" alt="Fallback" class="w-full h-40 md:h-48 object-cover rounded-lg cursor-pointer" onclick="showFlashcard(0)" />
+            <script>galleryImages.push("https://instaily.com/_next/static/media/test.b3910688.jpg");</script>
+            <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="Fallback" class="w-full h-40 md:h-48 object-cover rounded-lg cursor-pointer" onclick="showFlashcard(0)" />
           <% } %>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div id="flashcardModal" class="flashcard-modal">
-    <span class="close-modal" onclick="closeFlashcard()">×</span>
-    <span class="nav-arrow left" onclick="prevImage()">&#10094;</span>
-    <img id="flashcardImage" class="flashcard-image" src="" alt="Flashcard Image" />
-    <span class="nav-arrow right" onclick="nextImage()">&#10095;</span>
+  <!-- Explore More Events -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-heading mb-6">You May Also Like</h2>
+    <p class="text-l md:text-l text-gray-800 font-heading mb-6">Events around you, get notified now!</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <% if (postsWithImages && postsWithImages.length) { %>
+        <% (postsWithImages || []).forEach(post => { %>
+          <a href="/events/posts/post/<%= post.id %>" class="block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div class="bg-white rounded-lg shadow hover:shadow-md transition duration-300 overflow-hidden">
+              <% if (post.images && post.images.length) { %>
+                <img src="<%= post.images[0].image_url %>" alt="Image" class="w-full h-64 object-cover rounded-t-xl" />
+              <% } else { %>
+                <img src="https://instaily.com/_next/static/media/test.b3910688.jpg" alt="No image available" class="w-full h-64 object-cover rounded-t-xl" />
+              <% } %>
+              <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-800 truncate"><%= post.title %></h3>
+                <p class="text-sm text-gray-600 mb-2">
+                  <i class="fas fa-user mr-2 text-gray-500"></i>
+                  <span>Organizer: <%= post.organizer %></span>
+                </p>
+                <p class="text-sm text-gray-600 mb-2">
+                  <i class="fa-solid fa-users mr-2 text-gray-500"></i><%= post.OrganizerCommitteeName %>
+                </p>
+                <p class="mt-4 text-lg font-bold
+                  <%= post.status === 'upcoming' ? 'text-red-600' : post.status === 'ongoing' ? 'text-blue-600' : 'text-green-600' %>">
+                  <%= post.status.charAt(0).toUpperCase() + post.status.slice(1) %>
+                </p>
+              </div>
+            </div>
+          </a>
+        <% }) %>
+      <% } else { %>
+        <p class="text-gray-500 text-center mt-4">No other posts available!</p>
+      <% } %>
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+      <div class="mt-8 flex justify-center space-x-1">
+        <% const maxPagesToShow = 3;
+          const half = Math.floor(maxPagesToShow / 2);
+          let startPage = Math.max(1, pageNo - half);
+          let endPage = startPage + maxPagesToShow - 1;
+          if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+          }
+        %>
+
+        <% if (pageNo > 1) { %>
+          <a href="?pageNo=<%= pageNo - 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+            class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+            <
+          </a>
+        <% } %>
+
+        <% for (let i = startPage; i <= endPage; i++) { %>
+          <a href="?pageNo=<%= i %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+            class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+            <%= i %>
+          </a>
+        <% } %>
+
+        <% if (pageNo < totalPages) { %>
+          <a href="?pageNo=<%= pageNo + 1 %><%= query.category ? `&category=${query.category}` : '' %><%= query.organizer ? `&organizer=${query.organizer}` : '' %>"
+            class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+            >
+          </a>
+        <% } %>
+      </div>
+    <% } %>
   </div>
 
-  <!-- Styles and Script -->
+  <!-- Image Flashcard Modal -->
+  <div id="flashcardModal" class="flashcard-modal">
+    <span class="close-modal" onclick="closeFlashcard()">×</span>
+    <span class="nav-arrow left" onclick="prevImage()">❮</span>
+    <img id="flashcardImage" class="flashcard-image" src="" alt="Flashcard Image" />
+    <span class="nav-arrow right" onclick="nextImage()">❯</span>
+  </div>
+
+  <!-- Styles -->
   <style>
     .flashcard-modal { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: background-color 0.3s ease, opacity 0.3s ease; }
     .flashcard-modal.active { opacity: 1; pointer-events: auto; background-color: rgba(0, 0, 0, 0.8); }
@@ -95,9 +178,11 @@
     .nav-arrow.right { right: 1rem; }
   </style>
 
+  <!-- Scripts -->
   <script>
     let currentIndex = -1;
 
+    // Image Flashcard Functions
     function showFlashcard(index) {
       if (index < 0 || index >= galleryImages.length) return;
       currentIndex = index;
@@ -118,17 +203,6 @@
       setTimeout(() => { modal.classList.remove('active'); image.src = ''; currentIndex = -1; }, 300);
     }
 
-    document.getElementById('flashcardModal').addEventListener('click', function (e) {
-      if (e.target === this) closeFlashcard();
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (currentIndex === -1) return;
-      if (e.key === 'ArrowLeft') prevImage();
-      else if (e.key === 'ArrowRight') nextImage();
-      else if (e.key === 'Escape') closeFlashcard();
-    });
-
     function prevImage() {
       if (currentIndex === -1) return;
       currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
@@ -147,5 +221,29 @@
       setTimeout(() => { image.src = galleryImages[currentIndex]; }, 200);
       image.onload = () => requestAnimationFrame(() => image.classList.add('visible'));
     }
+
+    // Event Listeners
+    document.getElementById('flashcardModal').addEventListener('click', function (e) {
+      if (e.target === this) closeFlashcard();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeFlashcard();
+      } else if (currentIndex !== -1) {
+        if (e.key === 'ArrowLeft') prevImage();
+        else if (e.key === 'ArrowRight') nextImage();
+      }
+    });
   </script>
+
+  <% if (notify) { %>
+    <script>
+      Swal.fire({
+        text: "<%- notify %>",
+        icon: "info",
+        confirmButtonColor: "#ec4899"
+      });
+    </script>
+  <% } %>
 </div>

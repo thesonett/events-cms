@@ -67,7 +67,7 @@ async function getEventsByCategoryId(category_id) {
     }
 }
 
-async function getEventsByOrganizingCommitteeId(organizing_committee_id, pageNo = 1, pageSize = 100) {
+async function getEventsByOrganizingCommitteeId(organizing_committee_id, pageNo = 1, pageSize = 50) {
     try {
         const { count, rows: events} = await Events.findAndCountAll({ 
             where: { organizing_committee_id }, 
@@ -150,11 +150,11 @@ async function getEventsByYear(id, date) {
             return { success: false, message: 'No events found for given ID' }
         }
 
-        const targetYear = date.split('/')[2]; // date -> 17/05/2025 -> 2025
+        const targetYear = date.split('/')[2] // date -> 17/05/2025 -> 2025
         const filteredEvents = response.events.filter(event => {
             const eventYear = new Date(event.date).getFullYear().toString()
             return eventYear === targetYear
-        });
+        })
 
         return { success: true, filteredEvents }
     }

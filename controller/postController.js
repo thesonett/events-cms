@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { Events, Posts } from '../models/index.js'
 import { getImagesByPostId } from './imagesController.js'
 
@@ -55,7 +56,7 @@ async function updatePostByEventId(event_id, updates) {
             return { success: false, message: 'Post not found or nothing to update!' }
         }
 
-        const updatedPost = await getPostsByEventId(event_id);
+        const updatedPost = await getPostsByEventId(event_id)
         return { success: true, message: 'Post updated successfully!', updatedPost }
 
     } 
@@ -198,13 +199,41 @@ async function getPostsByStatus(status) {
     }
 }
 
-async function getAllPosts() {
+async function getAllPosts(pageNo = 1, pageSize = 50) {
     try {
-        const posts = await Posts.findAll()
-        return posts.length ? { success: true, posts } : { success: false, message: 'Posts not found!' }
+        const {count, rows: posts} = await Posts.findAndCountAll({
+            limit: pageSize,
+            offset: (pageNo - 1) * pageSize
+        })
+        
+        return posts.length ? 
+            { success: true, posts, totalRecords: count } : 
+            { success: false, message: 'Event Posts not found!' }
     }
     catch(error) {
         console.error('Exception occurred inside getAllPosts!\n', error)
+        return { success: false, message: 'Exception::: Event Posts not found!' }
+    }
+}
+
+async function getAllPostsExceptThisId(postId, pageNo = 1, pageSize = 100) {
+    try {
+        const { count, rows: posts } = await Posts.findAndCountAll({
+            where: {
+                id: { [Op.ne]: postId }
+            },
+            limit: pageSize,
+            offset: (pageNo - 1) * pageSize,
+        })
+
+        if (!posts || !posts.length) {
+            return { success: false, message: 'Events not found!' }
+        }
+
+        return { success: true, posts, totalRecords: count }
+    } 
+    catch (error) {
+        console.error('Exception occurred inside getAllPostsExceptThisId!\n', error)
         return { success: false, message: 'Exception::: Posts not found!' }
     }
 }
@@ -242,6 +271,7 @@ export {
 
     getPostById,
     getAllPosts,
+    getAllPostsExceptThisId,
     
     findOnePostByField,
 }

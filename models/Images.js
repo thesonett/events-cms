@@ -1,7 +1,7 @@
-import sequelize from "../database/config.js";
-import { DataTypes } from "sequelize";
-import Events from "./Events.js";
-import Posts from "./Posts.js";
+import sequelize from "../database/config.js"
+import { DataTypes } from "sequelize"
+import Events from "./Events.js"
+import Posts from "./Posts.js"
 
 const Images = sequelize.define(
   "images_model", {
@@ -23,7 +23,7 @@ const Images = sequelize.define(
     image_url: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg',
+      defaultValue: 'https://instaily.com/_next/static/media/test.b3910688.jpg',
     },
     size: {
       type: DataTypes.STRING(255),
@@ -60,6 +60,6 @@ const Images = sequelize.define(
     tableName: "images",
     timestamps: true,
   }
-);
+)
 
-export default Images;
+export default Images

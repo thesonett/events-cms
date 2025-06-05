@@ -87,7 +87,7 @@ async function getActiveUsers(id) {
     }
 }
 
-async function getOnlyUsers(id, pageNo = 1, pageSize = 100) {
+async function getOnlyUsers(id, pageNo = 1, pageSize = 50) {
     try {
         const { user }  = await getUserById(id)
         const { count, rows: users} = await Users.findAndCountAll({

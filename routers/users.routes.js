@@ -33,8 +33,8 @@ router.get('/register', async (req, res) => {
     const notify = req.flash('message')[0]
 
     const { organizingCommitties, success, message } = await getOrganizingCommittees()
-    const rolesResult = await getRoles();
-    const roles = rolesResult.success ? rolesResult.roles : [];
+    const rolesResult = await getRoles()
+    const roles = rolesResult.success ? rolesResult.roles : []
 
     res.render('pages/registration', { organizingCommitties, roles, notify })
 })
@@ -104,9 +104,9 @@ router.post('/login', async (req, res) => {
         return res.redirect('/users/login')
     }
 
-    req.session.user = { id: user.id }
+    req.session.user = { id: user.id, email: user.email, role_id: user.role_id, organizing_committee_id: user.organizing_committee_id }
 
-    const token = jwt.sign({ _id: user.id, email: user.email, role_id: user.role_id }, process.env.MY_SECRET_KEY, { expiresIn: '24h' })
+    const token = jwt.sign({ _id: user.id, email: user.email, role_id: user.role_id, organizing_committee_id: user.organizing_committee_id }, process.env.MY_SECRET_KEY, { expiresIn: '24h' })
     res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000 })
 
     req.flash('message', message)
@@ -148,9 +148,9 @@ router.post('/delete/:id', async (req, res) => {
 
     const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id) || {}
     for (const event of events) {
-        const { image, success } = await getImageByEventId(event.id);
+        const { image, success } = await getImageByEventId(event.id)
         if (success && image?.file_name && image.file_name !== 'default.jpg') {
-            await deleteCloudinaryImage(image.file_name);
+            await deleteCloudinaryImage(image.file_name)
         }
         await deleteImageByEventId(event.id)
 
@@ -184,4 +184,4 @@ router.post('/delete/:id', async (req, res) => {
 })
 
 
-export default router;
+export default router

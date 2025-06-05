@@ -14,9 +14,9 @@ async function createImage({ file_name, original_filename, image_url, size, enti
 
 async function deleteImageById(id) {
     try {
-        const image = await Images.destroy({ where: { id } });
+        const image = await Images.destroy({ where: { id } })
         return image ? { success: true, message: 'Image deleted!' } : 
-                       { success: false, message: 'Unable to delete image or image not found!' };
+                       { success: false, message: 'Unable to delete image or image not found!' }
     }
     catch (error) {
         console.error('Exception occurred inside deleteImageById!\n', error)
@@ -55,7 +55,7 @@ async function updateImageById(id, updates) {
             return { success: false, message: 'Image not found or no changes made!' }
         }
     
-        const updatedImage = await Images.findByPk(id);
+        const updatedImage = await Images.findByPk(id)
         return { success: true, message: 'Image updated!', updatedImage }
     }
     catch (error) {
@@ -98,7 +98,7 @@ async function updateImageByPostId(post_id, updates) {
 
 async function getImageById(id) {
     try {
-        const image = await Images.findOne({ where: { id } });
+        const image = await Images.findOne({ where: { id } })
         return image ? { success: true, image } : { success: false, message: 'Image not found!' }
     }
     catch (error) {
@@ -131,10 +131,10 @@ async function getImageUrlByEventId(event_id) {
 
 async function getImagesByPostId(post_id) {
     try {
-        const images = await Images.findAll({ where: { post_id, entity_type: 'post', entity_id: 2 } });
+        const images = await Images.findAll({ where: { post_id, entity_type: 'post', entity_id: 2 } })
         return images.length ? 
             { success: true, images } : 
-            { success: false, message: 'Images not found!' };
+            { success: false, message: 'Images not found!' }
     }
     catch (error) {
         console.log('Exception occurred inside getImagesByPostId!\n', error)
@@ -179,7 +179,7 @@ async function getImageByFileName(file_name) {
 
 async function getImagesByFileName(file_name) {
     try {
-        const images = await Images.findAll({ where: { file_name } });
+        const images = await Images.findAll({ where: { file_name } })
         return images.length ? 
             { success: true, images } : 
             { success: false, message: 'Images not found!' }
@@ -225,7 +225,7 @@ async function getImageByEntityRef(entity_id, entity_type) {
 
 async function getImagesByEntityRef(entity_id, entity_type) {
     try {
-        const images = await Images.findAll({ where: { entity_id, entity_type } });
+        const images = await Images.findAll({ where: { entity_id, entity_type } })
         return images.length ? { success: true, images } : { success: false, message: 'Images not found!' }
     } 
     catch (error) {
@@ -239,7 +239,7 @@ async function getPaginatedImages({ page = 1, limit = 10, filters = {} }) {
 
     try {
         const { count, rows: images } = await Images.findAndCountAll({ where: filters, offset, limit })
-        const totalPages = Math.ceil(count / limit);
+        const totalPages = Math.ceil(count / limit)
 
         return { success: true, pageInfo: { totalItems: count, totalPages, currentPage: page, limit }, images }
     } 

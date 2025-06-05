@@ -13,7 +13,7 @@ router.get('/post/:id', async (req, res) => {
     const eventId = Number(req.params.id)
     req.session.eventId = eventId
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 2
+    const pageSize = 5
 
     const sessionUser = req.user
     const message = req.flash('message')[0]
@@ -73,7 +73,7 @@ router.post('/post/create/:id', upload.array('images'), async (req, res) => {
         await createImage({
             file_name: 'default.jpg',
             original_filename: 'default.jpg',
-            image_url: 'https://res.cloudinary.com/diobt2ibi/image/upload/v1748862503/undraw_avatars_xsfb_on45bq.jpg',
+            image_url: 'https://instaily.com/_next/static/media/test.b3910688.jpg',
             size: '0',
             entity_type: 'post',
             entity_id: 2,
@@ -130,8 +130,8 @@ router.post('/post/update/:id', upload.array('images'), async (req, res) => {
     const { success, message } = await updatePostById(post_id, { title, description, venue, location, duration, organizer: organizedBy, time, date, status: getStatus(date, time) })
 
     if (!success) {
-        req.flash('message', message);
-        return res.redirect(`/dashboard/posts/post/${req.session.eventId}`);
+        req.flash('message', message)
+        return res.redirect(`/dashboard/posts/post/${req.session.eventId}`)
     }
 
     const uploadedFiles = req.files || []
@@ -141,14 +141,15 @@ router.post('/post/update/:id', upload.array('images'), async (req, res) => {
 
     // user has uploaded some images
     if (uploadedFiles.length > 0) {
-        const hasOnlyDefaultImage = existingImages.length === 1 && existingImages[0].file_name === 'default.jpg';
+        const hasOnlyDefaultImage = existingImages.length === 1 && existingImages[0].file_name === 'default.jpg'
 
         for (const img of existingImages) {
             if (img.file_name !== 'default.jpg') {
-                await deleteCloudinaryImage(img.file_name);
-                await deleteImageById(img.id);
-            } else if (hasOnlyDefaultImage) {
-                await deleteImageById(img.id); // Remove only if it's the only image
+                await deleteCloudinaryImage(img.file_name)
+                await deleteImageById(img.id)
+            } 
+            else if (hasOnlyDefaultImage) {
+                await deleteImageById(img.id) // Remove only if it's the only image
             }
         }
 
@@ -156,7 +157,7 @@ router.post('/post/update/:id', upload.array('images'), async (req, res) => {
             const { success, imageData } = await uploadImage({
                 original_filename: file.originalname,
                 buffer: file.buffer,
-            });
+            })
 
             if (success) {
                 await createImage({
@@ -168,7 +169,7 @@ router.post('/post/update/:id', upload.array('images'), async (req, res) => {
                     entity_id: 2, // or your correct static ID
                     event_id: req.session.eventId,
                     post_id,
-                });
+                })
             }
         }
     }

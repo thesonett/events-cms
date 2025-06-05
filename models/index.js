@@ -37,4 +37,4 @@ export {
   Posts,
   Images,
   Activities,
-};
+}

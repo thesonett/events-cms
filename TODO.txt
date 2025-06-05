@@ -1,49 +1,6 @@
 NEXT TASKS✅
 
-1. remove 
-2. automation system for date changing (excecute in every 24hrs.)
-3. email system for sending mails + send auto email to all the registered users for upcoming events.
-
-
-
-:::: paginations section demo ::::
-<!-- Pagination -->
-    <% if (totalPages > 1) { %>
-      <div class="mt-10 flex justify-center space-x-1">
-        <% 
-          const maxPagesToShow = 3;
-          const half = Math.floor(maxPagesToShow / 2);
-          let startPage = Math.max(1, pageNo - half);
-          let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-          if (endPage - startPage < maxPagesToShow - 1) {
-            startPage = Math.max(1, endPage - maxPagesToShow + 1);
-          }
-
-          function buildQueryString(queryObj) {
-            return Object.entries(queryObj)
-              .map(([key, val]) =>
-                Array.isArray(val)
-                  ? val.map(v => `${key}=${encodeURIComponent(v)}`).join("&")
-                  : `${key}=${encodeURIComponent(val)}`
-              )
-              .join("&");
-          }
-
-          const queryString = buildQueryString(query || {})
-        %>
-
-        <% if (pageNo > 1) { %>
-          <a href="?pageNo=<%= pageNo - 1 %>&<%= queryString %>" class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">&lt;</a>
-        <% } %>
-
-        <% for (let i = startPage; i <= endPage; i++) { %>
-           <a href="?pageNo=<%= i %>&<%= queryString %>" class="px-3 py-1 text-sm rounded border font-medium transition <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
-            <%= i %>
-          </a>
-        <% } %>
-
-        <% if (pageNo < totalPages) { %>
-          <a href="?pageNo=<%= pageNo + 1 %>&<%= queryString %>" class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">&gt;</a>
-        <% } %>
-      </div>
-<% } %>
+1. automation system for date changing (excecute in every 24hrs.)
+2. email system for sending mails + send auto email to all the registered users for upcoming events.
+3. uuid for hiding id, filter name on url
+4. add loading screen.

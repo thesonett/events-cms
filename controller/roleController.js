@@ -1,4 +1,4 @@
-import { Role } from '../models/index.js';
+import { Role } from '../models/index.js'
 
 async function createRole({ role }) {
     try {

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import express from 'express'
 import bcrypt from 'bcrypt'
 
-import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getUserById, updateUserById } from '../controller/index.js'
+import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getCategories, getCategoryById, getEventById, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getPostsByEventId, getUserById, updateUserById } from '../controller/index.js'
 import { getStatus } from '../services/status.js'
 
 dotenv.config()
@@ -44,7 +44,7 @@ router.get('/users', async (req, res) => {
     const message = req.flash('message')[0]
     const selectedStatus = req.query.status || ''
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 1
+    const pageSize = 5
 
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
@@ -173,6 +173,55 @@ router.post('/settings/update/password', async (req, res) => {
 
     req.flash('message', message)
     return res.redirect('/dashboard/settings')
+})
+
+// dashboard categories page
+router.get('/categories', async (req, res) => {
+    const token = req.cookies?.token
+    const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
+    const { user } = await getUserById(decoded._id)
+    const { name: organizingCommitteeName } = await getOrganizingCommitteeById(user.organizing_committee_id)
+
+    const { events = [] } = await getEventsByOrganizingCommitteeId(user.organizing_committee_id)
+    console.log(events)
+
+    let postsByCategory = {}
+    let categories = []
+
+    if (events.length > 0) {
+        const eventIds = events.map(event => event.id)
+        const { posts = [] } = await getPostsByEventId(eventIds)
+
+        const allPostswithCategories = await Promise.all(
+            posts.map(async post => {
+                const { event } = await getEventById(post.event_id)
+                const { category } = await getCategoryById(event.category_id)
+                return {
+                    ...post.get({ plain: true }),
+                    category: category.category
+                }
+            })
+        )
+
+        // Group posts by category
+        postsByCategory = allPostswithCategories.reduce((acc, post) => {
+            const category = post.category
+            if (!acc[category]) {
+                acc[category] = []
+            }
+            acc[category].push(post)
+            return acc
+        }, {})
+        categories = Object.keys(postsByCategory)
+    }
+
+    res.render('pages/dashboard/categories', {
+        layout: 'layouts/dashboardLayout',
+        admin: user,
+        categories,
+        postsByCategory,
+        organizingCommitteeName,
+    })
 })
 
 export default router
