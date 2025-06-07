@@ -19,6 +19,7 @@ import {
     createUser,
     deleteUserById,
     updateUserById,
+    updateAllUsersStatus,
     getUser,
     getUsers,
     getActiveUsers,
@@ -72,6 +73,7 @@ import {
     getEventsByRoleId,
     getEventsByYear,
     getAllEvents,
+    sendUpcomingEventEmails,
 } from './eventsController.js'
 
 import {
@@ -80,6 +82,7 @@ import {
     deletePostById,
     updatePostByEventId,
     updatePostById,
+    updateAllPostsStatus,
     getPostByEventId,
     getPostsByEventId,
     getPostByOrganizerName,
@@ -120,6 +123,7 @@ export {
     createUser,
     deleteUserById,
     updateUserById,
+    updateAllUsersStatus,
     getUser,
     getUsers,
     getActiveUsers,
@@ -170,6 +174,7 @@ export {
     getEventsByRoleId,
     getEventsByYear,
     getAllEvents,
+    sendUpcomingEventEmails,
 
     // posts
     createPost,
@@ -177,6 +182,7 @@ export {
     deletePostById,
     updatePostByEventId,
     updatePostById,
+    updateAllPostsStatus,
     getPostByEventId,
     getPostsByEventId,
     getPostByOrganizerName,

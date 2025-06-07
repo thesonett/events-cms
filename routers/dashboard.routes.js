@@ -3,8 +3,9 @@ import jwt from 'jsonwebtoken'
 import express from 'express'
 import bcrypt from 'bcrypt'
 
-import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getCategories, getCategoryById, getEventById, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getPostsByEventId, getUserById, updateUserById } from '../controller/index.js'
+import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getAllUpcomingPosts, getCategories, getCategoryById, getEventById, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getPostsByEventId, getUserById, updateUserById } from '../controller/index.js'
 import { getStatus } from '../services/status.js'
+import { sendMailToRegisteredUser } from '../services/mail.js'
 
 dotenv.config()
 const router = express.Router()
@@ -223,5 +224,95 @@ router.get('/categories', async (req, res) => {
         organizingCommitteeName,
     })
 })
+
+router.get('/notify/:id', async (req, res) => {
+    const message = req.flash('message')[0]
+    const userId = req.params.id
+
+    const token = req.cookies?.token
+    const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
+
+    const { user: admin } = await getUserById(decoded._id)
+    const { user } = await getUserById(userId)
+    const { posts } = await getAllUpcomingPosts()
+    
+    if (!user || posts.length === 0) {
+      req.flash('message', 'User or posts not found!')
+      return res.redirect('/dashboard/users')
+    }
+
+    await sendMailToRegisteredUser({
+        name: `${admin.first_name} ${admin.last_name}`,
+        adminEmail: admin.email,
+        email: user.email,
+        subject: 'Upcoming Events Notification',
+        message: `<div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Hi ${user.first_name},</p>
+                    <p>Here are the upcoming posts/events:</p>
+                    ${posts.map(post => `
+                    <div style="margin-bottom: 12px;">
+                        <strong>${post.title}</strong><br/>
+                        ${post.description}<br/>
+                        <span style="color: #555;"><strong>Event:</strong> ${post.events_model.title} | <strong>Date:</strong> ${post.date} | <strong>Time:</strong> ${post.time}</span>
+                    </div>
+                    `).join('')}
+                    <p style="margin-top: 16px;">Regards,<br/>Event CMS Team</p>
+                </div>`
+    })
+
+    req.flash('message', `Email successfully sent to ${user.email}!`)
+    res.redirect('/dashboard/users')
+})
+
+router.get('/notifyAll', async (req, res) => {
+  try {
+    const token = req.cookies?.token
+    const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
+
+    const { user: admin } = await getUserById(decoded._id)
+    const { users } = await getActiveUsers(decoded._id)
+    const { posts } = await getAllUpcomingPosts()
+
+    if (!users || users.length === 0 || !posts || posts.length === 0) {
+      req.flash('message', 'No users or upcoming posts found!')
+      return res.redirect('/dashboard/users')
+    }
+
+    for (const user of users) {
+      const userData = user.dataValues
+
+      await sendMailToRegisteredUser({
+        name: `${admin.first_name} ${admin.last_name}`,
+        adminEmail: admin.email,
+        email: userData.email,
+        subject: 'Upcoming Events Notification',
+        message: `<div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                    <p>Hi ${userData.first_name},</p>
+                    <p>Here are the upcoming posts/events:</p>
+                    ${posts.map(post => `
+                      <div style="margin-bottom: 12px;">
+                        <strong>${post.title}</strong><br/>
+                        ${post.description}<br/>
+                        <span style="color: #555;">
+                          <strong>Event:</strong> ${post.events_model.title} |
+                          <strong>Date:</strong> ${post.date} |
+                          <strong>Time:</strong> ${post.time}
+                        </span>
+                      </div>`).join('')}
+                    <p style="margin-top: 16px;">Regards,<br/>Event CMS Team</p>
+                  </div>`
+      })
+    }
+
+    req.flash('message', 'Emails successfully sent to all active users!')
+    res.redirect('/dashboard/users')
+  } 
+  catch (error) {
+    console.error('\nError in /notifyAll!\n', error)
+    req.flash('message', 'Something went wrong while sending emails!')
+    res.redirect('/dashboard/users')
+  }
+})
+
 
 export default router

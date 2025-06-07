@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import flash from 'connect-flash'
 import cookieParser from 'cookie-parser'
 import expressLayouts from 'express-ejs-layouts'
+import { scheduler } from './services/scheduler.js'
 
 import router from './routers/index.js'
 import initializeDB from './database/data.js'
@@ -40,6 +41,9 @@ app.set('layout', './layouts/main')
 
 // database
 initializeDB()
+
+// job scheduler
+scheduler()
 
 // server
 app.listen(process.env.DB_PORT, () => {

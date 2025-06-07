@@ -3,8 +3,7 @@ import { DataTypes } from "sequelize"
 import Events from "./Events.js"
 import Posts from "./Posts.js"
 
-const Images = sequelize.define(
-  "images_model", {
+const Images = sequelize.define("images_model", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,

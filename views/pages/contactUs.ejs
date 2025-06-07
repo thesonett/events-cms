@@ -10,47 +10,43 @@
         <p class="text-gray-600 mb-6">Fill in the details below and our team will get back to you shortly.</p>
         
         <div class="space-y-4">
-          <div>
-            <label for="name" class="block text-gray-700 font-medium mb-1">Name</label>
-            <input type="text" id="name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Your Name" />
-          </div>
-          
-          <div>
-            <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
-            <input type="email" id="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Your Email" />
-          </div>
-          
-          <div>
-            <label for="phone" class="block text-gray-700 font-medium mb-1">Phone Number</label>
-            <input type="tel" id="phone" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Your Phone Number" />
-          </div>
-          
-          <div>
-            <label for="subject" class="block text-gray-700 font-medium mb-1">Subject</label>
-            <select id="subject" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600">
-              <option value="">Select a Subject</option>
-              <option value="booking">Booking Issues</option>
-              <option value="payment">Payment Queries</option>
-              <option value="event">Event Information</option>
-              <option value="feedback">Feedback</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          
-          <div>
-            <label for="message" class="block text-gray-700 font-medium mb-1">Message</label>
-            <textarea id="message" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Your Message"></textarea>
-          </div>
-          
-          <button type="button" class="w-full py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
-            Submit
-          </button>
+          <form action="/contactUs/submit" method="POST">
+            <div>
+              <label for="name" class="block text-gray-700 font-medium mb-1">Name</label>
+              <input type="text" id="name" name="name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 mb-3" placeholder="Your Name" />
+            </div>
+            
+            <div>
+              <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
+              <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 mb-3" placeholder="Your Email" />
+            </div>
+            
+            <div>
+              <label for="subject" class="block text-gray-700 font-medium mb-1">Subject</label>
+              <select id="subject" name="subject" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 mb-3">
+                <option value="Report a Technical Issue">Report a Technical Issue</option>
+                <option value="General Feedback">General Feedback</option>
+                <option value="Collaboration/Partnership Inquiry">Collaboration/Partnership Inquiry</option>
+                <option value="Sponsorship Opportunities">Sponsorship Opportunities</option>
+                <option value="Mail From Event CMS Project!">Other</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="message" class="block text-gray-700 font-medium mb-1">Message</label>
+              <textarea id="message" name="message" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 mb-3" placeholder="Your Message"></textarea>
+            </div>
+            
+            <button type="submit" class="w-full py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+              Submit
+            </button>
+          </form>
         </div>
       </div>
       
       <!-- Contact Information -->
       <div class="w-full lg:w-1/2 bg-white p-6 rounded-xl shadow-lg">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 font-heading">Reach Us</h3>
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 font-heading">Developer's Contact Info</h3>
         <p class="text-gray-600 mb-6">Have questions? Here’s how you can contact us directly.</p>
         
         <div class="space-y-6">
@@ -58,7 +54,7 @@
             <i class="fas fa-map-marker-alt text-red-600 mt-1 mr-3"></i>
             <div>
               <h4 class="text-gray-800 font-semibold">Address</h4>
-              <p class="text-gray-600">123 Event Street, Kolkata, West Bengal, India - 700001</p>
+              <p class="text-gray-600">Lake Town, Bangur Avenue, Kolkata, West Bengal, India - 700055</p>
             </div>
           </div>
           
@@ -66,7 +62,7 @@
             <i class="fas fa-phone-alt text-red-600 mt-1 mr-3"></i>
             <div>
               <h4 class="text-gray-800 font-semibold">Phone</h4>
-              <p class="text-gray-600">+91 123-456-7890 (Mon-Fri, 9:00 AM - 6:00 PM IST)</p>
+              <p class="text-gray-600">+91 9073525312 (Mon-Fri, 10:00 AM - 5:00 PM IST)</p>
             </div>
           </div>
           
@@ -74,7 +70,7 @@
             <i class="fas fa-envelope text-red-600 mt-1 mr-3"></i>
             <div>
               <h4 class="text-gray-800 font-semibold">Email</h4>
-              <p class="text-gray-600">support@eventplatform.com</p>
+              <p class="text-gray-600">sonettjsaha@gmail.com</p>
             </div>
           </div>
           
@@ -82,8 +78,8 @@
             <i class="fas fa-clock text-red-600 mt-1 mr-3"></i>
             <div>
               <h4 class="text-gray-800 font-semibold">Support Hours</h4>
-              <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM IST</p>
-              <p class="text-gray-600">Saturday: 10:00 AM - 4:00 PM IST</p>
+              <p class="text-gray-600">Monday - Friday: 10:00 AM - 5:00 PM IST</p>
+              <p class="text-gray-600">Saturday: 10:00 AM - 1:00 PM IST</p>
             </div>
           </div>
         </div>
@@ -91,3 +87,13 @@
     </div>
   </div>
 </section>
+
+<% if (notify) { %>
+  <script>
+    Swal.fire({
+      text: "<%- notify %>",
+      icon: "info",
+      confirmButtonColor: "#ec4899"
+    });
+  </script>
+<% } %>

@@ -1,6 +1,0 @@
-NEXT TASKS✅
-
-1. automation system for date changing (excecute in every 24hrs.)
-2. email system for sending mails + send auto email to all the registered users for upcoming events.
-3. uuid for hiding id, filter name on url
-4. add loading screen.

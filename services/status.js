@@ -2,25 +2,21 @@ function getStatus(date, time) {
   const now = new Date()
   const postDateTime = new Date(`${date}T${time}`)
 
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const postOnlyDate = new Date(postDateTime.getFullYear(), postDateTime.getMonth(), postDateTime.getDate())
+  const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const postDate = new Date(postDateTime.getFullYear(), postDateTime.getMonth(), postDateTime.getDate())
 
-  if (postOnlyDate.getTime() === today.getTime()) {
-    // If the event is today, compare time
-    if (now >= postDateTime) {
+  const diffMinutes = Math.abs((postDateTime - now) / 60000)
+
+  if (postDate.getTime() === nowDate.getTime()) {
+    if (diffMinutes <= 1) {
       return "ongoing"
     }
-    else {
-      return "upcoming"
-    }
+    return now > postDateTime ? "completed" : "upcoming"
   }
-  else if (postOnlyDate > today) {
-    return "upcoming"
-  }
-  else {
-    return "completed"
-  }
+
+  return postDate > nowDate ? "upcoming" : "completed"
 }
+
 
 export {
     getStatus,

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import dayjs from 'dayjs'
 import { Users } from '../models/index.js'
 
 async function createUser({ first_name, last_name, email, password, username, status, email_verified_at,  is_owner, organizing_committee_id, role_id}) {
@@ -199,12 +200,36 @@ async function updateUserById(id, updates) {
     }
 }
 
+async function updateAllUsersStatus() {
+    try {
+        const users = await Users.findAll({ where: { role_id: 2, status: 1 } })
+        if (!users || !users.length) return { success: false, message: 'No active users found!' }
+
+        const today = dayjs()
+
+        for (const user of users) {
+            const verifiedDate = dayjs(user.email_verified_at)
+            const isOlderThan90Days = today.diff(verifiedDate, 'day') >= 90
+
+            if (isOlderThan90Days) {
+                await user.update({ status: 0 })
+            }
+        }
+
+        return { success: true, message: 'Users status updated!' }
+    }
+    catch (error) {
+        console.log('Exception occurred inside updateAllUsersStatus!\n', error)
+        return { success: false, message: 'Exception::: Users not found or no changes made!' }
+    }
+}
+
 
 export {
     createUser,
     deleteUserById,
     updateUserById,
-
+    updateAllUsersStatus,
     getUser,
     getUsers,
     getActiveUsers,

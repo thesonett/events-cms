@@ -51,12 +51,12 @@
             </div>
             <div class="mt-6">
               <% if (post.status === 'completed' || post.status === 'ongoing') { %>
-                <a href="javascript:void(0)" class="inline-block bg-gray-400 text-white font-semibold text-lg px-6 py-3 rounded-lg cursor-not-allowed opacity-50 pointer-events-none"><i class="fa-solid fa-bell mr-2"></i>Notify Me</a>
+                <a href="javascript:void(0)" class="inline-block bg-gray-400 text-white font-semibold text-lg px-6 py-3 rounded-lg cursor-not-allowed opacity-50 pointer-events-none"><i class="fa-solid fa-envelope mr-3"></i>Get Details</a>
               <% } else { %>
                 <a id="notifyBtn-<%= post.id %>" 
                   href="/booking/<%= post.id %>"
                   class="inline-block bg-red-600 text-white font-semibold text-lg px-6 py-3 rounded-lg hover:bg-red-700 transition duration-300">
-                  <i class="fa-solid fa-bell mr-2"></i>Notify Me
+                  <i class="fa-solid fa-envelope mr-3"></i>Get Details
                 </a>
               <% } %>
             </div>

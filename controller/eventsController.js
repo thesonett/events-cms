@@ -1,4 +1,7 @@
-import { Events } from '../models/index.js'
+import { Op } from 'sequelize'
+import moment from 'moment'
+import { Events, Posts, Users } from '../models/index.js'
+import { sendMailToRegisteredUser } from '../services/mail.js'
 
 async function createEvent({title, description, date, category_id, organizing_committee_id, role_id}) {
     if (!title || !date || !category_id || !organizing_committee_id || !role_id) {
@@ -164,6 +167,39 @@ async function getEventsByYear(id, date) {
     }
 }
 
+async function sendUpcomingEventEmails() {
+  try {
+    const today = moment().format('YYYY-MM-DD')
+    const upcomingEvents = await Posts.findAll({ where: { status: 'upcoming', date: { [Op.eq]: today } } })
+    if(!upcomingEvents.length) return
+
+    const registeredActiveUsers = await Users.findAll({ where: { role_id: 2, status: 1 } })
+    if(!registeredActiveUsers.length) return
+
+    for (const event of upcomingEvents) {
+        for (const user of registeredActiveUsers) {
+            await sendMailToRegisteredUser({
+                name: `${user.first_name} ${user.last_name}`,
+                adminEmail: null,
+                email: user.email,
+                subject: `Upcoming Event Reminder: ${event.title}`,
+                message: `<p>Hello <strong>${user.first_name} ${user.last_name}</strong>,</p>
+                          <p>We hope you're doing well! This is a friendly reminder about an upcoming event:</p>
+                          <p><strong>${event.title}</strong><br>
+                          Date: ${event.date}<br>
+                          Time: ${event.time}<br>
+                          Venue: ${event.venue || 'To be announced'}</p>
+                          <p>Make sure to mark your calendar — we’d love to see you there!</p>
+                          <p>Best regards,<br>Events CMS Team</p>`
+            })
+        }
+    }
+  }
+  catch (error) {
+    console.error('\n:::: Error sending upcoming event emails to registered users! ::::\n', error)
+  }
+}
+
 export {
     createEvent,
     deleteEventById,
@@ -176,4 +212,6 @@ export {
     getEventsByRoleId,
     getEventsByYear,
     getAllEvents,
+
+    sendUpcomingEventEmails,
 }

@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import { Events, Posts } from '../models/index.js'
 import { getImagesByPostId } from './imagesController.js'
+import { getStatus } from '../services/status.js'
 
 async function createPost({ title, description, venue, time, date, location, duration, organizer, status, event_id }) {
     try {
@@ -82,6 +83,28 @@ async function updatePostById(id, updates) {
        console.error('Exception occurred inside updatePostById!\n', error)
        return { success: false, message: 'Exception::: Post not found or nothing to update!'}
     }
+}
+
+async function updateAllPostsStatus() {
+  try {
+    const posts = await Posts.findAll({ where: { status: { [Op.in]: ['upcoming', 'ongoing'] } } })
+    if (!posts.length) return { success: false, message: '\nNo posts found to update post status!' }
+
+    for (const post of posts) {
+      const { id, date, time, status: currentStatus } = post
+      const calculatedStatus = getStatus(date, time)
+
+      if (calculatedStatus !== currentStatus) {
+        await Posts.update({ status: calculatedStatus }, { where: { id } })
+      }
+    }
+
+    return { success: true, message: 'Post status updated!' }
+  } 
+  catch (error) {
+    console.error('\n:::: Exception while updating the posts! ::::\n', error)
+    return { success: false, message: 'No posts found to update post status!' }
+  }
 }
 
 async function getPostByEventId(event_id) {
@@ -258,6 +281,7 @@ export {
 
     updatePostByEventId,
     updatePostById,
+    updateAllPostsStatus,
 
     getPostByEventId,
     getPostsByEventId,
