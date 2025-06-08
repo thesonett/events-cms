@@ -13,9 +13,9 @@ const router = express.Router()
 // home page
 router.get("/", async (req, res) => {
   const pageNo = parseInt(req.query.pageNo) || 1
-  const pageSize = 5
+  const pageSize = 20
 
-  const { events = [], totalRecords } = await getAllEvents(pageNo, pageSize)
+  const { events = [] } = await getAllEvents(pageNo, pageSize)
   const { success, posts, totalPages } = await getAllUpcomingPosts(pageNo, pageSize)
 
   const totalEvents = await Promise.all(events.map(async (event) => {

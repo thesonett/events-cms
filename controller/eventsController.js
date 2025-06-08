@@ -121,7 +121,7 @@ async function getEventById(id) {
     }
 }
 
-async function getAllEvents(pageNo = 1, pageSize = 100) {
+async function getAllEvents(pageNo = 1, pageSize = 50) {
     try {
         const { count, rows: events } = await Events.findAndCountAll({ 
             limit: pageSize, 

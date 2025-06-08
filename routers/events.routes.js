@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
 
   // Pagination
   const pageNo = parseInt(req.query.pageNo) || 1
-  const pageSize = 5
+  const pageSize = 20
   const totalRecords = filteredPosts.length
   const totalPages = Math.ceil(totalRecords / pageSize)
   const startIndex = (pageNo - 1) * pageSize
@@ -76,7 +76,7 @@ router.get('/:id', async (req, res) => {
   const eventId = Number(req.params.id)
 
   const pageNo = parseInt(req.query.pageNo) || 1
-  const pageSize = 5
+  const pageSize = 10
 
   const { event } = await getEventById(eventId)
   const { category } = await getCategoryById(event.category_id)
@@ -119,7 +119,7 @@ router.get('/posts/post/:id', async (req, res) => {
 
   const postId = req.params.id
   const pageNo = parseInt(req.query.pageNo) || 1
-  const pageSize = 5
+  const pageSize = 8
 
   const { post } = await getPostById(postId)
   const { images } = await getImagesByPostId(post.id)

@@ -75,6 +75,53 @@
     </div>
     
     <!-- add pagination here if needed -->
+      <% if (totalPages > 1) { %>
+          <div class="mt-8 flex justify-center space-x-1">
+            <% const maxPagesToShow = 3;
+              const half = Math.floor(maxPagesToShow / 2);
+              let startPage = Math.max(1, pageNo - half);
+              let endPage = startPage + maxPagesToShow - 1;
+              if (endPage > totalPages) {
+                  endPage = totalPages;
+                  startPage = Math.max(1, endPage - maxPagesToShow + 1);
+              }
+
+              // Helper: build query string from arrays
+              const buildQuery = () => {
+                let q = '';
+                if (query.category) q += [].concat(query.category).map(c => `&category=${c}`).join('');
+                if (query.status) q += [].concat(query.status).map(s => `&status=${s}`).join('');
+                if (query.year) q += [].concat(query.year).map(y => `&year=${y}`).join('');
+                if (query.organizer) q += `&organizer=${query.organizer}`;
+                if (query.organizer) q += [].concat(query.organizer).map(o => `&organizer=${o}`).join('');
+                return q;
+              };
+              const extraQuery = buildQuery();
+            %>
+
+            <% if (pageNo > 1) { %>
+              <a href="?pageNo=<%= pageNo - 1 %><%= extraQuery %>"
+                class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+                &lt;
+              </a>
+            <% } %>
+
+            <% for (let i = startPage; i <= endPage; i++) { %>
+              <a href="?pageNo=<%= i %><%= extraQuery %>"
+                class="px-3 py-1 text-sm rounded border font-medium transition 
+                <%= pageNo === i ? 'bg-red-500 text-white border-red-600' : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-100' %>">
+                <%= i %>
+              </a>
+            <% } %>
+
+            <% if (pageNo < totalPages) { %>
+              <a href="?pageNo=<%= pageNo + 1 %><%= extraQuery %>"
+                class="px-2 py-1 text-sm rounded border font-medium bg-white text-gray-800 border-gray-300 hover:bg-gray-100">
+                &gt;
+              </a>
+            <% } %>
+          </div>
+        <% } %>
 </section>
 
 <!-- Additional CSS for Animations -->

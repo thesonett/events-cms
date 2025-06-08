@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
 
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 5
+    const pageSize = 10
 
     const { users } = await getActiveUsers(decoded._id)
     const { user } = await getUserById(decoded._id)

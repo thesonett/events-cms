@@ -12,7 +12,7 @@
         </div>
 
         <!-- Dropdown Content -->
-        <div class="dropdown-content bg-white p-4 rounded-b shadow-md overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 invisible">
+        <div class="dropdown-content bg-white p-4 rounded-b shadow-md transition-all duration-300 ease-in-out max-h-0 opacity-0 invisible">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm sm:text-base">
               <thead class="text-gray-600 border-b">
@@ -46,10 +46,7 @@
                       <td class="py-2 px-4 hidden md:table-cell">
                         <% 
                           const [hours, minutes] = post.time.split(':');
-                          const date = new Date();
-                          date.setHours(parseInt(hours), parseInt(minutes));
-                          const options = { hour: 'numeric', minute: '2-digit', hour12: true };
-                          const formattedTime = date.toLocaleTimeString('en-US', options);
+                          const formattedTime = new Date(0, 0, 0, hours, minutes).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
                         %>
                         <%= formattedTime %>
                       </td>
@@ -74,9 +71,9 @@
         </div>
       </div>
     <% }) %>
-    <% } else { %>
-        <p class="py-4 text-center text-gray-500">No categories found!</p>
-    <% } %>
+  <% } else { %>
+    <p class="py-4 text-center text-gray-500">No categories found!</p>
+  <% } %>
 </div>
 
 <style>
@@ -85,7 +82,7 @@
   }
 
   .dropdown-content.open {
-    max-height: 1000px; /* Adjust based on your content size, should be large enough */
+    max-height: none; /* Allow full height to show all content */
     opacity: 1;
     visibility: visible;
   }
@@ -114,18 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
         dc.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
       });
 
-      // Toggle current one
-      if (!isOpen) {
-        content.classList.add('open');
-        svg.classList.add('rotate-180');
-      } else {
-        content.classList.remove('open');
-        svg.classList.remove('rotate-180');
-      }
+      // Toggle current dropdown
+      content.classList.toggle('open', !isOpen);
+      svg.classList.toggle('rotate-180', !isOpen);
     });
   });
 
-  // Optional: click outside to close
+  // Optional: Close dropdowns when clicking outside
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.dropdown')) {
       document.querySelectorAll('.dropdown-content').forEach(dc => {

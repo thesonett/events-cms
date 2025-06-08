@@ -146,7 +146,7 @@ async function getPostsByEventId(event_id, pageNo = 1, pageSize = 100) {
     }
 }
 
-async function getAllUpcomingPosts(pageNo = 1, pageSize = 100) {
+async function getAllUpcomingPosts(pageNo = 1, pageSize = 50) {
   try {
     const { count, rows: posts } = await Posts.findAndCountAll({
       where: { status: 'upcoming' },
