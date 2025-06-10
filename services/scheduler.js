@@ -10,8 +10,8 @@ function scheduler() {
     })
 
     // send auto email to all registered active users for upcoming events
-    // at 12:00 AM and 7:00 AM everyday
-    cron.schedule('0 0,7 * * *', async () => {
+    // run at 7:00 AM everyday
+    cron.schedule('0 7 * * *', async () => {
         await sendUpcomingEventEmails()
         console.log('Cron mail system runned!!!\n')
     })

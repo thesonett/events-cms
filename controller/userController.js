@@ -209,7 +209,7 @@ async function updateAllUsersStatus() {
 
         for (const user of users) {
             const verifiedDate = dayjs(user.email_verified_at)
-            const isOlderThan90Days = today.diff(verifiedDate, 'day') >= 90
+            const isOlderThan90Days = today.diff(verifiedDate, 'day') >= 10 // testing
 
             if (isOlderThan90Days) {
                 await user.update({ status: 0 })

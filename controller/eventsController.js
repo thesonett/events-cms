@@ -170,29 +170,34 @@ async function getEventsByYear(id, date) {
 async function sendUpcomingEventEmails() {
   try {
     const today = moment().format('YYYY-MM-DD')
+    // Fetch all upcoming events for today
     const upcomingEvents = await Posts.findAll({ where: { status: 'upcoming', date: { [Op.eq]: today } } })
-    if(!upcomingEvents.length) return
+    if (!upcomingEvents.length) return; // No events for today
 
     const registeredActiveUsers = await Users.findAll({ where: { role_id: 2, status: 1 } })
-    if(!registeredActiveUsers.length) return
+    if (!registeredActiveUsers.length) return // No active users
 
-    for (const event of upcomingEvents) {
-        for (const user of registeredActiveUsers) {
-            await sendMailToRegisteredUser({
-                name: `${user.first_name} ${user.last_name}`,
-                adminEmail: null,
-                email: user.email,
-                subject: `Upcoming Event Reminder: ${event.title}`,
-                message: `<p>Hello <strong>${user.first_name} ${user.last_name}</strong>,</p>
-                          <p>We hope you're doing well! This is a friendly reminder about an upcoming event:</p>
-                          <p><strong>${event.title}</strong><br>
-                          Date: ${event.date}<br>
-                          Time: ${event.time}<br>
-                          Venue: ${event.venue || 'To be announced'}</p>
+    const eventList = upcomingEvents.map(event => {
+      return `<li><strong>${event.title}</strong><br>
+                  Date: ${event.date}<br>
+                  Time: ${event.time}<br>
+                  Venue: ${event.venue || 'To be announced'}</li>`
+    }).join('')
+
+    const emailMessage = `<p>Hello <strong>{{firstName}} {{lastName}}</strong>,</p>
+                          <p>We hope you're doing well! This is a friendly reminder about the upcoming events for today:</p>
+                          <ul>${eventList}</ul>
                           <p>Make sure to mark your calendar — we’d love to see you there!</p>
                           <p>Best regards,<br>Events CMS Team</p>`
-            })
-        }
+
+    for (const user of registeredActiveUsers) {
+      await sendMailToRegisteredUser({
+        name: `${user.first_name} ${user.last_name}`,
+        adminEmail: null,
+        email: user.email,
+        subject: `Today's Upcoming Events`,
+        message: emailMessage.replace('{{firstName}}', user.first_name).replace('{{lastName}}', user.last_name)
+      })
     }
   }
   catch (error) {
