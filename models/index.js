@@ -6,6 +6,7 @@ import OrganizingCommittee from './OrganizingCommittee.js'
 import Posts from './Posts.js'
 import Images from './Images.js'
 import Activities from './Activities.js'
+import Views from './Views.js'
 
 // defining relationships
 Category.hasMany(Events, { foreignKey: "category_id" })
@@ -28,6 +29,9 @@ Users.hasMany(Role, { foreignKey: "users_organizing_committee_id" })
 Users.hasMany(Activities, { foreignKey: 'user_id' })
 Activities.belongsTo(Users, { foreignKey: 'user_id' })
 
+Posts.hasMany(Views, { foreignKey: 'post_id', as: 'views', onDelete: 'CASCADE' })
+Views.belongsTo(Posts, { foreignKey: 'post_id', as: 'post' })
+
 export {
   Users,
   Role,
@@ -37,4 +41,5 @@ export {
   Posts,
   Images,
   Activities,
+  Views,
 }

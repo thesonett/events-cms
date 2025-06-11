@@ -10,6 +10,7 @@ const router = express.Router()
 
 router.get('/:id', async (req, res) => {
     if (!req.cookies.token) {
+        req.flash('message', 'Kindly Login or Register Yourself First!')
         return res.redirect('/users/register')
     }
 
@@ -20,17 +21,22 @@ router.get('/:id', async (req, res) => {
     const { user } = await getUserById(decoded._id)
     const { post } = await getPostById(postId)
 
-    const { message } = await getNotified({
+    await getNotified({
         name: `${user.first_name} ${user.last_name}`,
         email: user.email,
-        subject: `Details About An Event: ${post.title}`,
-        message: `<p>Hello ${user.first_name},</p>
-            <p>Thank you for viewing "<strong>${post.title}</strong>".</p>
-            <p><strong>Details:</strong><br>${post.description}</p>
-            <p>Regards,<br>Events CMS Team</p>`
+        subject: `Booking Confirmed: ${post.title}`,
+        message: `<p>Hi ${user.first_name},</p>
+            <p>Your booking for the event "<strong>${post.title}</strong>" has been successfully confirmed.</p>
+            <p><strong>Show Details:</strong><br>${post.description}</p>
+            <p>We look forward to your participation and hope you have a great experience!</p>
+            <p>If you have any questions, feel free to reply to this email.</p>
+            <p>Best regards,<br><strong>Events CMS Team</strong></p>`
     })
 
-    req.flash('message', message)
+    let bookingStatus = true
+    req.flash('message', 'Booking successfully done!')
+    req.flash('bookingStatus', bookingStatus)
+
     res.redirect(`/events/posts/post/${postId}`)
 })
 

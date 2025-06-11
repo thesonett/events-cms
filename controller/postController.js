@@ -99,11 +99,11 @@ async function updateAllPostsStatus() {
       }
     }
 
-    return { success: true, message: 'Post status updated!' }
+    return { success: true, message: '\nPost status updated!' }
   } 
   catch (error) {
     console.error('\n:::: Exception while updating the posts! ::::\n', error)
-    return { success: false, message: 'No posts found to update post status!' }
+    return { success: false, message: '\nNo posts found to update post status!' }
   }
 }
 

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import express from 'express'
 import bcrypt from 'bcrypt'
 
-import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getAllUpcomingPosts, getCategories, getCategoryById, getEventById, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getPostsByEventId, getUserById, updateUserById } from '../controller/index.js'
+import { createActivity, createUser, deleteUserById, getActiveUsers, getActivities, getAllPosts, getAllUpcomingPosts, getCategories, getCategoryById, getEventById, getEventsByOrganizingCommitteeId, getOnlyUsers, getOrganizingCommitteeById, getPostsByEventId, getTotalViews, getUserById, updateUserById } from '../controller/index.js'
 import { getStatus } from '../services/status.js'
 import { sendMailToRegisteredUser } from '../services/mail.js'
 
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)
 
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 10
+    const pageSize = 20
 
     const { users } = await getActiveUsers(decoded._id)
     const { user } = await getUserById(decoded._id)
@@ -26,11 +26,14 @@ router.get('/', async (req, res) => {
 
     const { activities = [],  totalRecords } = await getActivities(user.id, pageNo, pageSize)
     const totalPages = Math.ceil(totalRecords / pageSize)
+
+    const { totalViews } = await getTotalViews()
     
     res.render('pages/dashboard/home', { 
         layout:'layouts/dashboardLayout',  
         admin: user,
         activities,
+        totalViews,
         activeUsers: users,
         events,
         upcomingEvents,
@@ -45,7 +48,7 @@ router.get('/users', async (req, res) => {
     const message = req.flash('message')[0]
     const selectedStatus = req.query.status || ''
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 5
+    const pageSize = 10
 
     const token = req.cookies?.token
     const decoded = jwt.verify(token, process.env.MY_SECRET_KEY)

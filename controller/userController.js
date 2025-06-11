@@ -203,7 +203,7 @@ async function updateUserById(id, updates) {
 async function updateAllUsersStatus() {
     try {
         const users = await Users.findAll({ where: { role_id: 2, status: 1 } })
-        if (!users || !users.length) return { success: false, message: 'No active users found!' }
+        if (!users || !users.length) return { success: false, message: '\nNo active users found!' }
 
         const today = dayjs()
 
@@ -216,7 +216,7 @@ async function updateAllUsersStatus() {
             }
         }
 
-        return { success: true, message: 'Users status updated!' }
+        return { success: true, message: '\nUsers status updated!' }
     }
     catch (error) {
         console.log('Exception occurred inside updateAllUsersStatus!\n', error)

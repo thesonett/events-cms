@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 
-import { createActivity, createImage, createPost, deleteImageById, deleteImagesByPostId, deletePostById, getEventById, getImagesByPostId, getPostsByEventId, getUserById, updateImageByEventId, updateImageById, updateImageByPostId, updatePostById } from '../controller/index.js'
+import { createActivity, createImage, createPost, deleteImageById, deleteImagesByPostId, deletePostById, getEventById, getImagesByPostId, getPostsByEventId, getUserById, getViews, updateImageByEventId, updateImageById, updateImageByPostId, updatePostById } from '../controller/index.js'
 import { deleteCloudinaryImage, updateCloudinaryImage, upload, uploadImage } from '../services/cloudinary.js'
 import { getStatus } from '../services/status.js'
 
@@ -13,7 +13,7 @@ router.get('/post/:id', async (req, res) => {
     const eventId = Number(req.params.id)
     req.session.eventId = eventId
     const pageNo = parseInt(req.query.pageNo) || 1
-    const pageSize = 5
+    const pageSize = 10
 
     const sessionUser = req.user
     const message = req.flash('message')[0]
@@ -35,9 +35,16 @@ router.get('/post/:id', async (req, res) => {
 
     // getting image names
     const image_names = {}
+
+    // getting all the views
+    const views = {}
+    
     for (const post of posts) {
         const { images = [] } = (await getImagesByPostId(post.id)) || {}
         image_names[post.id] = images.map(img => img.file_name)
+
+        const { view } = await getViews(post.id)
+        views[post.id] = view
     }
     
     res.render('pages/dashboard/posts', {
@@ -47,6 +54,7 @@ router.get('/post/:id', async (req, res) => {
         posts,
         eventName: event.title,
         image_names,
+        views,
         notify: message? message : null,
         query: req.query,
         totalPages,

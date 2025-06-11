@@ -104,6 +104,12 @@ import {
     getActivities,
 } from './activitiesController.js'
 
+import {
+    createViews,
+    getViews,
+    getTotalViews,
+} from './viewsController.js'
+
 export {
     // categories
     createCategory,
@@ -201,4 +207,9 @@ export {
     deleteActivity,
     deleteActivityByUserId,
     getActivities,
+
+    // views
+    createViews,
+    getViews,
+    getTotalViews,
 }

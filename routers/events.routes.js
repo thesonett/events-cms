@@ -1,6 +1,6 @@
 import express from 'express'
 import { formatDate, formatTime } from '../services/formatter.js'
-import { getAllPosts, getAllPostsExceptThisId, getCategories, getCategoryById, getEventById, getImagesByPostId, getImageUrlByEventId, getOrganizingCommitteeById, getOrganizingCommittees, getPostById, getPostsByEventId, getRoles } from '../controller/index.js'
+import { createViews, getAllPosts, getAllPostsExceptThisId, getCategories, getCategoryById, getEventById, getImagesByPostId, getImageUrlByEventId, getOrganizingCommitteeById, getOrganizingCommittees, getPostById, getPostsByEventId, getRoles, getViews } from '../controller/index.js'
 
 const router = express.Router()
 
@@ -116,6 +116,8 @@ router.get('/:id', async (req, res) => {
 // An event's post page
 router.get('/posts/post/:id', async (req, res) => {
   const notify = req.flash('message')[0]
+  const bookingStatus = req.flash('bookingStatus')[0]
+  const bookingText = bookingStatus ? 'Booked!' : 'Book Now'
 
   const postId = req.params.id
   const pageNo = parseInt(req.query.pageNo) || 1
@@ -145,8 +147,12 @@ router.get('/posts/post/:id', async (req, res) => {
   const { organizingCommitties } = await getOrganizingCommittees()
   const { roles = [] } = await getRoles()
 
+  await createViews(postId)
+  const { view } = await getViews(postId)
+
   res.render('pages/post', {
     roles,
+    view,
     organizingCommitties,
     post: post || null,
     images: images || [],
@@ -155,6 +161,7 @@ router.get('/posts/post/:id', async (req, res) => {
     totalPages,
     pageNo,
     notify,
+    bookingText,
   })
 })
 

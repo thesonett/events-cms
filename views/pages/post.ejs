@@ -12,7 +12,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
       <div class="p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-heading mb-6">Event Details</h2>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-heading mb-6">Show Details</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Image -->
           <div>
@@ -45,19 +45,32 @@
               </p>
             </div>
 
+            <div class="mt-6 flex items-center">
+              <i class="fa fa-eye text-green-600" aria-hidden="true"></i>
+              <span id="viewsCount" class="ml-2 font-bold text-grey-500"><%= view.views %> views</span>
+            </div>
+
             <div class="mt-6">
-              <h4 class="text-lg font-semibold text-gray-700 mb-2">About the Event</h4>
+              <h4 class="text-lg font-semibold text-gray-700 mb-2">About</h4>
               <p class="text-gray-600 text-base"><%= post.description || 'Not found!' %></p>
             </div>
             <div class="mt-6">
               <% if (post.status === 'completed' || post.status === 'ongoing') { %>
-                <a href="javascript:void(0)" class="inline-block bg-gray-400 text-white font-semibold text-lg px-6 py-3 rounded-lg cursor-not-allowed opacity-50 pointer-events-none"><i class="fa-solid fa-envelope mr-3"></i>Get Details</a>
+                <a href="javascript:void(0)" class="inline-block bg-gray-400 text-white font-semibold text-lg px-6 py-3 rounded-lg cursor-not-allowed opacity-50 pointer-events-none"><i class="fa-solid fa-envelope mr-3"></i>Book Now</a>
               <% } else { %>
-                <a id="notifyBtn-<%= post.id %>" 
-                  href="/booking/<%= post.id %>"
-                  class="inline-block bg-red-600 text-white font-semibold text-lg px-6 py-3 rounded-lg hover:bg-red-700 transition duration-300">
-                  <i class="fa-solid fa-envelope mr-3"></i>Get Details
-                </a>
+                <% if (bookingText === 'Booked!') { %>
+                  <button
+                    class="inline-block bg-gray-400 text-white font-semibold text-lg px-6 py-3 rounded-lg opacity-50 cursor-not-allowed"
+                    disabled>
+                    <%= bookingText %>
+                  </button>
+                <% } else { %>
+                  <a id="notifyBtn-<%= post.id %>" 
+                    href="/booking/<%= post.id %>"
+                    class="inline-block bg-red-600 text-white font-semibold text-lg px-6 py-3 rounded-lg hover:bg-red-700 transition duration-300">
+                    <%= bookingText %>
+                  </a>
+                <% } %>
               <% } %>
             </div>
           </div>
@@ -66,7 +79,7 @@
 
       <!-- Gallery -->
       <div class="p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-heading mb-6">Event Gallery</h2>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-heading mb-6">Gallery</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <script>const galleryImages = [];</script>
           <% if (images && images.length) { %>
@@ -86,7 +99,7 @@
   <!-- Explore More Events -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 font-heading mb-6">You May Also Like</h2>
-    <p class="text-l md:text-l text-gray-800 font-heading mb-6">Events around you, get notified now!</p>
+    <p class="text-l md:text-l text-gray-800 font-heading mb-6">Find more shows around you, book now!</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <% if (postsWithImages && postsWithImages.length) { %>
         <% (postsWithImages || []).forEach(post => { %>
@@ -115,7 +128,7 @@
           </a>
         <% }) %>
       <% } else { %>
-        <p class="text-gray-500 text-center mt-4">No other posts available!</p>
+        <p class="text-gray-500 text-center mt-4">No shows available!</p>
       <% } %>
     </div>
 
